@@ -43,9 +43,9 @@ spring:
         show-sql: true
 
     datasource:
-        password: postgrespw
-        username: postgres
-        url: jdbc:postgresql://localhost:32768/redscooter?reWriteBatchedInserts=true
+        password: admin
+        username: admin
+        url: jdbc:postgresql://localhost/redscooter?reWriteBatchedInserts=true
 
 
 jwt:
