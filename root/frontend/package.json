@@ -1,0 +1,31 @@
+{
+  "name": "redscooter",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "openapi -i services.yaml -o src/services && next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "export": "openapi -i services.yaml -o src/services && next build && next export"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.9.3",
+    "@types/node": "18.15.11",
+    "@types/react": "18.0.32",
+    "@types/react-dom": "18.0.11",
+    "eslint": "8.37.0",
+    "eslint-config-next": "13.2.4",
+    "next": "13.2.4",
+    "next-redux-wrapper": "^8.1.0",
+    "openapi-typescript": "^6.2.1",
+    "openapi-typescript-codegen": "^0.23.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.10.0",
+    "redux": "^4.2.1",
+    "redux-persist": "^6.0.0",
+    "typescript": "5.0.3"
+  }
+}

@@ -1,10 +1,11 @@
 
 server:
+    port: 8080
     forward-headers-strategy: framework
     error:
-    include-stacktrace: never
-    include-message: never
-    domain: https://redscooter.al/
+        include-stacktrace: never
+        include-message: never
+        domain: https://redscooter.al/
 
 cors:
     allowed-origins:
@@ -45,7 +46,7 @@ spring:
     datasource:
         password: admin
         username: admin
-        url: jdbc:postgresql://localhost/redscooter?reWriteBatchedInserts=true
+        url: jdbc:postgresql://db/redscooter?reWriteBatchedInserts=true
 
 
 jwt:

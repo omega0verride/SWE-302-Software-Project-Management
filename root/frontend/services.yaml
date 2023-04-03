@@ -1,0 +1,412 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: http://localhost/api
+info:
+  description: api
+  version: "1.0.0"
+  title: test
+paths:
+  /api/token:
+    post:
+      operationId: login
+      summary: user login
+      description: user login
+      requestBody:
+        description: body login
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+                - authType
+                - token
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                authType:
+                  type: string
+                token:
+                  type: string
+  /api/user/users/{username}:
+    get:
+      operationId: getUserDetails
+      summary: user details api request
+      description: get user information
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: string
+          required: true
+          description: user name
+          example: "azal.developers@gmail.com"
+  /api/admin/products/deleteImage:
+    delete:
+      operationId: deleteImage
+      summary: image delete
+      description: delete product image
+      parameters:
+        - in: query
+          name: filePath
+          schema:
+            type: string
+          required: true
+  /api/admin/categories/{categoryId}:
+    patch:
+      operationId: updateCategoryById
+      summary: updates the selected category
+      parameters:
+        - in: path
+          name: categoryId
+          schema:
+            type: integer
+          required: true
+          description: the category id
+          example: 1
+      requestBody:
+        description: body update category
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - defaultColor
+                - textColor
+                - name
+                - backgroundColor
+                - visible
+              properties:
+                defaultColor:
+                  type: string
+                textColor:
+                  type: string
+                name:
+                  type: string
+                backgroundColor:
+                  type: string
+                visible:
+                  type: boolean
+  /api/public/users/register:
+    post:
+      operationId: registerUser
+      summary: creates a new user
+      requestBody:
+        description: body create user
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - name
+                - password
+                - phoneNumber
+                - surname
+              properties:
+                email:
+                  type: string
+                name:
+                  type: string
+                password:
+                  type: string
+                phoneNumber:
+                  type: string
+                surname:
+                  type: string
+  /api/public/products/searchSuggestions:
+    get:
+      operationId: getSearchSuggestions
+      summary: get all the products for the seearch query
+      parameters:
+        - in: query
+          name: categoryId
+          schema:
+            type: integer
+          required: true
+          description: category id
+          example: 1
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+          required: true
+          example: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          required: true
+          example: 1
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+          required: false
+          example: "columnName"
+        - in: query
+          name: order
+          schema:
+            type: string
+          required: true
+          example: "ascending"
+        - in: query
+          name: minPrice
+          schema:
+            type: integer
+          required: false
+          example: 1
+        - in: query
+          name: maxPrice
+          schema:
+            type: integer
+          required: false
+          example: 1
+        - in: query
+          name: searchQuery
+          schema:
+            type: string
+          required: false
+          example: "product"
+  /api/admin/products:
+    post:
+      operationId: createNewProduct
+      summary: creates a new product
+      requestBody:
+        description: body create a new product
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - categories
+                - description
+                - discount
+                - facebookPostURL
+                - instagramPostURL
+                - price
+                - stock
+                - title
+                - used
+                - visible
+                - customFields
+              properties:
+                categories:
+                  type: array
+                description:
+                  type: string
+                discount:
+                  type: integer
+                facebookPostURL:
+                  type: string
+                instagramPostURL:
+                  type: string
+                price:
+                  type: integer
+                stock:
+                  type: integer
+                title:
+                  type: string
+                used:
+                  type: boolean
+                visible:
+                  type: boolean
+                customFields:
+                  type: object
+  /api/admin/categories:
+    post:
+      operationId: createCategory
+      summary: creates a new Category
+      requestBody:
+        description: body update category
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - defaultColor
+                - textColor
+                - name
+                - backgroundColor
+                - visible
+              properties:
+                defaultColor:
+                  type: string
+                textColor:
+                  type: string
+                name:
+                  type: string
+                backgroundColor:
+                  type: string
+                visible:
+                  type: boolean
+  /api/admin/products/{productId}:
+    patch:
+      operationId: editProductWithId
+      summary: edit a new product
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          required: true
+          description: the category id
+          example: 1
+      requestBody:
+        description: body edit a new product
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - categories
+                - description
+                - discount
+                - facebookPostURL
+                - instagramPostURL
+                - price
+                - stock
+                - title
+                - used
+                - visible
+                - customFields
+              properties:
+                categories:
+                  type: array
+                description:
+                  type: string
+                discount:
+                  type: integer
+                facebookPostURL:
+                  type: string
+                instagramPostURL:
+                  type: string
+                price:
+                  type: integer
+                stock:
+                  type: integer
+                title:
+                  type: string
+                used:
+                  type: boolean
+                visible:
+                  type: boolean
+                customFields:
+                  type: object
+  /api/admin/categories/{categoryid}:
+    delete:
+      operationId: deleteCategoryById
+      summary: deletes the selected category
+      parameters:
+        - in: path
+          name: categoryid
+          schema:
+            type: integer
+          required: true
+          description: the category id
+          example: 1
+  /api/admin/products/{productID}:
+    delete:
+      operationId: deleteProductWithId
+      summary: deletes the selected productId
+      parameters:
+        - in: path
+          name: productID
+          schema:
+            type: integer
+          required: true
+          description: the product id
+          example: 1
+  /api/public/products:
+    get:
+      operationId: getCategoryProducts
+      summary: get all the products for a category
+      parameters:
+        - in: query
+          name: categoryId
+          schema:
+            type: integer
+          required: true
+          description: category id
+          example: 1
+        - in: query
+          name: pageNumber
+          schema:
+            type: integer
+          required: true
+          example: 1
+        - in: query
+          name: pageSize
+          schema:
+            type: integer
+          required: true
+          example: 1
+        - in: query
+          name: sortBy
+          schema:
+            type: string
+          required: false
+          example: "columnName"
+        - in: query
+          name: price
+          schema:
+            type: string
+          required: false
+          example: "btn:minPrice,MaxPrice"
+        - in: query
+          name: searchQuery
+          schema:
+            type: string
+          required: false
+          example: "product"
+  /api/public/categories:
+    get:
+      operationId: getAllCategories
+      summary: get all the categories that exist in the database
+    Bearer:
+      type: apiKey
+      description: Place to add JWT with Bearer
+      name: Authorization
+      in: header
+  /api/public/products/{productId}:
+    get:
+      operationId: getProductDetails
+      summary: get details for only one product
+      parameters:
+        - in: path
+          name: productId
+          schema:
+            type: integer
+          required: true
+          description: category id
+          example: 1
+  /api/public/stores/name/{storeName}:
+    get:
+      operationId: getStoreDetailsByName
+      summary: get details for the store
+      parameters:
+        - in: path
+          name: storeName
+          schema:
+            type: string
+          required: true
+          description: azal
+          example: 1
+    Bearer:
+      type: apiKey
+      description: Place to add JWT with Bearer
+      name: Authorization
+      in: header
+security:
+  - Bearer: []
