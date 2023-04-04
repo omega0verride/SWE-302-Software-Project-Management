@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+# TODO RESTART ON FALIURE
+  webserver:
+    image: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./target/html/:/var/www/html
+    ports:
+    - "80:80"
+    restart: always
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: &db_user ${DATABASE_USER:-admin}
+      PGUSER: *db_user
+      POSTGRES_PASSWORD: &db_password ${DATABASE_PASSWORD:-admin}
+      POSTGRES_DB: &db_database redscooter
+      PGDATABASE: *db_database
+    volumes:
+    - ${DATABASE_VOLUME:-./database-data}:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+    command: postgres -c listen_addresses='*' # todo removes this and use network config
+    restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 0s
+
+
+  backend:
+    image: eclipse-temurin:17
+    volumes:
+      - ./target/api.jar:/api.jar
+      - ./target/application.yml:/application.yml
+    environment:
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      DATABASE_USER: *db_user
+      DATABASE_PASSWORD: *db_password
+    command: "java -jar api.jar --spring.config.location=file:///application.yml"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always

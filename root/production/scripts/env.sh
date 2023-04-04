@@ -1,0 +1,6 @@
+export SSH_KEY_PATH="./.ssh/key_rsa"
+export HOST="localhost"
+export USER="root"
+export DATABASE_USER="admin"
+export DATABASE_PASSWORD="admin"
+export DATABASE_VOLUME="./target/database-data"
