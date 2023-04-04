@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "openapi -i services.yaml -o src/services && next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "next start",  
     "lint": "next lint",
     "export": "openapi -i services.yaml -o src/services && next build && next export"
   },

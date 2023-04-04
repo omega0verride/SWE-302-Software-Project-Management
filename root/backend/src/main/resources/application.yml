@@ -44,9 +44,9 @@ spring:
         show-sql: true
 
     datasource:
-        password: admin
-        username: admin
-        url: jdbc:postgresql://db/redscooter?reWriteBatchedInserts=true
+        username: ${DATABASE_USERNAME:admin}
+        password: ${DATABASE_PASSWORD:admin}
+        url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/redscooter?reWriteBatchedInserts=true
 
 
 jwt:
@@ -57,3 +57,5 @@ jwt:
     # TODO[production]: change secret or set it as ENV VARIABLE since this github repo will be public
     secret: W&gN*^eBp*Yb?bAkzz_@Vh?=3jTL^UAR?G%XbkX!Kd&*=Fs$=n3SEcnkvDGE#c9V$E&BLtJKX@LA^Pp6bpyudMbDm@!Zt+#mhkpu6WtT56!=qy5SNWV74b3$C%cLw&8JRy2rL2X4T=58GE6TwY+WwyD%624eVZS_^F5g$YGpuDkJwM+-&-gCGw2b29Hf4t&wrs$+EFP!F3^6dD^KB4UHZ!U8hNZh2BABFe&Y+gqUG2UW9AcNu9Mb$mF34&Kmy$2vm*z299&^bnGxd-LcC%+VmqFEbPuxPySj9xxAwyCa_y87apdG^?5*bAKTBfByrWNnJA$xhK-*hk^&4tHs$gS-Y?s43cbJ=h?X6FzN_TM+jJfEzyzZgppEXgD7SuFBn5zue_%d4CBgZN6u@^bzDaQEvN?C9T7w@3ApmSwHBreKDzuqL=srGS3aVd9w3AkQnQgT79QpHR^=YMSUxfa73b@NUBEnp#avWUmB&4R%HgJ?NRyPuQRrT@E+2fnu9j$Tw?-KNMn@XjXjE2y&g4Bt4Hdxh#25_U^CHR7CcgPds7QFW=S$@zgAs9#efqpZzKqAR5@gxvPF5&FM=3M#s7u@YnsnxJ@T-a$YjY8Zx829pT+!xKhBpchWRj+cGkEBt%b3+U8pSKLBDyK-Uanz==@WnEyD3NP3ZLcE&Gz$VMmAz3+?HYX9!K2mBJDxf3F=yA%%&^_EHJ-j=AUxEs$RFcUhew?LNudF8sKLP+q8658K+58brwYB^+nB4a2V-x8Pd-hCbzw5Drn^@DY%ATJT$zsHJB%PhMvxnZBGsm_r6s9#3jDf9rfk+#795c%888f3TEXZQ+yu?krqm?^mmeUk%2jXKp5x&Un7uc^u*8hFkzw@DpUmkNFrSfA4zJt7PY_#9m*&2_ULvw$?Z$RjhV@ve*ZQ9*#@3BWPNMTmCh5U?+gcbB&Y!C3tfFr&jD=5MxFcCePJn5F*P6hJGw$y@azQqr-FfXwvqdzW9!tBFx!WehK+*vRwJKEeJ@2gaF=hv6sfwfF+2E%ZmHqYu*fq4apZ+qQ&MpecH4BNt+xjKwAN5_39ta__JGXQ8=A&&5_+QXA7_4U=??G4FcyeuQu7g@rdmHjbK%RBpd?fW@%LMw&BvjypUXcn!9V4ZFY3bKEWmHZR83FzedkpvDS*Vqp!^99NE7MFELnjCB97#J7u-&vkVnu7nRh%gnLca5jp-^M3f4VjtHqbTq4A@zfUM43HXt2hKYZsV5RMsT$-_a7djTJ?BY@BbA2BBhSy+z?rw&BcpBMxrP@Vk6m8MezY=x-TP@K8PtqGjDaUnRE-WVrLXPE99c+8!U3qJ9p5rs%jKQsrd9yt@_^F&QP^Ed-HNvS^bU4C8!F2PPRryBv9E&*bCweYQMAQCXBJkh7vN3A@pd4&@S_8$E_xxYq_jxs$FRj6?HWvm_&AuhnMM^Gsbws2TgRR8Hp!+9H$@yHEA$z+%#N=kfEu9yAh@A4W&FQ4X#*vGHWpAh?t2DJb@Xd#J5R@tBn$2mgqu@G3H$_jYRDLG^xyf*DqBg2_x4J$ydZzJ2m8K$y+yG!YsR-ppf@qfh_z4ZwrSrB-F4N4Y#45_u3fLXq^q%=T7ctLfv6hB5YahfQ6g^M^mByqwUzd?QWCx8HVWark?38@t+FFcgSu-m4$85kyu4N22jaqfXJyS%c9NEj6ujwzNkS%#&KGUS-f?RgUsQtVtW2Tb?w*4xWdXtM^7PT*?&prVpmnD789q?+RV2B-rCDYhHFk38?F2sn2$6x&s6x#z%F8TZvDJBWR=2A7x9z-aH!E+LyLc4&3GwWjJG7eCV6&uz=N2v-ZV8Y$#!Jt7Eku6wg5C4q*mny&X*wZ*$8PSDpNDv^PZM2R!=ABuswX@J5%&A35h8W3HXSq#y8%tuJ&Z%FkY+Yf7EF+qV#NZyJe@ruM?v!bB#sTh?tPh68c7n-e3MfSStpxUqm22#9Hjj-RCH#j3C?J-w&LCKgW&S%3ALDEG35tf3TNV@!+cbsggY*wvdhRR8fr-zc3yDmWMFFTVbe3gJYsm_rsyUq4dr&nJ5YQDNk2M25Q
     issuer: REDSCOOTER.AL
+
+FileStore:

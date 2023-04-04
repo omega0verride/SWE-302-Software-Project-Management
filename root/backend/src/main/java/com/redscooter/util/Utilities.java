@@ -68,14 +68,15 @@ public class Utilities {
     }
 
     public static String getRootDirFromWorkingDir(String rootProjectFolderName) {
-        Path path = Paths.get("");
-        Path root = path.toAbsolutePath();
-        for (int i = root.getNameCount() - 1; i >= 0; i--) {
-            if (root.getName(i).toString().equals(rootProjectFolderName))
-                return root.toString().replaceAll("\\\\", "/");
-            root = root.getParent();
-        }
-        throw new RuntimeException("Could not find ROOT_WORKING_DIR based on ROOT_PROJECT_FOLDER_NAME=" + ROOT_PROJECT_FOLDER_NAME + ", root=" + path.toAbsolutePath());
+        return "./";
+//        Path path = Paths.get("");
+//        Path root = path.toAbsolutePath();
+//        for (int i = root.getNameCount() - 1; i >= 0; i--) {
+//            if (root.getName(i).toString().equals(rootProjectFolderName))
+//                return root.toString().replaceAll("\\\\", "/");
+//            root = root.getParent();
+//        }
+//        throw new RuntimeException("Could not find ROOT_WORKING_DIR based on ROOT_PROJECT_FOLDER_NAME=" + ROOT_PROJECT_FOLDER_NAME + ", root=" + path.toAbsolutePath());
     }
 
     public static List<File> getFilesFromFolder(File folder) {

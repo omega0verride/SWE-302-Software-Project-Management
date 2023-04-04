@@ -2,4 +2,4 @@ FROM eclipse-temurin:17
 WORKDIR /
 ADD ./target/api.jar api.jar
 EXPOSE 8080
-CMD java -jar api.jar
+ENTRYPOINT ["java", "-jar", "api.jar"]
