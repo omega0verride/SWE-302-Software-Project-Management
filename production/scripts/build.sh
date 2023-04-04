@@ -5,7 +5,7 @@ set -e
 echo "[1/3][0] Exportig fronted..."
 # cd ../../frontend && npm install --legacy-peer-deps && npm run export
 if [ $? -eq 0 ]; then
-    echo "[1/3][1] Exportig succsfull!"
+    echo "[1/3][1] Export successful!"
     echo "[1/3][2] Deleting old prodcution target directory..."
     rm -rf ../target
     echo "[1/3][3] Creating new prodcution target directory..."
