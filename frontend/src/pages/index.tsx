@@ -1,6 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux'
 import { RootState } from '../store/store'
 import React, { useEffect } from 'react'
+import LoginButton from '../components/loginButton'
 
 export default function Home() {
 
@@ -12,7 +13,7 @@ export default function Home() {
 
   return (
       <div>
-          Hello World
+          <LoginButton></LoginButton>
       </div>
   )
 }
