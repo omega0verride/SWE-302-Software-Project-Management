@@ -8,6 +8,7 @@ import FormTitle from '../components/FormTitle'
 import PageLogo from '../components/PageLogo'
 import ShopName from '../components/ShopName'
 import RegisterPage from './RegisterPage'
+import RedBorderButton from '../components/RedBorderButton'
 
 export default function Home() {
 
@@ -25,6 +26,7 @@ export default function Home() {
           <FormTitle title='Create Account'></FormTitle>
           <TextFieldLabel text="Username"></TextFieldLabel>
           <UsernameTextField placeholder='Username'></UsernameTextField>
+          <RedBorderButton content='Login'></RedBorderButton>
       </div>
   )
 }
