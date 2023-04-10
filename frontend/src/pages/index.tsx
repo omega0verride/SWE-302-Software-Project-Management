@@ -6,6 +6,7 @@ import UsernameTextField from '../components/UsernameTextField'
 import TextFieldLabel from '../components/TextFieldLabel'
 import FormTitle from '../components/FormTitle'
 import PageLogo from '../components/PageLogo'
+import ShopName from '../components/ShopName'
 
 export default function Home() {
 
@@ -18,6 +19,7 @@ export default function Home() {
   return (
       <div>
           <PageLogo></PageLogo>
+          <ShopName></ShopName>
           <LoginButton></LoginButton>
           <FormTitle title='Create Account'></FormTitle>
           <TextFieldLabel text="Username"></TextFieldLabel>
