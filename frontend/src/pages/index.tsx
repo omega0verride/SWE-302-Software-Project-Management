@@ -3,6 +3,7 @@ import { RootState } from '../store/store'
 import React, { useEffect } from 'react'
 import LoginButton from '../components/loginButton'
 import UsernameTextField from '../components/UsernameTextField'
+import TextFieldLabel from '../components/TextFieldLabel'
 
 export default function Home() {
 
@@ -15,7 +16,9 @@ export default function Home() {
   return (
       <div>
           <LoginButton></LoginButton>
-          <UsernameTextField></UsernameTextField>
+          <TextFieldLabel text="Username"></TextFieldLabel>
+          <UsernameTextField placeholder='Username'></UsernameTextField>
+          
       </div>
   )
 }
