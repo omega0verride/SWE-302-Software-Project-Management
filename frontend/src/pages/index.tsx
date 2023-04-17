@@ -7,8 +7,8 @@ import TextFieldLabel from '../components/TextFieldLabel'
 import FormTitle from '../components/FormTitle'
 import PageLogo from '../components/PageLogo'
 import ShopName from '../components/ShopName'
-import RegisterPage from './RegisterPage'
 import RedBorderButton from '../components/RedBorderButton'
+
 
 export default function Home() {
 

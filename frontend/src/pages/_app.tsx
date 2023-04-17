@@ -4,7 +4,7 @@ import { wrapper } from '../store/store';
 import React, { Fragment } from 'react';
 
 const MyApp = ({ Component, pageProps }: AppProps) => (
-  <Fragment>
+  <Fragment >
     <Component {...pageProps} />
   </Fragment>
 );
