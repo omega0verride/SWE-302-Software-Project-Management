@@ -3,27 +3,28 @@
 set -e
 
 echo "[1/3][0] Exportig fronted..."
-# cd ../../frontend && npm install --legacy-peer-deps && npm run export
+cd ../../frontend && npm install --legacy-peer-deps && npm run export
 if [ $? -eq 0 ]; then
     echo "[1/3][1] Export successful!"
     echo "[1/3][2] Deleting old prodcution target directory..."
-    rm -rf ../target
+    rm -rf ../production/target
     echo "[1/3][3] Creating new prodcution target directory..."
-    mkdir -p ../target/html
+    mkdir -p ../production/target/html
     echo "[1/3][4] Copying static html files..."
-    cp -r ../../frontend/out/* ../target/html/
+    pwd
+    cp -r ./out/* ../production/target/html/
     
     echo "[2/3][0] Building backend jar..."
-    # cd ../../backend && mvn package
+    cd ../backend && mvn package
     if [ $? -eq 0 ]; then
         echo "[2/3][1] mvn package executed succesfully!"
-        jarFile=$( find ../../backend/target/ -name "*.jar" -print0 | xargs -r -0 ls -1 -t | head -) # get latest jar file
+        jarFile=$( find ./target/ -name "*.jar" -print0 | xargs -r -0 ls -1 -t | head -) # get latest jar file
         if [ $? -eq 0 ]; then
             if ! [[ -z "$jarFile" ]]; then
               echo "Copying jar file: $jarFile"
-              cp $jarFile ../target/
+              cp $jarFile ../production/target/
               echo "Copying sprint application properties..."
-              cp ../../backend/src/main/resources/application.yml ../target/
+              cp ./src/main/resources/application.yml ../production/target/
             else
                 read -n 1 -p "Error: jar not found! Press any key to continue..." _continue
                 exit 1
