@@ -6,4 +6,4 @@ export USER=root
 # non produciton values
 export DATABASE_USER=admin
 export DATABASE_PASSWORD=admin
-export DATABASE_VOLUME=./target/database-data
+export DATABASE_VOLUME=~/database-data

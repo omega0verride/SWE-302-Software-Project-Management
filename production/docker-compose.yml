@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-# TODO RESTART ON FALIURE
   webserver:
     image: nginx
     volumes:
