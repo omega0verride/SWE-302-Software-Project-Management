@@ -1,7 +1,7 @@
 import {useDispatch, useSelector} from 'react-redux'
 import { RootState } from '../store/store'
 import React, { useEffect } from 'react'
-import LoginButton from '../components/loginButton'
+import LoginButton from '../components/LoginButton'
 import UsernameTextField from '../components/UsernameTextField'
 import TextFieldLabel from '../components/TextFieldLabel'
 import FormTitle from '../components/FormTitle'
