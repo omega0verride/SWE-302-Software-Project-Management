@@ -8,6 +8,9 @@ import FormTitle from '../components/FormTitle'
 import PageLogo from '../components/PageLogo'
 import ShopName from '../components/ShopName'
 import RedBorderButton from '../components/RedBorderButton'
+import Header from '../components/LoginHeader'
+import LoginMain from '../components/LoginMain'
+import Footer from '../components/LoginFooter'
 
 
 export default function Home() {
@@ -20,13 +23,16 @@ export default function Home() {
 
   return (
       <div>
-          <PageLogo></PageLogo>
+          {/* <PageLogo></PageLogo>
           <ShopName></ShopName>
           <LoginButton></LoginButton>
           <FormTitle title='Create Account'></FormTitle>
           <TextFieldLabel text="Username"></TextFieldLabel>
           <UsernameTextField placeholder='Username'></UsernameTextField>
-          <RedBorderButton content='Login'></RedBorderButton>
+          <RedBorderButton content='Login'></RedBorderButton> */}
+          <Header></Header>
+          <Footer></Footer>
+          
       </div>
   )
 }
