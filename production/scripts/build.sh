@@ -37,17 +37,6 @@ if [ $? -eq 0 ]; then
         read -n 1 -p "Error: [mvn package] failed. Press any key to continue..." _continue
         exit 1
     fi
-    
-    # if [ $? -eq 0 ]; then
-    #   scp -i $SSH_KEY_PATH -r ../frontend/out/* $USER@$HOST:/var/www/html/
-    #   if [ $? -ne 0 ]; then
-    #     read -n 1 -p "Error: SCP failed. Press any key to continue..." _continue
-    #     exit 1
-    #   fi
-    # else
-    #   read -n 1 -p "Error: SSH delete failed. Press any key to continue..." _continue
-    #   exit 1
-    # fi
 else
     read -n 1 -p "Error: [npm export] failed. Press any key to continue..." _continue
     exit 1
