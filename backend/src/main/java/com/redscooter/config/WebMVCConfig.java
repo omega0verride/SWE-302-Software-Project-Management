@@ -14,7 +14,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
-@EnableConfigurationProperties({CorsConfigProperties.class})
 @EnableWebMvc
 public class WebMVCConfig implements WebMvcConfigurer {
     @Override
