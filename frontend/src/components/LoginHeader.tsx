@@ -5,13 +5,9 @@ import ShopName from "./ShopName"
 const Header = () => {
     return(
         <div style={{
-            height: '100px',
+            height: '10%',
             width: '100vw',
             backgroundColor: 'white',
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
             paddingLeft: 42,
             paddingTop: 25,
             paddingBottom: 25,
