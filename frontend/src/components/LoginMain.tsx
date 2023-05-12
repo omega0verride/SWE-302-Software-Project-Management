@@ -1,6 +1,6 @@
 import React from 'react'
 import FormTitle from './FormTitle'
-import LoginButton from './loginButton'
+import LoginButton from './LoginButton'
 import TextFieldLabel from './TextFieldLabel'
 import UsernameTextField from './UsernameTextField'
 //import logopic from '../../public/loginBackground.jpg'

@@ -1,5 +1,5 @@
 #!/bin/bash
-source env.sh
+source ../env.sh
 # replace env.sh with locally stored env.sh (we do not want to include it in git, yes gitignore works but cannot trust anyone that edits it)
 rm -f ../../production.tar
 tar cf ../../production.tar ../
