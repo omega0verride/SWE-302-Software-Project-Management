@@ -1,7 +1,8 @@
 package com.redscooter.security;
 
 import com.redscooter.API.appUser.AppUserService;
-import com.redscooter.config.CorsConfigProperties;
+import com.redscooter.config.configProperties.CorsConfigProperties;
+import com.redscooter.security.filters.CustomAuthenticationFilter;
 import com.redscooter.security.filters.CustomAuthorizationFilter;
 import com.redscooter.security.thirdPartyLogin.MultiAuthIdentityProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -52,12 +54,11 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // high priority filter that must be accessed only on specific conditions
-        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/admin/**").hasAnyAuthority("ROLE_ADMIN")
-                .requestMatchers("/api/user/**").authenticated());
+        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/**").permitAll());
 
         // open/public endpoints with permitAll !!pay extra attention as order matters in this config first matcher gets returned!!
         // CustomAuthorizationFilter permits authentication and token refresh endpoints by default
-        customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api/public/**");
+//        customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api/**");
         customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/resources/public/**");
         customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api-docs/**");
         customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api"); // redirect to /api-docs
@@ -68,8 +69,8 @@ public class SecurityConfig {
         // deny all other requests (this helps limit access to resources paths)
         http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/**").denyAll());
 
-//        http.addFilter(new CustomAuthenticationFilter(authenticationManager, jwtUtils, appUserService, multiAuthIdentityProvider)); // add authentication filter
-//        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // add authorization filter
+        http.addFilter(new CustomAuthenticationFilter(authenticationManager, jwtUtils, appUserService, multiAuthIdentityProvider)); // add authentication filter
+        http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // add authorization filter
 
         return http.build();
     }

@@ -1,6 +1,7 @@
 package com.redscooter.API.common;
 
 
+import com.redscooter.exceptions.api.ResourceAlreadyExistsException;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -49,6 +50,11 @@ public abstract class BaseService<T> implements IBaseService<T> {
     @Override
     public ResourceNotFoundException buildResourceNotFoundException(String field, Object value) {
         return new ResourceNotFoundException(entityName, field, value);
+    }
+
+    @Override
+    public ResourceAlreadyExistsException buildResourceAlreadyExistsException(String field, Object value) {
+        return new ResourceAlreadyExistsException(entityName, field, value);
     }
 
 

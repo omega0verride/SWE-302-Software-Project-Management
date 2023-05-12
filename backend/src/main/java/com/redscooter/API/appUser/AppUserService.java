@@ -3,7 +3,7 @@ package com.redscooter.API.appUser;
 import com.redscooter.API.appUser.registration.VerificationToken;
 import com.redscooter.API.appUser.registration.VerificationTokenRepository;
 import com.redscooter.API.common.BaseService;
-import com.redscooter.exceptions.api.ResourceNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -38,9 +37,7 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     }
 
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser user = appUserRepository.findByUsername(username).orElseThrow(() -> {
-            throw new ResourceNotFoundException("User", "username", username);
-        });
+        AppUser user = getByUsername(username);
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         user.getRoles().forEach(role -> authorities.add(new SimpleGrantedAuthority(role.getName())));
         return new User(user.getUsername(), user.getPassword(), authorities);
@@ -49,7 +46,7 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
 
     // this method is used to register users internally, with no need to verify
     public AppUser getOrRegisterUserInternally(AppUser user) {
-        AppUser appUser = appUserRepository.getByUsername(user.getUsername());
+        AppUser appUser = getByUsername(user.getUsername());
         if (appUser != null)
             return appUser;
         user.setEnabled(true);
@@ -59,32 +56,25 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         return save(user);
     }
 
-    // TODO refactor these methods. why is the return type optional? the service should handle exceptions
-    public Optional<AppUser> saveUser(AppUser user) {
-        if (appUserRepository.existsByUsername(user.getUsername()))
-            return Optional.empty();
+    public AppUser saveUser(AppUser user) {
+        AppUser existingUserWithUsername = getByUsername(user.getUsername(), false);
+        if (existingUserWithUsername != null) {
+            if (user.getId() != null && !user.getId().equals(existingUserWithUsername.getId())) {
+                throw buildResourceAlreadyExistsException("username", user.getUsername());
+            }
+            user.setId(existingUserWithUsername.getId());
+        }
         if (user.isPasswordUpdated())
             user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return Optional.of(appUserRepository.save(user));
+        return appUserRepository.save(user);
     }
 
 
     public AppUser addRoleToUser(String username, String roleName) {
-        AppUser user = appUserRepository.findByUsername(username).orElseThrow(() -> {
-            throw new ResourceNotFoundException("User", "username", username);
-        });
+        AppUser user = getByUsername(username);
         user.getRoles().add(roleService.getByName(roleName));
         return save(user);
     }
-
-
-    // TODO [1] refactor not found inside this function
-    public Optional<AppUser> getUser(String username) {
-        return appUserRepository.findByUsername(username);
-    }
-//    public Optional<AppUser> getUser(String username, AuthType au) {
-//        return appUserRepository.findByUsername(username);
-//    }
 
     @Override
     public void delete(Long id, boolean throwNotFoundEx) {
@@ -96,7 +86,7 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     }
 
     public void delete(String username) {
-        AppUser appUser = appUserRepository.getByUsername(username);
+        AppUser appUser = getByUsername(username);
         if (appUser != null) {
             deleteAllVerificationTokens(appUser);
             appUserRepository.delete(appUser);
@@ -110,6 +100,20 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     public List<AppUser> getUsers() {
         log.info("Fetching all users");
         return appUserRepository.findAll();
+    }
+
+
+    public AppUser getByUsername(String username) {
+        return getByUsername(username, true);
+    }
+
+    public AppUser getByUsername(String username, boolean throwNotFoundEx) {
+        Optional<AppUser> appUser = appUserRepository.findByUsername(username);
+        if (appUser.isPresent())
+            return appUser.get();
+        if (throwNotFoundEx)
+            throw buildResourceNotFoundException("username", username);
+        return null;
     }
 
     public void enableUser(AppUser appUser) {

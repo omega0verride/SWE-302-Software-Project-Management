@@ -7,7 +7,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
-import com.redscooter.config.JWTConfigProperties;
+import com.redscooter.config.configProperties.JWTConfigProperties;
 import com.redscooter.exceptions.api.unauthorized.InvalidTokenException;
 import com.redscooter.exceptions.api.unauthorized.InvalidTokenTypeException;
 import com.redscooter.exceptions.api.unauthorized.InvalidTokenUserException;
@@ -284,9 +284,9 @@ public class JwtUtils implements Serializable {
         }
 
         // first check if user exists
-        AppUser appUser = appUserService.getUser(username).orElseThrow(() -> {
+        AppUser appUser = appUserService.getByUsername(username, false);
+        if (appUser==null)
             throw new InvalidTokenUserException(username);
-        });
         // check if user is enabled/active and somehow has a token (i.e. the user was deactivated later on)
         if (!appUser.isEnabled())
             throw new UserAccountNotActivatedException();

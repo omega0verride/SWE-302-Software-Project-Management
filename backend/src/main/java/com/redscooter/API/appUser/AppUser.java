@@ -51,14 +51,13 @@ public class AppUser implements Auditable {
     // internal
     @Column(name = "enabled")
     private boolean enabled;
-    private Locale userLocale;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
     @Transient
     private boolean passwordUpdated = false;
 
-    public AppUser(String name, String surname, String username, String password, String email, String phoneNumber, Locale locale, Collection<Role> roles) {
+    public AppUser(String name, String surname, String username, String password, String email, String phoneNumber, Collection<Role> roles) {
         setName(name);
         setSurname(surname);
         setUsername(username);
@@ -66,17 +65,12 @@ public class AppUser implements Auditable {
         setPhoneNumber(phoneNumber);
         setPassword(password);
         setRoles(roles);
-        setUserLocale(locale);
         setEnabled(false);
-    }
-
-    public AppUser(String name, String surname, String username, String password, String email, String phoneNumber, Collection<Role> roles) {
-        this(name, surname, username, password, email, phoneNumber, null, roles);
     }
 
     public AppUser(CreateAppUserDTO createAppUserDTO) {
         // no need to check for null values, these are all mandatory fields, the DTO will be marked invalid otherwise
-        this(createAppUserDTO.getName(), createAppUserDTO.getSurname(), createAppUserDTO.getEmail(), createAppUserDTO.getPassword(), createAppUserDTO.getEmail(), createAppUserDTO.getPhoneNumber(), createAppUserDTO.getLocale(), new ArrayList<>());
+        this(createAppUserDTO.getName(), createAppUserDTO.getSurname(), createAppUserDTO.getEmail(), createAppUserDTO.getPassword(), createAppUserDTO.getEmail(), createAppUserDTO.getPhoneNumber(), new ArrayList<>());
     }
 
     public static GetAppUserDTO toGetAppUserDTO(AppUser appUser) {
@@ -84,16 +78,10 @@ public class AppUser implements Auditable {
     }
 
     public void setPassword(String password) {
-        if (password != this.password) { // to avoid rehashing an already hashed password, causing auth issues
+        if (!password.equals(this.password)) { // to avoid rehashing an already hashed password, causing auth issues
             this.password = password;
             passwordUpdated = true;
         }
-    }
-
-    public void setUserLocale(Locale locale) {
-        if (locale == null)
-            locale = Locale.US;
-        this.userLocale = locale;
     }
 
     @Transient

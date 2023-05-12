@@ -3,13 +3,16 @@ package com.redscooter.security;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
-import com.redscooter.config.JWTConfigProperties;
+import com.redscooter.config.configProperties.JWTConfigProperties;
 import com.redscooter.exceptions.BaseException;
 import com.redscooter.exceptions.UnknownException;
+import com.redscooter.exceptions.api.ResourceNotFoundException;
 import com.redscooter.exceptions.api.unauthorized.*;
 import com.redscooter.exceptions.generic.TokenDecodeException;
 import com.redscooter.security.DTO.DetailedTokenDetailsDTO;
 import com.redscooter.security.DTO.MultiAuthIdentityProviderDTO;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,8 +22,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -71,15 +72,17 @@ public class AuthTokenController {
                 throw new InvalidTokenException("Invalid token! Could not read username from token.", e);
             }
 
-            AppUser appUser = appUserService.getUser(username).orElseThrow(() -> {
-                throw new InvalidTokenUserException(username);
-            });
-            // check if user is enabled/active and somehow has a token (i.e. the user was deactivated later on)
-            if (!appUser.isEnabled())
-                throw new UserAccountNotActivatedException();
-            User user = appUser.toDomainUser();
+            try {
+                AppUser appUser = appUserService.getByUsername(username);
+                // check if user is enabled/active and somehow has a token (i.e. the user was deactivated later on)
+                if (!appUser.isEnabled())
+                    throw new UserAccountNotActivatedException();
+                User user = appUser.toDomainUser();
 
-            return jwtUtils.generateDetailedTokenPair(user);
+                return jwtUtils.generateDetailedTokenPair(user);
+            } catch (ResourceNotFoundException resourceNotFoundException) {
+                throw new InvalidTokenUserException(username);
+            }
         } catch (Exception exception) {
             if (!(exception instanceof BaseException)) // TODO: a cool idea would be to generate a stack trace/log and save it in a resources folder accessible only from admins we can send the user a link that points to this file so they can share it with us
                 exception = new UnknownException(exception);

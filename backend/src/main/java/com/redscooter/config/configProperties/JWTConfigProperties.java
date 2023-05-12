@@ -1,4 +1,4 @@
-package com.redscooter.config;
+package com.redscooter.config.configProperties;
 
 
 import lombok.Data;

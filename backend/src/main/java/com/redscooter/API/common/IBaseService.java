@@ -1,5 +1,6 @@
 package com.redscooter.API.common;
 
+import com.redscooter.exceptions.api.ResourceAlreadyExistsException;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 
 public interface IBaseService<T> {
@@ -19,4 +20,6 @@ public interface IBaseService<T> {
     void delete(Long id, boolean throwNotFoundEx);
 
     ResourceNotFoundException buildResourceNotFoundException(String field, Object value);
+
+    ResourceAlreadyExistsException buildResourceAlreadyExistsException(String field, Object value);
 }

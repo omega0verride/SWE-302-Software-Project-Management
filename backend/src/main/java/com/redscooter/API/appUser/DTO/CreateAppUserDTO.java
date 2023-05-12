@@ -26,6 +26,4 @@ public class CreateAppUserDTO {
     private String password;
     @NotNull
     private String phoneNumber;
-    @Nullable
-    private Locale locale;
 }

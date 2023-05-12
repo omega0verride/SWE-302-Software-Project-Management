@@ -70,8 +70,8 @@ spring:
         show-sql: true
 
     datasource:
-        username: ${DATABASE_USERNAME:admin}
-        password: ${DATABASE_PASSWORD:admin}
+        username: ${DATABASE_USERNAME:postgres}
+        password: ${DATABASE_PASSWORD:postgres}
         url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/redscooter?reWriteBatchedInserts=true
 
 

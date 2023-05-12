@@ -4,6 +4,7 @@ import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 import com.redscooter.exceptions.api.unauthorized.InvalidCredentialsException;
+import com.redscooter.exceptions.api.unauthorized.InvalidTokenUserException;
 import com.redscooter.exceptions.api.unauthorized.UserAccountNotActivatedException;
 import com.redscooter.exceptions.to_refactor.InvalidValueException;
 import com.redscooter.security.DTO.MultiAuthIdentityProviderDTO;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import org.apache.commons.lang3.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -35,9 +37,12 @@ public class MultiAuthIdentityProvider {
             if (authDetails.getPassword() == null || authDetails.getPassword().trim().length() == 0) {
                 throw new InvalidValueException("Username cannot be null or empty when AuthType=BASIC!");
             }
-            appUser = appUserService.getUser(authDetails.getUsername()).orElseThrow(() -> {
-                throw new InvalidCredentialsException(new ResourceNotFoundException("User", "username", authDetails.getUsername()));
-            });
+
+            try {
+                appUser = appUserService.getByUsername(authDetails.getUsername());
+            } catch (ResourceNotFoundException resourceNotFoundException) {
+                throw new InvalidCredentialsException(resourceNotFoundException);
+            }
             if (!appUser.getUserAuthType().equals(AuthType.BASIC)) { // this is achieved only if someone tries to access a non BASIC account, the condition prevents accessing the third party provider accounts that have a common password
                 throw new InvalidCredentialsException(new ResourceNotFoundException("User", "username", authDetails.getUsername()));
             }
