@@ -1,4 +1,4 @@
-import { Person } from './Table';
+import { Person } from './UsersTable';
 
 export const data: Person[] = [
   {

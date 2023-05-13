@@ -10,7 +10,7 @@ import ShopName from '../components/ShopName'
 import TextFieldLabel from '../components/TextFieldLabel'
 import UsernameTextField from '../components/UsernameTextField'
 
-const RegisterPage = () => {
+const registerPage = () => {
   return (
     <div
       style={{
@@ -27,10 +27,10 @@ const RegisterPage = () => {
       }}
     >
       <Header />
-      <LoginMain />
+      <LoginMain register />
       <Footer />
     </div>
   )
 }
 
-export default RegisterPage
+export default registerPage

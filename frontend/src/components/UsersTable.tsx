@@ -1,10 +1,10 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react'
 import MaterialReactTable, {
   type MaterialReactTableProps,
   type MRT_Cell,
   type MRT_ColumnDef,
-  type MRT_Row,
-} from 'material-react-table';
+  type MRT_Row
+} from 'material-react-table'
 import {
   Box,
   Button,
@@ -16,65 +16,65 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Tooltip,
-} from '@mui/material';
-import { Delete, Edit } from '@mui/icons-material';
-import { data, states } from './makeData';
-import {v4 as uuidv4} from 'uuid';
-import BasicModal from './BasicModal';
+  Tooltip
+} from '@mui/material'
+import { Delete, Edit } from '@mui/icons-material'
+import { data, states } from './makeData'
+import { v4 as uuidv4 } from 'uuid'
+import BasicModal from './BasicModal'
 
 export type Person = {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  age: number;
-  state: string;
-};
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  age: number
+  state: string
+}
 
 const Table = () => {
-  const [createModalOpen, setCreateModalOpen] = useState(false);
-  const [tableData, setTableData] = useState<Person[]>(() => data);
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [tableData, setTableData] = useState<Person[]>(() => data)
   const [validationErrors, setValidationErrors] = useState<{
-    [cellId: string]: string;
-  }>({});
+    [cellId: string]: string
+  }>({})
 
   const handleCreateNewRow = (values: Person) => {
-    tableData.push(values);
-    setTableData([...tableData]);
-  };
+    tableData.push(values)
+    setTableData([...tableData])
+  }
 
   const handleSaveRowEdits: MaterialReactTableProps<Person>['onEditingRowSave'] =
     async ({ exitEditingMode, row, values }) => {
       if (!Object.keys(validationErrors).length) {
-        tableData[row.index] = values;
+        tableData[row.index] = values
         //send/receive api updates here, then refetch or update local table data for re-render
-        setTableData([...tableData]);
-        exitEditingMode(); //required to exit editing mode and close modal
+        setTableData([...tableData])
+        exitEditingMode() //required to exit editing mode and close modal
       }
-    };
+    }
 
   const handleCancelRowEdits = () => {
-    setValidationErrors({});
-  };
+    setValidationErrors({})
+  }
 
   const handleDeleteRow = useCallback(
     (row: MRT_Row<Person>) => {
       if (
         !confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
       ) {
-        return;
+        return
       }
       //send api delete request here, then refetch or update local table data for re-render
-      tableData.splice(row.index, 1);
-      setTableData([...tableData]);
+      tableData.splice(row.index, 1)
+      setTableData([...tableData])
     },
-    [tableData],
-  );
+    [tableData]
+  )
 
   const getCommonEditTextFieldProps = useCallback(
     (
-      cell: MRT_Cell<Person>,
+      cell: MRT_Cell<Person>
     ): MRT_ColumnDef<Person>['muiTableBodyCellEditTextFieldProps'] => {
       return {
         error: !!validationErrors[cell.id],
@@ -85,25 +85,25 @@ const Table = () => {
               ? validateEmail(event.target.value)
               : cell.column.id === 'age'
               ? validateAge(+event.target.value)
-              : validateRequired(event.target.value);
+              : validateRequired(event.target.value)
           if (!isValid) {
             //set validation error for cell if invalid
             setValidationErrors({
               ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
-            });
+              [cell.id]: `${cell.column.columnDef.header} is required`
+            })
           } else {
             //remove validation error for cell if valid
-            delete validationErrors[cell.id];
+            delete validationErrors[cell.id]
             setValidationErrors({
-              ...validationErrors,
-            });
+              ...validationErrors
+            })
           }
-        },
-      };
+        }
+      }
     },
-    [validationErrors],
-  );
+    [validationErrors]
+  )
 
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
     () => [
@@ -113,31 +113,31 @@ const Table = () => {
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
-        size: 80,
+        size: 80
       },
       {
         accessorKey: 'firstName',
         header: 'First Name',
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
+          ...getCommonEditTextFieldProps(cell)
+        })
       },
       {
         accessorKey: 'lastName',
         header: 'Last Name',
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-        }),
+          ...getCommonEditTextFieldProps(cell)
+        })
       },
       {
         accessorKey: 'email',
         header: 'Email',
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
-          type: 'email',
-        }),
+          type: 'email'
+        })
       },
       {
         accessorKey: 'age',
@@ -145,8 +145,8 @@ const Table = () => {
         size: 80,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
-          type: 'number',
-        }),
+          type: 'number'
+        })
       },
       {
         accessorKey: 'state',
@@ -157,12 +157,12 @@ const Table = () => {
             <MenuItem key={state} value={state}>
               {state}
             </MenuItem>
-          )),
-        },
-      },
+          ))
+        }
+      }
     ],
-    [getCommonEditTextFieldProps],
-  );
+    [getCommonEditTextFieldProps]
+  )
 
   return (
     <>
@@ -170,27 +170,27 @@ const Table = () => {
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
-              align: 'center',
+              align: 'center'
             },
-            size: 120,
-          },
+            size: 120
+          }
         }}
         columns={columns}
         data={tableData}
-        editingMode="modal" //default
+        editingMode='modal' //default
         enableColumnOrdering
         enableEditing
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement="left" title="Edit">
+            <Tooltip arrow placement='left' title='Edit'>
               <IconButton onClick={() => table.setEditingRow(row)}>
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement="right" title="Delete">
-              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
+            <Tooltip arrow placement='right' title='Delete'>
+              <IconButton color='error' onClick={() => handleDeleteRow(row)}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -199,17 +199,18 @@ const Table = () => {
         renderTopToolbarCustomActions={() => (
           <Button
             onClick={() => setCreateModalOpen(true)}
-            variant="contained"
-            sx={{ 
+            variant='contained'
+            sx={{
               textTransform: 'inherit',
               backgroundColor: '#D12222',
               color: '#FFF',
               '&:hover': {
                 borderColor: '#1E2125',
                 boxShadow: 'none',
-                backgroundColor: '#1E2125',
-              },
-            }}>
+                backgroundColor: '#1E2125'
+              }
+            }}
+          >
             Create New Account
           </Button>
         )}
@@ -221,14 +222,14 @@ const Table = () => {
         onSubmit={handleCreateNewRow}
       />
     </>
-  );
-};
+  )
+}
 
 interface CreateModalProps {
-  columns: MRT_ColumnDef<Person>[];
-  onClose: () => void;
-  onSubmit: (values: Person) => void;
-  open: boolean;
+  columns: MRT_ColumnDef<Person>[]
+  onClose: () => void
+  onSubmit: (values: Person) => void
+  open: boolean
 }
 
 //example of creating a mui dialog modal for creating new rows
@@ -236,35 +237,35 @@ export const CreateNewAccountModal = ({
   open,
   columns,
   onClose,
-  onSubmit,
+  onSubmit
 }: CreateModalProps) => {
   const [values, setValues] = useState<any>(() =>
     columns.reduce((acc, column) => {
-      acc[column.accessorKey ?? ''] = '';
-      return acc;
-    }, {} as any),
-  );
+      acc[column.accessorKey ?? ''] = ''
+      return acc
+    }, {} as any)
+  )
   const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = () => {
     //put your validation logic here
     const arrayOfErros: string[] = []
-    if(!validateAge(values?.age)) {
+    if (!validateAge(values?.age)) {
       arrayOfErros.push('Please enter a vaild age!')
     }
-    if(!validateEmail(values?.email)) {
+    if (!validateEmail(values?.email)) {
       arrayOfErros.push('Please enter a valid email!')
     }
-    if(!values?.firstName) {
+    if (!values?.firstName) {
       arrayOfErros.push('Please enter a valid first name!')
     }
-    if(!values?.lastName) {
+    if (!values?.lastName) {
       arrayOfErros.push('Please enter a valid last name!')
     }
-    if(!values?.state) {
+    if (!values?.state) {
       arrayOfErros.push('Please enter a valid state!')
     }
-    const newValues = {...values, id: uuidv4()}
+    const newValues = { ...values, id: uuidv4() }
 
     setErrors(arrayOfErros)
     if (arrayOfErros.length === 0) {
@@ -273,62 +274,75 @@ export const CreateNewAccountModal = ({
       setValues('')
     }
     console.log(newValues)
-  };
-
+  }
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign="center">Create New Account</DialogTitle>
+      <DialogTitle textAlign='center'>Create New Account</DialogTitle>
       <DialogContent>
         <form onSubmit={(e) => e.preventDefault()}>
           <Stack
             sx={{
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem',
+              gap: '1.5rem'
             }}
           >
-            {columns.map((column, index) => (
-              column.accessorKey !== 'id' &&
-              <TextField
-                key={column.accessorKey}
-                label={column.header}
-                name={column.accessorKey}
-                onChange={(e) =>
-                  setValues({ ...values, [e.target.name]: e.target.value })
-                }
-              />
-            ))}
+            {columns.map(
+              (column, index) =>
+                column.accessorKey !== 'id' && (
+                  <TextField
+                    key={column.accessorKey}
+                    label={column.header}
+                    name={column.accessorKey}
+                    onChange={(e) =>
+                      setValues({ ...values, [e.target.name]: e.target.value })
+                    }
+                  />
+                )
+            )}
           </Stack>
         </form>
       </DialogContent>
       <DialogActions sx={{ p: '1.25rem' }}>
-        <Button onClick={onClose} variant='outlined' sx={{ borderColor: 'lightblue' }}>Cancel</Button>
-        <Button onClick={handleSubmit} variant="contained" 
+        <Button
+          onClick={onClose}
+          variant='outlined'
+          sx={{ borderColor: 'lightblue' }}
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleSubmit}
+          variant='contained'
           sx={{
             backgroundColor: '#D12222',
             color: '#FFF',
             '&:hover': {
-                borderColor: '#1E2125',
-                boxShadow: 'none',
-                backgroundColor: '#1E2125',
-              },}}>
-            Create New Account
+              borderColor: '#1E2125',
+              boxShadow: 'none',
+              backgroundColor: '#1E2125'
+            }
+          }}
+        >
+          Create New Account
         </Button>
-        {errors?.length > 0 && <BasicModal errors={errors} setErrors={setErrors}/>}
+        {errors?.length > 0 && (
+          <BasicModal errors={errors} setErrors={setErrors} />
+        )}
       </DialogActions>
     </Dialog>
-  );
-};
+  )
+}
 
-const validateRequired = (value: string) => !!value?.length;
+const validateRequired = (value: string) => !!value?.length
 const validateEmail = (email: string) =>
   !!email?.length &&
   email
     .toLowerCase()
     .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    );
-const validateAge = (age: number) => age >= 18 && age <= 50;
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    )
+const validateAge = (age: number) => age >= 18 && age <= 50
 
-export default Table;
+export default Table

@@ -1,37 +1,29 @@
 import React from 'react'
-import LoginMain from '../components/LoginMain'
-import ShopName from '../components/ShopName'
-import LoginButton from '../components/LoginButton'
-import FormTitle from '../components/FormTitle'
-import TextFieldLabel from '../components/TextFieldLabel'
-import UsernameTextField from '../components/UsernameTextField'
-import RedBorderButton from '../components/RedBorderButton'
-import Header from '../components/LoginHeader'
 import Footer from '../components/LoginFooter'
-import bg from '../assets/icons/loginBackground.png'
+import Header from '../components/LoginHeader'
+import LoginMain from '../components/LoginMain'
 
-const Login = () => {
+const RegisterPage = () => {
   return (
     <div
       style={{
-        backgroundImage: bg,
-        width: '100%',
-        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        margin: 0,
+        padding: 0,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0
       }}
     >
       <Header />
-      {/* <LoginMain />
-      <ShopName />
-      <LoginButton />
-      <FormTitle title='Create Account' />
-      <TextFieldLabel text='Username' />
-      <UsernameTextField placeholder='Username' />
-      <RedBorderButton content='Login' /> */}
-      <p>TEST</p>
-
+      <LoginMain register={false} />
       <Footer />
     </div>
   )
 }
 
-export default Login
+export default RegisterPage

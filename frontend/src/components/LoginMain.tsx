@@ -4,10 +4,10 @@ import LoginButton from './LoginButton'
 import TextFieldLabel from './TextFieldLabel'
 import UsernameTextField from './UsernameTextField'
 import bg from '../assets/icons/loginBackground.png'
-
+import PasswordField from './PasswordField'
 //This image import displays a module not found error and the page crashes
 
-const LoginMain = () => {
+const LoginMain = ({ register }) => {
   return (
     <div
       style={{
@@ -39,11 +39,17 @@ const LoginMain = () => {
           <FormTitle title='Create Account' />
           <TextFieldLabel text='Username' />
           <UsernameTextField placeholder='Enter username' />
-          <TextFieldLabel text='Password'></TextFieldLabel>
-          <UsernameTextField placeholder='Enter password' />
-          <TextFieldLabel text='Email'></TextFieldLabel>
-          <UsernameTextField placeholder='Enter email address' />
-          <LoginButton />
+          <TextFieldLabel text='Password' />
+          <PasswordField placeholder='Enter password' />
+
+          {register && (
+            <>
+              <TextFieldLabel text='Email' />
+              <UsernameTextField placeholder='Enter email address' />
+            </>
+          )}
+
+          <LoginButton register={register} />
         </div>
       </div>
     </div>

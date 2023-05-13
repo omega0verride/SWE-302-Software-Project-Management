@@ -4,12 +4,12 @@ interface myProps {
   placeholder: string
 }
 
-const UsernameTextField = (props: myProps) => {
+const PasswordField = (props: myProps) => {
   const { placeholder } = props
   return (
     <div>
       <input
-        type='text'
+        type='password'
         placeholder={placeholder}
         style={{
           borderColor: '#BEBEBF',
@@ -26,4 +26,4 @@ const UsernameTextField = (props: myProps) => {
   )
 }
 
-export default UsernameTextField
+export default PasswordField

@@ -1,23 +1,23 @@
 import React from 'react'
 import PageLogo from '../components/PageLogo'
 import QuickSection from '../components/QuickSection'
-import UsersTable from '../components/UsersTable'
+import ProductsTable from '../components/ProductsTable'
 
-const users = () => {
+const products = () => {
   return (
     <div style={{ padding: '1.5rem 1.5rem 0.75rem 1.5rem' }}>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <PageLogo />
         <strong style={{ margin: '2% 0% 0% 15%', fontSize: '2rem' }}>
-          Users
+          Products
         </strong>
       </div>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
         <QuickSection />
-        <UsersTable />
+        <ProductsTable />
       </div>
     </div>
   )
 }
 
-export default users
+export default products

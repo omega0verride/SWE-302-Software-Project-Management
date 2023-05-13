@@ -1,42 +1,42 @@
 import React from 'react'
 import PageLogo from './PageLogo'
 
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import StarIcon from '@mui/icons-material/Star';
-import HomeIcon from '@mui/icons-material/Home';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import GroupIcon from '@mui/icons-material/Group';
-import ReviewsIcon from '@mui/icons-material/Reviews';
-import LocalOfferIcon from '@mui/icons-material/LocalOffer';
-import QueryStatsIcon from '@mui/icons-material/QueryStats';
-import SettingsIcon from '@mui/icons-material/Settings';
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import StarIcon from '@mui/icons-material/Star'
+import HomeIcon from '@mui/icons-material/Home'
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
+import InventoryIcon from '@mui/icons-material/Inventory'
+import GroupIcon from '@mui/icons-material/Group'
+import ReviewsIcon from '@mui/icons-material/Reviews'
+import LocalOfferIcon from '@mui/icons-material/LocalOffer'
+import QueryStatsIcon from '@mui/icons-material/QueryStats'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 const QuickSection = () => {
   return (
     <List
       sx={{ width: '100%', maxWidth: 360, marginTop: '2%' }}
-      aria-label="contacts"
+      aria-label='contacts'
     >
       <ListItem disablePadding>
         <ListItemButton href='/'>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary="Home" />
+          <ListItemText primary='Home' />
         </ListItemButton>
       </ListItem>
-      
+
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href='/products'>
           <ListItemIcon>
             <InventoryIcon />
           </ListItemIcon>
-          <ListItemText primary="Products" />
+          <ListItemText primary='Products' />
         </ListItemButton>
       </ListItem>
 
@@ -45,16 +45,16 @@ const QuickSection = () => {
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
-          <ListItemText primary="Orders" />
+          <ListItemText primary='Orders' />
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href='/users'>
           <ListItemIcon>
             <GroupIcon />
           </ListItemIcon>
-          <ListItemText primary="Users" />
+          <ListItemText primary='Users' />
         </ListItemButton>
       </ListItem>
 
@@ -63,7 +63,7 @@ const QuickSection = () => {
           <ListItemIcon>
             <ReviewsIcon />
           </ListItemIcon>
-          <ListItemText primary="Reviews" />
+          <ListItemText primary='Reviews' />
         </ListItemButton>
       </ListItem>
 
@@ -72,7 +72,7 @@ const QuickSection = () => {
           <ListItemIcon>
             <LocalOfferIcon />
           </ListItemIcon>
-          <ListItemText primary="Discounts" />
+          <ListItemText primary='Discounts' />
         </ListItemButton>
       </ListItem>
 
@@ -81,7 +81,7 @@ const QuickSection = () => {
           <ListItemIcon>
             <QueryStatsIcon />
           </ListItemIcon>
-          <ListItemText primary="Analytics" />
+          <ListItemText primary='Analytics' />
         </ListItemButton>
       </ListItem>
 
@@ -90,12 +90,10 @@ const QuickSection = () => {
           <ListItemIcon>
             <SettingsIcon />
           </ListItemIcon>
-          <ListItemText primary="Settings" />
+          <ListItemText primary='Settings' />
         </ListItemButton>
       </ListItem>
-
     </List>
-
   )
 }
 
