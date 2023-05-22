@@ -292,7 +292,7 @@ export const CreateNewAccountModal = ({
               (column, index) =>
                 column.accessorKey !== 'id' && (
                   <TextField
-                    key={column.accessorKey}
+                    key={index}
                     label={column.header}
                     name={column.accessorKey}
                     onChange={(e) =>

@@ -41,7 +41,7 @@ const QuickSection = () => {
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href='/orders'>
           <ListItemIcon>
             <ShoppingCartIcon />
           </ListItemIcon>
