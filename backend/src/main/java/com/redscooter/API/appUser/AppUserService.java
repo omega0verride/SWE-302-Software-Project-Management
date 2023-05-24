@@ -130,6 +130,7 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         String token = UUID.randomUUID().toString();
         VerificationToken myToken = new VerificationToken(token, user);
         deleteAllVerificationTokens(user);
+        tokenRepository.flush();
         tokenRepository.save(myToken);
         return myToken;
     }

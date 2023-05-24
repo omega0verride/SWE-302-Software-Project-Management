@@ -22,7 +22,7 @@ services:
     - ${DATABASE_VOLUME:-./database-data}:/var/lib/postgresql/data
     ports:
     - "5432:5432"
-    command: postgres -c listen_addresses='*' # todo removes this and use network config
+    command: postgres -c listen_addresses='*' 
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "pg_isready"]
@@ -37,11 +37,14 @@ services:
     volumes:
       - ./target/api.jar:/api.jar
       - ./target/application.yml:/application.yml
+      - ./target/resources:/root/resources
     environment:
       DATABASE_HOST: db
       DATABASE_PORT: 5432
       DATABASE_USER: *db_user
       DATABASE_PASSWORD: *db_password
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
     command: "java -jar api.jar --spring.config.location=file:///application.yml"
     ports:
       - "8080:8080"

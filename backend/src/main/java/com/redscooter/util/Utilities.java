@@ -22,7 +22,8 @@ public class Utilities {
     public static String ROOT_PROJECT_FOLDER_NAME = "root";
     //    public static final String ROOT_WORKING_DIR=new File("").getAbsolutePath();
     public static final String ROOT_WORKING_DIR = getRootDirFromWorkingDir(ROOT_PROJECT_FOLDER_NAME);
-    public static final String STATIC_FOLDER_DIR = joinPathsAsString(ROOT_WORKING_DIR, "static");
+    public static final String STATIC_FOLDER_DIR = "/root/resources/static";
+//    public static final String STATIC_FOLDER_DIR = "C:/Users/indri/SWE-302-Software-Project-Management/backend/src/main/resources/static";
 
     public static final String HTML_TEMPLATES_FOLDER_DIR = joinPathsAsString(STATIC_FOLDER_DIR, "htmlTemplates");
     public static final String PRODUCT_IMAGES_ABSOLUTE_PATH = joinPathsAsString(STATIC_FOLDER_DIR, PRODUCT_IMAGES_SUB_PATH);

@@ -1,4 +1,4 @@
-export PRODUCTION_ENV_FILEPAHT=~/env.sh
+export PRODUCTION_ENV_FILEPAHT=~/SWE-302/env.sh
 # ssh credentials
 export SSH_KEY_PATH=~/id_rsa
 export HOST=75.119.149.135

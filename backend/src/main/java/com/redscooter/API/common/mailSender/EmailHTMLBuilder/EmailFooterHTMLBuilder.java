@@ -1,7 +1,5 @@
-package com.redscooter.API.appUser.registration;
+package com.redscooter.API.common.mailSender.EmailHTMLBuilder;
 
-import com.redscooter.API.appUser.AppUser;
-import com.redscooter.API.common.mailSender.EmailHTMLBuilder.EmailFooterHTMLBuilder;
 import com.redscooter.util.Utilities;
 import io.pebbletemplates.pebble.PebbleEngine;
 import io.pebbletemplates.pebble.template.PebbleTemplate;
@@ -15,27 +13,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Getter
-public class ConfirmUserRegistrationHTMLBuilder {
+public class EmailFooterHTMLBuilder {
     static PebbleEngine engine = new PebbleEngine.Builder().build();
-    static String templatePath = Utilities.joinPathsAsString(Utilities.HTML_TEMPLATES_FOLDER_DIR, "UserRegistrationTemplate.html");
+    public static String templatePath = Utilities.joinPathsAsString(Utilities.HTML_TEMPLATES_FOLDER_DIR, "EmailFooter.html");
     static PebbleTemplate compiledTemplate = engine.getTemplate(templatePath);
 
-    public static String buildConfirmUserRegistrationHTML(AppUser user, String confirmationURL, VerificationToken verificationToken) {
+    public static String buildEmailFooterHTML() {
 
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
         Map<String, Object> context = new HashMap<>();
         context.put("storeName", "RedScooter");
         context.put("storeURL", "https://redscooter.al/");
+        context.put("currencySymbol", "ALL ");
+        context.put("storeAddress", "https://goo.gl/maps/mLVCsQMNgtJ8bwH99");
+        context.put("storePhoneNumber", "+355696867903");
+        context.put("storeEmail", "redscooter.al@gmail.com");
         context.put("instagramURL", "https://instagram.com/motorra.elektrik");
         context.put("facebookURL", "https://www.facebook.com/motorraelektrikred/");
-        context.put("emailFooter", EmailFooterHTMLBuilder.buildEmailFooterHTML());
-
-        context.put("userName", Utilities.capitalizeFirstLetter(user.getName()));
-        context.put("username", user.getUsername());
-        context.put("confirmationURL", confirmationURL);
-        context.put("confirmationToken", verificationToken.getToken());
-
 
         Writer writer = new StringWriter();
         try {

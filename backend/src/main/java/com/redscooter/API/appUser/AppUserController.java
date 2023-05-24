@@ -24,32 +24,35 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.net.URI;
 import java.util.AbstractMap;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("api/users")
 @RequiredArgsConstructor
 public class AppUserController {
     private final AppUserService appUserService;
-    private final RoleService roleService;
     private final JwtUtils jwtUtils;
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-
-    // TODO use indrit's restprocessor to build fully filterable/sortable endpoint
-    @GetMapping("users")
+    @GetMapping("/")
     public ResponseEntity<List<GetAppUserDTO>> getUsers() {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         return ResponseEntity.ok().body(appUserService.getUsers().stream().map(u -> u.toGetAppUserDTO()).collect(Collectors.toList()));
     }
 
-    @DeleteMapping("admin/users/{ids}")
+    @DeleteMapping("/{ids}")
     public ResponseEntity<Object> deleteUsers(@PathVariable List<Long> ids) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         List<AbstractMap.SimpleEntry<Long, String>> response = new ArrayList<>();
         for (Long id : ids) {
             AbstractMap.SimpleEntry<Long, String> pair;
@@ -62,7 +65,7 @@ public class AppUserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("user/users/{username}")
+    @GetMapping("/{username}")
     public ResponseEntity<GetAppUserDTO> getUserByUsername(@PathVariable String username) {
         if (!AuthenticationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(username))
             return ResponseEntity.status(403).body(null);
@@ -70,7 +73,7 @@ public class AppUserController {
         return new ResponseEntity<GetAppUserDTO>(user.toGetAppUserDTO(), HttpStatus.OK);
     }
 
-    @PatchMapping("user/users/{username}")
+    @PatchMapping("/{username}")
     public ResponseEntity<GetAppUserDTO> updateUserByUsername(@PathVariable String username) {
         if (!AuthenticationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(username))
             return ResponseEntity.status(403).body(null);
@@ -81,7 +84,7 @@ public class AppUserController {
 //        return new ResponseEntity<AppUser>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("user/users/{username}")
+    @DeleteMapping("/{username}")
     public ResponseEntity<Object> deleteUserByUsername(@PathVariable String username) {
         if (!AuthenticationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(username))
             return ResponseEntity.status(403).body(null);
@@ -91,7 +94,7 @@ public class AppUserController {
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }
 
-    @PostMapping("users/register")
+    @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, HttpServletRequest request) {
         AppUser appUser = appUserService.saveUser(new AppUser(createAppUserDTO));
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -104,60 +107,46 @@ public class AppUserController {
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("User", "Id", appUser.getId());
     }
 
-//    @PostMapping("users/register/resendVerification")
-//    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest request) {
-//        AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
-//        if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
-//            throw new ForbiddenAccessException("Unauthorized! Cannot resend verification email without verifying account credentials from a non admin context.");
-//        if (appUser.isEnabled())
-//            throw new UserAccountAlreadyActivatedException();
-//        VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
-//        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
-//    @GetMapping("public/users/register/confirm")
-//    public Object confirmRegistration(@RequestParam(name = "token", required = true) String token, @RequestParam(name = "username", required = false) String username) {
-//        VerificationToken verificationToken = appUserService.getVerificationToken(token);
-//        if (verificationToken == null) {
-//            if (username != null) {
-//                AppUser appUser = appUserService.getUser(username).orElse(null);
-//                if (appUser != null && appUser.isEnabled()) {
-//                    // return "The user has already been verified.";
-//                    RedirectView redirectView = new RedirectView();
-//                    redirectView.setUrl("https://www.redscooter.al");
-//                    return redirectView;
-//                }
-//            }
-//            return "The verification token is invalid or the user has already been verified!";
-//        }
-//        AppUser user = verificationToken.getUser();
-//        Calendar cal = Calendar.getInstance();
-//        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-//            verificationToken = appUserService.createVerificationToken(user);
-//            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
-//            return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML
-//        }
-//        appUserService.enableUser(user);
-//
-//        // return "Successfully Verified Your Account";
-//        RedirectView redirectView = new RedirectView();
-//        redirectView.setUrl("https://www.redscooter.al");
-//        return redirectView;
-//    }
-
-
-    @PostMapping("admin/role/save")
-    public ResponseEntity<Role> saveUser(@RequestBody Role role) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/admin/role/save").toUriString());
-        return ResponseEntity.created(uri).body(roleService.save(role));
+    @PostMapping("/register/resendVerification")
+    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest request) {
+        AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
+        if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
+            throw new ForbiddenAccessException("Unauthorized! Cannot resend verification email without verifying account credentials from a non admin context.");
+        if (appUser.isEnabled())
+            throw new UserAccountAlreadyActivatedException();
+        VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("admin/role/addtouser")
-    public ResponseEntity<?> addRoleToUser(@RequestBody RoleToUserDTO form) {
-        appUserService.addRoleToUser(form.getUsername(), form.getRoleName());
-        return ResponseEntity.ok().build();
-    }
+    @GetMapping("/register/confirm")
+    public Object confirmRegistration(@RequestParam(name = "token", required = true) String token, @RequestParam(name = "username", required = false) String username) {
+        VerificationToken verificationToken = appUserService.getVerificationToken(token);
+        if (verificationToken == null) {
+            if (username != null) {
+                AppUser appUser = appUserService.getByUsername(username,false);
+                if (appUser != null && appUser.isEnabled()) {
+                    // return "The user has already been verified.";
+                    RedirectView redirectView = new RedirectView();
+                    redirectView.setUrl("https://www.redscooter.al");
+                    return redirectView;
+                }
+            }
+            return "The verification token is invalid or the user has already been verified!";
+        }
+        AppUser user = verificationToken.getUser();
+        Calendar cal = Calendar.getInstance();
+        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+            verificationToken = appUserService.createVerificationToken(user);
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+            return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML
+        }
+        appUserService.enableUser(user);
 
+        // return "Successfully Verified Your Account";
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("https://www.redscooter.al");
+        return redirectView;
+    }
 }
 
