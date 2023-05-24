@@ -15,6 +15,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.restprocessors.RESTField;
 import org.springframework.stereotype.Repository;
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
@@ -42,6 +43,7 @@ public class Product extends ProductBase implements Auditable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @EqualsAndHashCode.Include // limit the hash generator to PK
     @Access(AccessType.PROPERTY)
+    @RESTField
     private Long id;
 
     @Column(length = 2048)

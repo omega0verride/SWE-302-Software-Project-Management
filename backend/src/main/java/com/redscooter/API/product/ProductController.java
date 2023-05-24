@@ -9,6 +9,8 @@ import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthenticationFacade;
 import com.redscooter.security.JwtUtils;
 import jakarta.validation.Valid;
+import org.restprocessors.DynamicRESTController.CriteriaParameters;
+import org.restprocessors.DynamicRestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +27,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(path = "api")
-public class ProductController {
+public class ProductController extends com.redscooter.API.product.ProductControllerBase {
     private final ProductService productService;
 
     private final AppUserService appUserService;
@@ -48,19 +50,25 @@ public class ProductController {
         return product.toGetProductDTO(productService);
     }
 
-
-    @GetMapping("public/products")
-    public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
-//        List<Filter<?>> filters = new ArrayList<>();
-//        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("createdAt", createdAtFilters));
-//        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("updatedAt", updatedAtFilters));
-//        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "id", productIdFilters));
-//        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "price", priceFilters));
-//        filters.addAll(FilterFactory.getLongJoinFiltersFromRHSColonExpression(Product.class, Category.class, "id", categoryFilters));
-
-        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
+    @DynamicRestMapping(path = "public/products", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
+    public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
+        Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp.getPageNumber(), cp.getPageSize(), cp.getSortBy(), cp.getFilters());
+//        return null;
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
+
+//    @GetMapping("public/products")
+//    public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
+////        List<Filter<?>> filters = new ArrayList<>();
+////        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("createdAt", createdAtFilters));
+////        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("updatedAt", updatedAtFilters));
+////        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "id", productIdFilters));
+////        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "price", priceFilters));
+////        filters.addAll(FilterFactory.getLongJoinFiltersFromRHSColonExpression(Product.class, Category.class, "id", categoryFilters));
+//
+//        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
+//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
+//    }
 
     @GetMapping("public/products/searchSuggestions")
     public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
@@ -71,8 +79,9 @@ public class ProductController {
 //        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "price", priceFilters));
 //        filters.addAll(FilterFactory.getLongJoinFiltersFromRHSColonExpression(Product.class, Category.class, "id", categoryFilters));
 
-        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
-        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
+//        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
+//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
+        return null;
     }
 
 
