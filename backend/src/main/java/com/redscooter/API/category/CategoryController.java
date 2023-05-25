@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(path = "api")
+@RequestMapping(path = "api/categories")
 public class CategoryController {
     private final CategoryService categoryService;
     private final JwtUtils jwtUtils;
@@ -32,7 +32,7 @@ public class CategoryController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("public/categories")
+    @GetMapping("/")
     public List<GetCategoryDTO> getAllCategories(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         List<Category> categories;
         if (!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -42,7 +42,7 @@ public class CategoryController {
         return categories.stream().map(c -> c.toGetCategoryDTO()).collect(Collectors.toList());
     }
 
-    @GetMapping("public/categories/{categoryId}")
+    @GetMapping("/{categoryId}")
     public GetCategoryDTO getCategoryById(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "categoryId", required = true) Long categoryId) {
         Category category = categoryService.getById(categoryId);
         if (!category.isVisible() && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -50,20 +50,26 @@ public class CategoryController {
         return category.toGetCategoryDTO();
     }
 
-    @PostMapping("admin/categories")
+    @PostMapping("/")
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CreateCategoryDTO createCategoryDTO) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Category insertedCategory = categoryService.create(createCategoryDTO);
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Category", "categoryId", insertedCategory.getId());
     }
 
-    @PatchMapping("admin/categories/{categoryId}")
+    @PatchMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable(name = "categoryId", required = true) Long categoryId, @Valid @RequestBody UpdateCategoryDTO updateCategoryDTO) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Category updatedCategory = categoryService.update(categoryId, updateCategoryDTO);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Category", "categoryId", categoryId, updatedCategory.toGetCategoryDTO());
     }
 
-    @DeleteMapping("admin/categories/{categoryId}")
+    @DeleteMapping("/{categoryId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable(name = "categoryId", required = true) Long categoryId) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         categoryService.delete(categoryId);
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }

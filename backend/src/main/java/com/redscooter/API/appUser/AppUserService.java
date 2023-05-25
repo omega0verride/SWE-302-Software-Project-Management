@@ -1,8 +1,11 @@
 package com.redscooter.API.appUser;
 
+import com.redscooter.API.appUser.passwordReset.PasswordResetToken;
+import com.redscooter.API.appUser.passwordReset.PasswordResetTokenRepository;
 import com.redscooter.API.appUser.registration.VerificationToken;
 import com.redscooter.API.appUser.registration.VerificationTokenRepository;
 import com.redscooter.API.common.BaseService;
+import com.redscooter.exceptions.api.verificationTokens.VerificationTokenException;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,14 +25,16 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     private final AppUserRepository appUserRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
-    private final VerificationTokenRepository tokenRepository;
+    private final VerificationTokenRepository verificationTokenRepository;
+    private final PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public AppUserService(AppUserRepository appUserRepository, RoleService roleService, PasswordEncoder passwordEncoder, VerificationTokenRepository tokenRepository) {
+    public AppUserService(AppUserRepository appUserRepository, RoleService roleService, PasswordEncoder passwordEncoder, VerificationTokenRepository verificationTokenRepository, PasswordResetTokenRepository passwordResetTokenRepository) {
         super(appUserRepository, "User");
         this.appUserRepository = appUserRepository;
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
-        this.tokenRepository = tokenRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
     }
 
     public boolean existsByUsername(String username) {
@@ -56,6 +61,17 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         return save(user);
     }
 
+    // used to register only
+    public AppUser registerUser(AppUser user) {
+        AppUser existingUserWithUsername = getByUsername(user.getUsername(), false);
+        if (existingUserWithUsername != null)
+            throw buildResourceAlreadyExistsException("username", user.getUsername());
+        if (user.isPasswordUpdated())
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return appUserRepository.save(user);
+    }
+
+    // used to persist, do not use for register
     public AppUser saveUser(AppUser user) {
         AppUser existingUserWithUsername = getByUsername(user.getUsername(), false);
         if (existingUserWithUsername != null) {
@@ -123,23 +139,44 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     }
 
     public VerificationToken getVerificationToken(String VerificationToken) {
-        return tokenRepository.findByToken(VerificationToken);
+        return verificationTokenRepository.findByToken(VerificationToken);
     }
 
     public VerificationToken createVerificationToken(AppUser user) {
         String token = UUID.randomUUID().toString();
         VerificationToken myToken = new VerificationToken(token, user);
         deleteAllVerificationTokens(user);
-        tokenRepository.flush();
-        tokenRepository.save(myToken);
+        verificationTokenRepository.flush();
+        verificationTokenRepository.save(myToken);
+        return myToken;
+    }
+
+    public PasswordResetToken createPasswordResetToken(AppUser user) {
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        passwordResetTokenRepository.flush();
+        passwordResetTokenRepository.save(myToken);
         return myToken;
     }
 
     public void deleteAllVerificationTokens(AppUser user) {
-        tokenRepository.deleteAllByUser(user);
+        verificationTokenRepository.deleteAllByUser(user);
     }
 
     public boolean matchesPassword(AppUser user, String password) {
         return passwordEncoder.matches(password, user.getPassword());
+    }
+
+    public boolean validatePasswordResetToken(String token) {
+        final PasswordResetToken passToken = passwordResetTokenRepository.findByToken(token);
+        if (passToken == null)
+            throw new VerificationTokenException();
+        if (passToken.getExpiryDate().before(Calendar.getInstance().getTime()))
+            throw new VerificationTokenException(passToken.getExpiryDate().getTime());
+        return true;
+    }
+
+    public void deleteAllPasswordResetTokesByUser(AppUser appUser) {
+        passwordResetTokenRepository.deleteAllByUser(appUser);
     }
 }

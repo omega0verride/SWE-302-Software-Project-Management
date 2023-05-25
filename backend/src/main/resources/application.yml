@@ -1,10 +1,10 @@
 server:
     port: 8080
     forward-headers-strategy: framework
+    domain: https://redscooter.al/
     error:
         include-stacktrace: never
         include-message: never
-        domain: https://redscooter.al/
 
 
 spring-doc:
