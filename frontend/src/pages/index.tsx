@@ -11,7 +11,7 @@ import RedBorderButton from '../components/RedBorderButton'
 import Header from '../components/LoginHeader'
 import LoginMain from '../components/LoginMain'
 import Footer from '../components/LoginFooter'
-import RegisterPage from './RegisterPage'
+import RegisterPage from './register'
 
 
 export default function Home() {

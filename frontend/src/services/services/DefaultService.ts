@@ -14,13 +14,13 @@ export class DefaultService {
      * @throws ApiError
      */
     public static login(
-requestBody?: {
-username: string;
-password: string;
-authType: string;
-token: string;
-},
-): CancelablePromise<void> {
+        requestBody?: {
+            username: string;
+            password: string;
+            authType: string;
+            token: string;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/token',
@@ -36,8 +36,8 @@ token: string;
      * @throws ApiError
      */
     public static getUserDetails(
-username: string,
-): CancelablePromise<void> {
+        username: string,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/user/users/{username}',
@@ -50,12 +50,12 @@ username: string,
     /**
      * image delete
      * delete product image
-     * @param filePath 
+     * @param filePath
      * @throws ApiError
      */
     public static deleteImage(
-filePath: string,
-): CancelablePromise<void> {
+        filePath: string,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/admin/products/deleteImage',
@@ -72,15 +72,15 @@ filePath: string,
      * @throws ApiError
      */
     public static updateCategoryById(
-categoryId: number,
-requestBody: {
-defaultColor: string;
-textColor: string;
-name: string;
-backgroundColor: string;
-visible: boolean;
-},
-): CancelablePromise<void> {
+        categoryId: number,
+        requestBody: {
+            defaultColor: string;
+            textColor: string;
+            name: string;
+            backgroundColor: string;
+            visible: boolean;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/admin/categories/{categoryId}',
@@ -98,14 +98,14 @@ visible: boolean;
      * @throws ApiError
      */
     public static registerUser(
-requestBody: {
-email: string;
-name: string;
-password: string;
-phoneNumber: string;
-surname: string;
-},
-): CancelablePromise<void> {
+        requestBody: {
+            email: string;
+            name: string;
+            password: string;
+            phoneNumber: string;
+            surname: string;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/public/users/register',
@@ -117,25 +117,25 @@ surname: string;
     /**
      * get all the products for the seearch query
      * @param categoryId category id
-     * @param pageNumber 
-     * @param pageSize 
-     * @param order 
-     * @param sortBy 
-     * @param minPrice 
-     * @param maxPrice 
-     * @param searchQuery 
+     * @param pageNumber
+     * @param pageSize
+     * @param order
+     * @param sortBy
+     * @param minPrice
+     * @param maxPrice
+     * @param searchQuery
      * @throws ApiError
      */
     public static getSearchSuggestions(
-categoryId: number,
-pageNumber: number,
-pageSize: number,
-order: string,
-sortBy?: string,
-minPrice?: number,
-maxPrice?: number,
-searchQuery?: string,
-): CancelablePromise<void> {
+        categoryId: number,
+        pageNumber: number,
+        pageSize: number,
+        order: string,
+        sortBy?: string,
+        minPrice?: number,
+        maxPrice?: number,
+        searchQuery?: string,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/public/products/searchSuggestions',
@@ -158,20 +158,20 @@ searchQuery?: string,
      * @throws ApiError
      */
     public static createNewProduct(
-requestBody: {
-categories: any[];
-description: string;
-discount: number;
-facebookPostURL: string;
-instagramPostURL: string;
-price: number;
-stock: number;
-title: string;
-used: boolean;
-visible: boolean;
-customFields: any;
-},
-): CancelablePromise<void> {
+        requestBody: {
+            categories: any[];
+            description: string;
+            discount: number;
+            facebookPostURL: string;
+            instagramPostURL: string;
+            price: number;
+            stock: number;
+            title: string;
+            used: boolean;
+            visible: boolean;
+            customFields: any;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/admin/products',
@@ -186,14 +186,14 @@ customFields: any;
      * @throws ApiError
      */
     public static createCategory(
-requestBody: {
-defaultColor: string;
-textColor: string;
-name: string;
-backgroundColor: string;
-visible: boolean;
-},
-): CancelablePromise<void> {
+        requestBody: {
+            defaultColor: string;
+            textColor: string;
+            name: string;
+            backgroundColor: string;
+            visible: boolean;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/admin/categories',
@@ -209,21 +209,21 @@ visible: boolean;
      * @throws ApiError
      */
     public static editProductWithId(
-productId: number,
-requestBody: {
-categories: any[];
-description: string;
-discount: number;
-facebookPostURL: string;
-instagramPostURL: string;
-price: number;
-stock: number;
-title: string;
-used: boolean;
-visible: boolean;
-customFields: any;
-},
-): CancelablePromise<void> {
+        productId: number,
+        requestBody: {
+            categories: any[];
+            description: string;
+            discount: number;
+            facebookPostURL: string;
+            instagramPostURL: string;
+            price: number;
+            stock: number;
+            title: string;
+            used: boolean;
+            visible: boolean;
+            customFields: any;
+        },
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/admin/products/{productId}',
@@ -241,8 +241,8 @@ customFields: any;
      * @throws ApiError
      */
     public static deleteCategoryById(
-categoryid: number,
-): CancelablePromise<void> {
+        categoryid: number,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/admin/categories/{categoryid}',
@@ -258,8 +258,8 @@ categoryid: number,
      * @throws ApiError
      */
     public static deleteProductWithId(
-productId: number,
-): CancelablePromise<void> {
+        productId: number,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/admin/products/{productID}',
@@ -272,21 +272,21 @@ productId: number,
     /**
      * get all the products for a category
      * @param categoryId category id
-     * @param pageNumber 
-     * @param pageSize 
-     * @param sortBy 
-     * @param price 
-     * @param searchQuery 
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param price
+     * @param searchQuery
      * @throws ApiError
      */
     public static getCategoryProducts(
-categoryId: number,
-pageNumber: number,
-pageSize: number,
-sortBy?: string,
-price?: string,
-searchQuery?: string,
-): CancelablePromise<void> {
+        categoryId: number,
+        pageNumber: number,
+        pageSize: number,
+        sortBy?: string,
+        price?: string,
+        searchQuery?: string,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/public/products',
@@ -318,8 +318,8 @@ searchQuery?: string,
      * @throws ApiError
      */
     public static getProductDetails(
-productId: number,
-): CancelablePromise<void> {
+        productId: number,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/public/products/{productId}',
@@ -335,8 +335,8 @@ productId: number,
      * @throws ApiError
      */
     public static getStoreDetailsByName(
-storeName: string,
-): CancelablePromise<void> {
+        storeName: string,
+    ): CancelablePromise<void> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/public/stores/name/{storeName}',
