@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 @RestController
-@RequestMapping(path = "api")
+@RequestMapping(path = "api/products")
 public class ProductController extends com.redscooter.API.product.ProductControllerBase {
     private final ProductService productService;
 
@@ -41,7 +41,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         this.jwtUtils = jwtUtils;
     }
 
-    @GetMapping("public/products/{productId}")
+    @GetMapping("/{productId}")
     public GetProductDTO getProductByID(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "productId", required = true) Long productId) {
 //        Long productId_ = Utilities.tryParseLong(productId, "productId");
         Product product = productService.getById(productId);
@@ -50,7 +50,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         return product.toGetProductDTO(productService);
     }
 
-    @DynamicRestMapping(path = "public/products", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
+    @DynamicRestMapping(path = "/", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
     public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
         Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp.getPageNumber(), cp.getPageSize(), cp.getSortBy(), cp.getFilters());
 //        return null;
@@ -70,7 +70,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 //        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
 //    }
 
-    @GetMapping("public/products/searchSuggestions")
+    @GetMapping("/searchSuggestions")
     public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
 //        List<Filter<?>> filters = new ArrayList<>();
 //        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("createdAt", createdAtFilters));
@@ -85,60 +85,78 @@ public class ProductController extends com.redscooter.API.product.ProductControl
     }
 
 
-    @PostMapping("admin/products")
+    @PostMapping("/")
     public ResponseEntity<Object> createProduct(@Valid @RequestBody CreateProductDTO createProductDTO) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product product = new Product(createProductDTO);
         product = productService.addCategories(product, createProductDTO.getCategories()); // this will also save the new product
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Product", "Id", product.getId());
     }
 
 
-    @PatchMapping("admin/products/{productId}")
+    @PatchMapping("/{productId}")
     public ResponseEntity<Object> updateProduct(@PathVariable(name = "productId") Long productId, @Valid @RequestBody UpdateProductDTO updateProductDTO) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.updateProduct(productId, updateProductDTO);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-    @PatchMapping("admin/products/{productId}/setCustomFields")
+    @PatchMapping("/{productId}/setCustomFields")
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.setCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-    @PatchMapping("admin/products/{productId}/setCustomFieldsFromList")
+    @PatchMapping("/{productId}/setCustomFieldsFromList")
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody List<Map.Entry<String, Object>> customFields) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.setCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-    @PatchMapping("admin/products/{productId}/addCustomFields")
+    @PatchMapping("/{productId}/addCustomFields")
     public ResponseEntity<Object> addCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.addCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-    @PatchMapping("admin/products/{productId}/removeCustomFields")
+    @PatchMapping("/{productId}/removeCustomFields")
     public ResponseEntity<Object> removeCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Set<String> keys) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.removeCustomFields(productId, keys);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-    @PatchMapping("admin/products/{productId}/removeCustomField")
+    @PatchMapping("/{productId}/removeCustomField")
     public ResponseEntity<Object> removeCustomField(@PathVariable(name = "productId") Long productId, @RequestBody String key) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         Product updatedProduct = productService.removeCustomField(productId, key);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
 
-    @DeleteMapping("admin/products/{productId}")
+    @DeleteMapping("/{productId}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(name = "productId") Long productId) {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         productService.delete(productId);
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }
 
     // THESE METHODS HANDLE IMAGE UPLOAD/DELETE/THUMBNAIL_CHANGE
-    @PostMapping("admin/products/uploadImage/{productId}")
+    @PostMapping("/uploadImage/{productId}")
     public ResponseEntity<Object> uploadImage(@RequestParam(name = "file", required = true) MultipartFile file, @PathVariable(name = "productId", required = true) Long productId, @RequestParam(name = "isThumbnail", required = false, defaultValue = "false") boolean isThumbnail) throws IOException {
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         LocalImage savedImage = productService.uploadImage(file, productId, isThumbnail);
         // TODO create response
         Map<String, Object> response = new HashMap<>();
@@ -148,9 +166,10 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @DeleteMapping("admin/products/deleteImage")
+    @DeleteMapping("/deleteImage")
     public ResponseEntity<Object> deleteImage(@RequestParam(name = "filePath", required = true) String filePath) throws IOException {
-
+        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            return ResponseEntity.status(403).body(null);
         productService.deleteImage(filePath);
 
         Map<String, Object> response = new HashMap<>();
@@ -159,31 +178,4 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         response.put("success", true);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-// NOTE this code is commented out since it was not used on production, we are instead using a separate upload for thumbnail
-// not fully tested
-// lets keep this here in case of future changes
-//    @PostMapping("admin/products/setThumbnail/{productId}")
-//    public ResponseEntity<Object> setThumbnail(@RequestParam(name = "filePath", required = true) String filePath, @PathVariable(name = "productId", required = true) Long productId) {
-//        Product product = productService.getProductById(productId);
-//
-//        Path filePath_ = Paths.get(filePath);
-//        if (!filePath_.isAbsolute())
-//            filePath_ = Utilities.joinPaths(Utilities.getStaticFolderPath_(), filePath); // should match the path exposed in WebMVCConfig#ResourceHandlerRegistry
-//        File file = filePath_.toFile();
-//
-//        if (!file.exists())
-//            throw new FileNotFoundException(filePath);
-//
-//        // make sure we normalize paths and validatePathPermissions in case the client sends a malicious path i.e: /../README.md
-//        if (Utilities.validatePathPermissions(filePath_, Utilities.getProductImagesAbsolutePath()))
-//            productService.setThumbnailFilename(product, filePath_);
-//        else
-//            throw new PermissionDeniedToAccessPathException(filePath_, filePath, Utilities.getProductImagesAbsolutePath(), Utilities.getProductImagesSubPath_(), PermissionDeniedToAccessPathException.Operation.DELETE);
-//
-//        Map<String, Object> response = new HashMap<>();
-//        response.put("message", "Successfully set new thumbnail! New thumbnail path: " + filePath_);
-//        response.put("filePath", filePath_);
-//        response.put("success", true);
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
 }
