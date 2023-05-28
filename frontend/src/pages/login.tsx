@@ -3,7 +3,7 @@ import Footer from '../components/LoginFooter'
 import Header from '../components/LoginHeader'
 import LoginMain from '../components/LoginMain'
 
-const RegisterPage = () => {
+const Login = () => {
   return (
     <div
       style={{
@@ -26,4 +26,4 @@ const RegisterPage = () => {
   )
 }
 
-export default RegisterPage
+export default Login
