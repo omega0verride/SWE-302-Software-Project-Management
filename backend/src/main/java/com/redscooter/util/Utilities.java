@@ -21,8 +21,8 @@ public class Utilities {
     public static final String DEFAULT_NO_IMAGE_NAME = "no_image.jpg";
     public static final String DEFAULT_NO_IMAGE_PATH = joinPathsAsString("images", DEFAULT_NO_IMAGE_NAME);
 
-//    public static final String STATIC_FOLDER_DIR = "/root/resources/static";
-    public static final String STATIC_FOLDER_DIR = "C:/Users/indri/SWE-302-Software-Project-Management/backend/src/main/resources/static";
+    public static final String STATIC_FOLDER_DIR = "/root/resources/static";
+//    public static final String STATIC_FOLDER_DIR = "C:/Users/indri/SWE-302-Software-Project-Management/backend/src/main/resources/static";
 
     public static final String HTML_TEMPLATES_FOLDER_DIR = joinPathsAsString(STATIC_FOLDER_DIR, "htmlTemplates");
     public static final String PRODUCT_IMAGES_ABSOLUTE_PATH = joinPathsAsString(STATIC_FOLDER_DIR, PRODUCT_IMAGES_SUB_PATH);
