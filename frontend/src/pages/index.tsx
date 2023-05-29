@@ -1,5 +1,4 @@
-import {useDispatch, useSelector} from 'react-redux'
-import { RootState } from '../store/store'
+import { useDispatch, useSelector } from 'react-redux'
 import React, { useEffect } from 'react'
 import LoginButton from '../components/LoginButton'
 import UsernameTextField from '../components/UsernameTextField'
@@ -12,19 +11,17 @@ import Header from '../components/LoginHeader'
 import LoginMain from '../components/LoginMain'
 import Footer from '../components/LoginFooter'
 import RegisterPage from './register'
-
+import { useRouter } from 'next/router'
 
 export default function Home() {
-
-  const user = useSelector((state: RootState)=>state.user)
-
-  const dispatch = useDispatch()
-
-  useEffect(()=>{}, [user]);
+  const { access_token } = useSelector((state: any) => state.user)
+  const router = useRouter()
 
   return (
-      <div>
-        <RegisterPage></RegisterPage>
-      </div>
+    <>
+      <div>This is the home page</div>
+      <div>Token: {access_token}</div>
+      <button onClick={(e: any) => router.push('/login')}>Log out</button>
+    </>
   )
 }
