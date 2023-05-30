@@ -103,7 +103,4 @@ public class AppUser implements Auditable {
     public long getUpdatedAt() {
         return auditData.getUpdatedAt();
     }
-
-//    @Embedded
-//    AppUser appUser;
 }

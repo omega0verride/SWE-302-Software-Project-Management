@@ -43,7 +43,7 @@ public class SuccessfulCUDOperation {
         if (entity != null)
             details.put("entity", entity);
         res.put("details", details);
-        return new ResponseEntity<Object>(res, HttpStatus.CREATED);
+        return new ResponseEntity<Object>(res, HttpStatus.OK);
     }
 
     public enum Operation {

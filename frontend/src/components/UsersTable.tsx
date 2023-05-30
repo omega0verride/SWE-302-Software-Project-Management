@@ -19,7 +19,7 @@ import {
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { data, states, GetData } from './makeData'
+import { data, states } from './makeData'
 import { v4 as uuidv4 } from 'uuid'
 import BasicModal from './BasicModal'
 
@@ -33,7 +33,6 @@ export type Person = {
 }
 
 const Table = () => {
-  GetData()
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState<Person[]>(() => data)
   const [validationErrors, setValidationErrors] = useState<{

@@ -15,14 +15,15 @@ import java.util.stream.Stream;
 @Getter
 public class Utilities {
 
-    // TODO move those to filestore configs
     public static final String PRODUCT_IMAGES_SUB_PATH = joinPathsAsString("products", "images");
     public static final String STORE_IMAGES_SUB_PATH = joinPathsAsString("stores", "images");
     public static final String DEFAULT_NO_IMAGE_NAME = "no_image.jpg";
     public static final String DEFAULT_NO_IMAGE_PATH = joinPathsAsString("images", DEFAULT_NO_IMAGE_NAME);
-
-    public static final String STATIC_FOLDER_DIR = "/root/resources/static";
-//    public static final String STATIC_FOLDER_DIR = "C:/Users/indri/SWE-302-Software-Project-Management/backend/src/main/resources/static";
+    public static String ROOT_PROJECT_FOLDER_NAME = "root";
+    //    public static final String ROOT_WORKING_DIR=new File("").getAbsolutePath();
+    public static final String ROOT_WORKING_DIR = getRootDirFromWorkingDir(ROOT_PROJECT_FOLDER_NAME);
+//    public static final String STATIC_FOLDER_DIR = "/root/resources/static";
+    public static final String STATIC_FOLDER_DIR = "C:/Users/indri/SWE-302-Software-Project-Management/backend/src/main/resources/static";
 
     public static final String HTML_TEMPLATES_FOLDER_DIR = joinPathsAsString(STATIC_FOLDER_DIR, "htmlTemplates");
     public static final String PRODUCT_IMAGES_ABSOLUTE_PATH = joinPathsAsString(STATIC_FOLDER_DIR, PRODUCT_IMAGES_SUB_PATH);
@@ -90,6 +91,13 @@ public class Utilities {
         return files;
     }
 
+    public static String getRootWorkingDir() {
+        return ROOT_WORKING_DIR;
+    }
+
+    public static String getRootProjectFolderName() {
+        return ROOT_PROJECT_FOLDER_NAME;
+    }
 
     public static String getDefaultNoImagePath() {
         return DEFAULT_NO_IMAGE_PATH;
