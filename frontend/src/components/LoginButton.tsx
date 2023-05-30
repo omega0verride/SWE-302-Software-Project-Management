@@ -1,7 +1,4 @@
 import React from 'react'
-import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
-import { setLogin } from '../store/reducers/user'
 
 interface myProps {
   register: boolean
@@ -81,15 +78,6 @@ const LoginButton = (props: myProps) => {
           cursor: 'pointer',
           marginTop: '2rem'
         }}
-        onClick={(e: any) =>
-          SendData(
-            register,
-            dataToBeSubmitted,
-            router,
-            setErrorMessage,
-            dispatch
-          )
-        }
       >
         {register ? 'Register' : 'Log In'}
       </button>

@@ -259,7 +259,7 @@ export const CreateNewOrderModal = ({
 
   const handleSubmit = () => {
     //put your validation logic here
-    console.log(values)
+
     const arrayOfErros: string[] = []
     if (!values?.total) {
       arrayOfErros.push('Please enter a valid Total!')
