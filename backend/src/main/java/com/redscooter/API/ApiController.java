@@ -12,7 +12,7 @@ public class ApiController {
 
     @RequestMapping(path = "api")
     public String redirectToDocumentation(HttpServletResponse httpResponse) throws Exception {
-        httpResponse.sendRedirect("/api-docs/swagger-ui/index.html#/"); // TODO get paths from application.yml
+        httpResponse.sendRedirect("/api/api-docs/swagger-ui/index.html#/"); // TODO get paths from application.yml
         return null;
     }
 }

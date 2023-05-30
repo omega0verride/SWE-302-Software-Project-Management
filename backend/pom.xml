@@ -147,7 +147,7 @@
         <dependency>
             <groupId>grad-project.indritbreti</groupId>
             <artifactId>restprocessors</artifactId>
-            <version>0.0.8-SNAPSHOT</version>
+            <version>0.0.15-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -194,11 +194,11 @@
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
-                        <path>
-                            <groupId>grad-project.indritbreti</groupId>
-                            <artifactId>restprocessors</artifactId>
-                            <version>0.0.8-SNAPSHOT</version>
-                        </path>
+<!--                        <path>-->
+<!--                            <groupId>grad-project.indritbreti</groupId>-->
+<!--                            <artifactId>restprocessors</artifactId>-->
+<!--                            <version>0.0.15-SNAPSHOT</version>-->
+<!--                        </path>-->
                     </annotationProcessorPaths>
                     <!--                    <annotationProcessors>-->
                     <!--                        <annotationProcessor>-->

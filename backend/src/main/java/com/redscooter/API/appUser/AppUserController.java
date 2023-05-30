@@ -7,7 +7,10 @@ import com.redscooter.API.appUser.passwordReset.PasswordDto;
 import com.redscooter.API.appUser.passwordReset.PasswordResetToken;
 import com.redscooter.API.appUser.registration.OnRegistrationCompleteEvent;
 import com.redscooter.API.appUser.registration.VerificationToken;
+import com.redscooter.API.common.responseFactory.PageResponse;
 import com.redscooter.API.common.responseFactory.ResponseFactory;
+import com.redscooter.API.product.DTO.GetModerateProductDTO;
+import com.redscooter.API.product.Product;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 import com.redscooter.exceptions.api.UserAccountAlreadyActivatedException;
 import com.redscooter.exceptions.api.badRequest.BadRequestBodyException;
@@ -23,6 +26,8 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.restprocessors.DynamicRESTController.CriteriaParameters;
+import org.restprocessors.DynamicRestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
@@ -48,7 +53,7 @@ public class AppUserController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<GetAppUserDTO>> getUsers() {
         if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
             return ResponseEntity.status(403).body(null);

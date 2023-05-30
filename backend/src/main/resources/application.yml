@@ -10,26 +10,17 @@ server:
 spring-doc:
     swagger-ui:
         disable-swagger-default-url: true
-        operations-sorter: method
-        path: /api-docs/swagger-ui.html
-        config-url: /api-docs/v3/swagger-config
+        operations-sorter: alpha
+        path: /api/api-docs/swagger-ui.html
+        config-url: /api/api-docs/v3/swagger-config
 
         urls-primary-name: All
         urls[0]:
             name: All
-            url: /api-docs/v3
-        urls[1]:
-            name: Public
-            url: /api-docs/v3/public
-        urls[2]:
-            name: Admin
-            url: /api-docs/v3/admin
-        urls[3]:
-            name: User
-            url: /api-docs/v3/user
+            url: /api/api-docs/v3
 
     api-docs:
-        path: /api-docs/v3
+        path: /api/api-docs/v3
         groups:
             enabled=true:
 
@@ -64,7 +55,7 @@ spring:
                     time_zone: UTC
 #                metadata_builder_contributor: com.redscooter.config.SqlFunctionsMetadataBuilderContributor
         hibernate:
-            ddl-auto: update # none, create, create-drop, validate, and update
+            ddl-auto: create-drop # none, create, create-drop, validate, and update
             enhancer:
                 enableLazyInitialization: true
 
@@ -85,7 +76,7 @@ jwt:
     issuer: REDSCOOTER.AL
 
 email:
-    username: "redscooter.al@gmail.com"
+    username: ${SMTP_USERNAME:}
     password: ${SMTP_PASSWORD:}
     host: "smtp.gmail.com"
     port: 587

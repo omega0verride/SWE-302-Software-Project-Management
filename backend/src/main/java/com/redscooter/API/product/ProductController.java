@@ -50,10 +50,9 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         return product.toGetProductDTO(productService);
     }
 
-    @DynamicRestMapping(path = "/", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
+    @DynamicRestMapping(path = "", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
     public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
         Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp.getPageNumber(), cp.getPageSize(), cp.getSortBy(), cp.getFilters());
-//        return null;
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
 
@@ -85,7 +84,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
     }
 
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Object> createProduct(@Valid @RequestBody CreateProductDTO createProductDTO) {
         if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
             return ResponseEntity.status(403).body(null);

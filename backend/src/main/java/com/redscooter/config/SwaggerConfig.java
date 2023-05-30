@@ -10,32 +10,6 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
-    @Bean
-    public GroupedOpenApi publicApi() {
-        return GroupedOpenApi.builder()
-                .group("public")
-                .displayName("Public")
-                .pathsToMatch("/api/public/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi adminApi() {
-        return GroupedOpenApi.builder()
-                .group("admin")
-                .displayName("Admin")
-                .pathsToMatch("/api/admin/**", "/api/user/**")
-                .build();
-    }
-
-    @Bean
-    public GroupedOpenApi userApi() {
-        return GroupedOpenApi.builder()
-                .group("user")
-                .displayName("User or Admin context")
-                .pathsToMatch("/api/user/**")
-                .build();
-    }
 
     @Bean
     public OpenAPI springShopOpenAPI() {

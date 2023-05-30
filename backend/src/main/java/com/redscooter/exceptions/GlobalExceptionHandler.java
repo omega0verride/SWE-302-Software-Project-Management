@@ -15,5 +15,10 @@ public class GlobalExceptionHandler {
         return ex.toResponseEntity();
     }
 
+    @ExceptionHandler(org.restprocessors.exceptions.BaseException.class)
+    public ResponseEntity<Object> invalidCriteriaOperatorExceptionHandler(org.restprocessors.exceptions.BaseException ex) {
+        return ex.toResponseEntity();
+    }
+
 
 }

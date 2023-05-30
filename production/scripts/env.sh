@@ -1,0 +1,1 @@
+export PRODUCTION_ENV_FILEPAHT=~/SWE-302/env.sh

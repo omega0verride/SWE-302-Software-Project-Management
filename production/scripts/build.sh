@@ -1,5 +1,4 @@
 #!/bin/bash
-# source env.sh
 set -e
 
 echo "[1/3][0] Exportig fronted..."

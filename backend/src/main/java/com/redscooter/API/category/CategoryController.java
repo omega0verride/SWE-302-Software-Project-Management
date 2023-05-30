@@ -32,7 +32,7 @@ public class CategoryController {
         this.appUserService = appUserService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<GetCategoryDTO> getAllCategories(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         List<Category> categories;
         if (!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -50,7 +50,7 @@ public class CategoryController {
         return category.toGetCategoryDTO();
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CreateCategoryDTO createCategoryDTO) {
         if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
             return ResponseEntity.status(403).body(null);
