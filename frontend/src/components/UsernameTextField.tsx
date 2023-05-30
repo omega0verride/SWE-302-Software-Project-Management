@@ -2,10 +2,16 @@ import React from 'react'
 
 interface myProps {
   placeholder: string
+  dataToBeSubmitted: object
+  typeOfField: string
 }
 
 const UsernameTextField = (props: myProps) => {
-  const { placeholder } = props
+  const { placeholder, dataToBeSubmitted, typeOfField } = props
+  const handleChange = (event: any) => {
+    dataToBeSubmitted[typeOfField] = event.target.value
+  }
+
   return (
     <div>
       <input
@@ -21,7 +27,8 @@ const UsernameTextField = (props: myProps) => {
           padding: '10px',
           marginBottom: '10px'
         }}
-      ></input>
+        onChange={handleChange}
+      />
     </div>
   )
 }

@@ -1,5 +1,27 @@
 import { Person } from './UsersTable';
 
+
+export const GetData = async () => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/users`,
+    {
+      method: 'GET',
+    }
+  )
+
+  console.log(response.json())
+
+  if (response.status === 400) {
+    console.log('Please Complete all the fields!')
+  }
+
+  if (response.status === 401) {
+    console.log('Wrong email or password!')
+  }
+
+}
+
+
 export const data: Person[] = [
   {
     id: '9s41rp',
