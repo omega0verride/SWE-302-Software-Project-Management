@@ -1,71 +1,25 @@
-import { Person } from './UsersTable';
+import {Person} from '../components/UsersTable'
 
-export const data: Person[] = [
-  {
-    id: '9s41rp',
-    firstName: 'Kelvin',
-    lastName: 'Langosh',
-    email: 'Jerod14@hotmail.com',
-    age: 19,
-    state: 'Ohio',
-  },
-  {
-    id: '08m6rx',
-    firstName: 'Molly',
-    lastName: 'Purdy',
-    email: 'Hugh.Dach79@hotmail.com',
-    age: 37,
-    state: 'Rhode Island',
-  },
-  {
-    id: '5ymtrc',
-    firstName: 'Henry',
-    lastName: 'Lynch',
-    email: 'Camden.Macejkovic@yahoo.com',
-    age: 20,
-    state: 'California',
-  },
-  {
-    id: 'ek5b97',
-    firstName: 'Glenda',
-    lastName: 'Douglas',
-    email: 'Eric0@yahoo.com',
-    age: 38,
-    state: 'Montana',
-  },
-  {
-    id: 'xxtydd',
-    firstName: 'Leone',
-    lastName: 'Williamson',
-    email: 'Ericka_Mueller52@yahoo.com',
-    age: 19,
-    state: 'Colorado',
-  },
-  {
-    id: 'wzxj9m',
-    firstName: 'Mckenna',
-    lastName: 'Friesen',
-    email: 'Veda_Feeney@yahoo.com',
-    age: 34,
-    state: 'New York',
-  },
-  {
-    id: '21dwtz',
-    firstName: 'Wyman',
-    lastName: 'Jast',
-    email: 'Melvin.Pacocha@yahoo.com',
-    age: 23,
-    state: 'Montana',
-  },
-  {
-    id: 'o8oe4k',
-    firstName: 'Janick',
-    lastName: 'Willms',
-    email: 'Delfina12@gmail.com',
-    age: 25,
-    state: 'Nebraska',
-  },
-];
+export const GetData = async (access_token) => {
+  try {
+      const response = await (await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/`,
+        {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': `Bearer ${access_token}`
+        })
+      }
+    )).json()
+
+      return response
+
+  } catch(err) {
+    console.log("Error at api call")
+    console.log(err)
+  }
+
+}
 
 //50 us states array
 export const states = [

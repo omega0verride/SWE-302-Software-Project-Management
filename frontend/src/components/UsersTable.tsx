@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import MaterialReactTable, {
   type MaterialReactTableProps,
   type MRT_Cell,
@@ -19,9 +19,10 @@ import {
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { data, states } from './makeData'
+import { states, GetData } from './makeData'
 import { v4 as uuidv4 } from 'uuid'
 import BasicModal from './BasicModal'
+import { useSelector } from 'react-redux'
 
 export type Person = {
   id: string
@@ -33,8 +34,26 @@ export type Person = {
 }
 
 const Table = () => {
+  const { access_token } = useSelector((state: any) => state.user)
+  const [testData, setData] = useState()
+
+  useEffect(() => {
+    // fetch data
+    const dataFetch = async () => {
+      const res = await GetData(access_token)
+
+      // set state when the data received
+      setData(res)
+    }
+
+    dataFetch()
+  }, [])
+
+  const data: Person[] = testData ?? []
+  console.log(data)
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState<Person[]>(() => data)
+  // setTableData(testData ?? [])
   const [validationErrors, setValidationErrors] = useState<{
     [cellId: string]: string
   }>({})
