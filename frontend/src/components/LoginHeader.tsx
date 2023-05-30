@@ -1,5 +1,6 @@
 import React from "react"
 import PageLogo from "./PageLogo"
+import RedBorderButton from "./RedBorderButton"
 import ShopName from "./ShopName"
 
 const Header = () => {
@@ -9,14 +10,22 @@ const Header = () => {
             width: '100vw',
             backgroundColor: 'white',
             paddingLeft: 42,
+            paddingRight: 42,
             paddingTop: 25,
             paddingBottom: 25,
             display: "flex",
             flexDirection: 'row',
             alignItems: "center",
+            justifyContent: "space-between",
             }}>
-                <PageLogo></PageLogo>
-                <ShopName></ShopName>
+                <div style={{display: "flex", flexDirection: 'row',}}>
+                    <PageLogo></PageLogo>
+                    <ShopName></ShopName>
+                </div>
+                <div style={{display: "flex", flexDirection: 'row',}}>
+                    <RedBorderButton content="login" ></RedBorderButton>
+                </div>
+                
           </div>
       
     )

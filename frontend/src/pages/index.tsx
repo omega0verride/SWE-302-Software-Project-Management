@@ -23,8 +23,39 @@ export default function Home() {
   useEffect(()=>{}, [user]);
 
   return (
-      <div>
-        <RegisterPage></RegisterPage>
+      <div style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        width: '100vw',
+        backgroundColor: '#F5F5F5',
+        margin: 0,
+        padding: 0,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0}}>
+        <div style={{
+            height: '10%',
+            width: '100vw',
+            paddingLeft: 42,
+            paddingRight: 42,
+            paddingTop: 25,
+            paddingBottom: 25,
+            display: "flex",
+            flexDirection: 'row',
+            alignItems: "center",
+            justifyContent: "space-between",
+            }}>
+                <div style={{display: "flex", flexDirection: 'row',}}>
+                    <PageLogo></PageLogo>
+                    <ShopName></ShopName>
+                </div>
+                <div style={{display: "flex", flexDirection: 'row',}}>
+                </div>
+                
+        </div>
       </div>
   )
 }
