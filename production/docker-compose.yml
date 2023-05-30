@@ -3,11 +3,16 @@ version: '3.8'
 services:
   webserver:
     image: nginx
+    environment:
+      NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+      RESOURCES_ROOT_PATH: &resources_root_path_ ${RESOURCES_ROOT_PATH:-/resources/}
+      RESOURCES_ROOT_URI: &resources_root_uri_ ${RESOURCES_ROOT_URI:-/resources/}
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      # - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx.conf:/etc/nginx/templates/nginx.conf.template
       - ./target/html/:/var/www/html
     ports:
-    - "80:80"
+    - "8002:80"
     restart: always
 
   db:

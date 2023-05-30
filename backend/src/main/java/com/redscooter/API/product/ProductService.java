@@ -64,6 +64,7 @@ public class ProductService extends BaseService<Product> {
         if (updateProductDTO.getDiscount() != null) existingProduct.setDiscount(updateProductDTO.getDiscount());
         if (updateProductDTO.getUsed() != null) existingProduct.setUsed(updateProductDTO.getUsed());
         if (updateProductDTO.getStock() != null) existingProduct.setStock(updateProductDTO.getStock());
+        if (updateProductDTO.getRange() != null) existingProduct.setRange(updateProductDTO.getRange());
         if (updateProductDTO.getCategories() != null)
             existingProduct.setCustomFields(updateProductDTO.getCustomFields());
         if (updateProductDTO.getInstagramPostURL() != null)

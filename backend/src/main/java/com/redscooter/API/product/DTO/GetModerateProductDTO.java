@@ -14,6 +14,7 @@ public class GetModerateProductDTO extends AuditBaseDTO {
     private String title;
     private String description;
     private Double price;
+    private Double range;
     private int discount;
     private boolean used;
     private int stock;
@@ -26,6 +27,7 @@ public class GetModerateProductDTO extends AuditBaseDTO {
         this.title = p.getTitle();
         this.description = p.getDescription();
         this.price = p.getPrice();
+        this.range = p.getRange();
         this.discount = p.getDiscount();
         this.used = p.isUsed();
         this.stock = p.getStock();

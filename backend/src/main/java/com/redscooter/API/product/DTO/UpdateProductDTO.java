@@ -19,6 +19,7 @@ public class UpdateProductDTO {
     private String description;
     private Boolean visible = null;
     private Double price;
+    private Double range;
     private Integer discount;
     private Boolean used = null; // if set to true the product is marked as "used" otherwise it is "new"
     private Integer stock;

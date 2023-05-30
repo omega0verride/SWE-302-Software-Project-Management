@@ -12,12 +12,14 @@ public class GetMinimalProductDTO {
     private Long id;
     private String title;
     private Double price;
+    private Double range;
     private String thumbnail;
 
     public GetMinimalProductDTO(Product p, ProductService productService) {
         this.id = p.getId();
         this.title = p.getTitle();
         this.price = p.getPrice();
+        this.range = p.getRange();
         LocalImage thumbnail = productService.getProductThumbnail(p);
         this.thumbnail = thumbnail == null ? null : thumbnail.getRelativeFilePath();
     }

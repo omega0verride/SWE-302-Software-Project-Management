@@ -7,3 +7,5 @@ export USER=root
 export DATABASE_USER=admin
 export DATABASE_PASSWORD=admin
 export DATABASE_VOLUME=~/database-data
+export RESOURCES_ROOT_PATH=/resources/
+export RESOURCES_ROOT_URI=/resources

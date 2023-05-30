@@ -67,12 +67,6 @@ public class CategoryService extends BaseService<Category> {
                 throw new ResourceAlreadyExistsException("Category", "name(case-insensitive)", updateCategoryDTO.getName());
             existingCategory.setName(updateCategoryDTO.getName());
         }
-        if (updateCategoryDTO.getDefaultColor() != null)
-            existingCategory.setDefaultColor(updateCategoryDTO.getDefaultColor());
-        if (updateCategoryDTO.getBackgroundColor() != null)
-            existingCategory.setBackgroundColor(updateCategoryDTO.getBackgroundColor());
-        if (updateCategoryDTO.getTextColor() != null)
-            existingCategory.setTextColor(updateCategoryDTO.getTextColor());
         return save(existingCategory);
     }
 }

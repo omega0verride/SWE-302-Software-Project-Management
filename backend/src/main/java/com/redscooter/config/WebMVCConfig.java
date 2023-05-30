@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 @EnableWebMvc
 public class WebMVCConfig implements WebMvcConfigurer {
+
+    // TODO: delegate this to nginx
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // Register resource handler for images

@@ -31,6 +31,9 @@ public class ProductBase {
     @SortableField
     private Double price;
 
+    @Min(0)
+    private double range;
+
     @SortableField
     private Integer discount = 0; // percentage
 
@@ -42,11 +45,12 @@ public class ProductBase {
         return price + (price * discount);
     }
 
-    public ProductBase(String title, String description, Double price, Integer discount, boolean used) {
+    public ProductBase(String title, String description, Double price, Integer discount, boolean used, double range) {
         this.title = title;
         this.description = description;
         this.price = price;
         this.discount = discount;
         this.used = used;
+        this.range=range;
     }
 }

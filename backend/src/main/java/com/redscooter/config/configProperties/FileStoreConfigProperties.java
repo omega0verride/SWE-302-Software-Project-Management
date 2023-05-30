@@ -15,12 +15,5 @@ public class FileStoreConfigProperties {
 
     private String rootDirectory;
 
-    private List<String> allowedMethods;
-
-    private List<String> allowedHeaders;
-
-    private List<String> exposedHeaders;
-
     private Long maxAge = null;
-
 }

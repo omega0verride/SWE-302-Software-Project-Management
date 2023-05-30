@@ -78,16 +78,17 @@ public class Product extends ProductBase implements Auditable {
                     ))})
     private List<Category> categories = new ArrayList<>();
 
-    public Product(String title, String description, int stock, Double price, int discount, String instagramPostURL, String facebookPostURL) {
+    public Product(String title, String description, int stock, Double price, int discount, double range, String instagramPostURL, String facebookPostURL) {
         setTitle(title);
         setDescription(description);
         setStock(stock);
         setPrice(price);
         setDiscount(discount);
+        setRange(range);
     }
 
-    public Product(String title, String description, int stock, Double price, int discount) {
-        this(title, description, stock, price, discount, null, null);
+    public Product(String title, String description, int stock, Double price, int discount, Double range) {
+        this(title, description, stock, price, discount, range, null, null);
     }
 
     public Product(CreateProductDTO productDTO) {
@@ -96,6 +97,8 @@ public class Product extends ProductBase implements Auditable {
         if (productDTO.getDescription() != null) setDescription(productDTO.getDescription());
         if (productDTO.getVisible() != null) setVisible(productDTO.getVisible());
 
+
+        if (productDTO.getRange() != null) setRange(productDTO.getRange());
         if (productDTO.getDiscount() != null) setDiscount(productDTO.getDiscount());
         if (productDTO.getStock() != null) setStock(productDTO.getStock());
         if (productDTO.getCustomFields() != null) setCustomFields(productDTO.getCustomFields());

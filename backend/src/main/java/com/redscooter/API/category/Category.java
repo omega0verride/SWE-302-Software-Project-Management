@@ -44,9 +44,6 @@ public class Category implements Auditable {
     @Column(unique = true, nullable = false)
     private String nameLowerCased;
 
-    private String defaultColor;
-    private String backgroundColor;
-    private String textColor;
     @ManyToMany(
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST},
@@ -54,16 +51,13 @@ public class Category implements Auditable {
     @JsonIgnore
     private List<Product> products = new ArrayList<>();
 
-    public Category(String name, String defaultColor, String backgroundColor, String textColor) {
+    public Category(String name) {
         setName(name);
-        setDefaultColor(defaultColor);
-        setBackgroundColor(backgroundColor);
-        setTextColor(textColor);
     }
 
     public Category(CreateCategoryDTO createCategoryDTO) {
         // no need to check for null values, these are all mandatory fields, the DTO will be marked invalid otherwise
-        this(createCategoryDTO.getName(), createCategoryDTO.getDefaultColor(), createCategoryDTO.getBackgroundColor(), createCategoryDTO.getTextColor());
+        this(createCategoryDTO.getName());
         if (createCategoryDTO.getVisible() != null) setVisible(createCategoryDTO.getVisible());
     }
 
