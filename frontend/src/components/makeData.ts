@@ -1,93 +1,25 @@
-import { Person } from './UsersTable';
+import {Person} from '../components/UsersTable'
 
+export const GetData = async (access_token) => {
+  try {
+      const response = await (await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/`,
+        {
+        method: 'GET',
+        headers: new Headers({
+          'Authorization': `Bearer ${access_token}`
+        })
+      }
+    )).json()
 
-export const GetData = async () => {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_URL}/users`,
-    {
-      method: 'GET',
-    }
-  )
+      return response
 
-  console.log(response.json())
-
-  if (response.status === 400) {
-    console.log('Please Complete all the fields!')
-  }
-
-  if (response.status === 401) {
-    console.log('Wrong email or password!')
+  } catch(err) {
+    console.log("Error at api call")
+    console.log(err)
   }
 
 }
-
-
-export const data: Person[] = [
-  {
-    id: '9s41rp',
-    firstName: 'Kelvin',
-    lastName: 'Langosh',
-    email: 'Jerod14@hotmail.com',
-    age: 19,
-    state: 'Ohio',
-  },
-  {
-    id: '08m6rx',
-    firstName: 'Molly',
-    lastName: 'Purdy',
-    email: 'Hugh.Dach79@hotmail.com',
-    age: 37,
-    state: 'Rhode Island',
-  },
-  {
-    id: '5ymtrc',
-    firstName: 'Henry',
-    lastName: 'Lynch',
-    email: 'Camden.Macejkovic@yahoo.com',
-    age: 20,
-    state: 'California',
-  },
-  {
-    id: 'ek5b97',
-    firstName: 'Glenda',
-    lastName: 'Douglas',
-    email: 'Eric0@yahoo.com',
-    age: 38,
-    state: 'Montana',
-  },
-  {
-    id: 'xxtydd',
-    firstName: 'Leone',
-    lastName: 'Williamson',
-    email: 'Ericka_Mueller52@yahoo.com',
-    age: 19,
-    state: 'Colorado',
-  },
-  {
-    id: 'wzxj9m',
-    firstName: 'Mckenna',
-    lastName: 'Friesen',
-    email: 'Veda_Feeney@yahoo.com',
-    age: 34,
-    state: 'New York',
-  },
-  {
-    id: '21dwtz',
-    firstName: 'Wyman',
-    lastName: 'Jast',
-    email: 'Melvin.Pacocha@yahoo.com',
-    age: 23,
-    state: 'Montana',
-  },
-  {
-    id: 'o8oe4k',
-    firstName: 'Janick',
-    lastName: 'Willms',
-    email: 'Delfina12@gmail.com',
-    age: 25,
-    state: 'Nebraska',
-  },
-];
 
 //50 us states array
 export const states = [

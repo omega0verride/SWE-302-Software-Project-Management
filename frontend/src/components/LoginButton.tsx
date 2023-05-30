@@ -57,7 +57,7 @@ const SendData = async (
         username: response?.username
       })
     )
-    router.push('/')
+    router.push('/users')
   }
 }
 
