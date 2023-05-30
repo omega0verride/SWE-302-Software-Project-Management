@@ -1,5 +1,6 @@
 package com.redscooter.API.common.localFileStore;
 
+import com.redscooter.config.configProperties.FileStoreConfigProperties;
 import com.redscooter.exceptions.api.LocalFileStore.FileNotFoundException;
 import com.redscooter.exceptions.api.LocalFileStore.UnableToCreateDirectory;
 import com.redscooter.exceptions.api.forbidden.PermissionDeniedToAccessPathException;
@@ -34,18 +35,22 @@ import java.util.stream.Collectors;
 @Getter
 public class LocalFileStore {
     public static final int DEFAULT_MAX_NUMBER_OF_SUB_DIRECTORIES = 30000;
-    public int maxNumberOfSubDirectories = 30000; // TODO get from config if null
+    public int maxNumberOfSubDirectories;
     private String absoluteParentRootPath;
     private String fileStoreRelativePath;
 
     public LocalFileStore(String absoluteParentRootPath, String fileStoreRelativePath, Integer maxNumberOfSubDirectories) {
         setAbsoluteParentRootPath(absoluteParentRootPath);
         setFileStoreRelativePath(fileStoreRelativePath);
-        if (maxNumberOfSubDirectories != null) setMaxNumberOfSubDirectories(maxNumberOfSubDirectories);
+        if (maxNumberOfSubDirectories != null) setMaxNumberOfSubDirectories(DEFAULT_MAX_NUMBER_OF_SUB_DIRECTORIES);
     }
 
     public LocalFileStore(String absoluteParentRootPath, String fileStoreRelativePath) {
         this(absoluteParentRootPath, fileStoreRelativePath, null);
+    }
+
+    public LocalFileStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties) {
+        this(fileStoreConfigProperties.getPublicRootPath(), fileStoreRelativePath, fileStoreConfigProperties.getMaxNumberOfSubDirectories());
     }
 
     public static String generateUniqueRelativePath(Long id, String subPath, int maxNumberOfSubDirectories) {

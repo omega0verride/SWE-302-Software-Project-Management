@@ -54,11 +54,11 @@ public class SecurityConfig {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // high priority filter that must be accessed only on specific conditions
-//        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/**").permitAll());
+        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/**").permitAll());
 
         // open/public endpoints with permitAll !!pay extra attention as order matters in this config first matcher gets returned!!
         // CustomAuthorizationFilter permits authentication and token refresh endpoints by default
-        customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api/**");
+//        customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api/**");
         customAuthorizationFilter.addPublicUnprotectedEndpointsAntMatcher("/api"); // redirect to /api-docs
         for (String antPatter : customAuthorizationFilter.getPublicUnprotectedEndpointsAntMatchers()) {
             http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers(antPatter).permitAll());

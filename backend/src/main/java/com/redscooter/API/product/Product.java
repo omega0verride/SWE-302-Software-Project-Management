@@ -33,9 +33,6 @@ public class Product extends ProductBase implements Auditable {
     @EmbeddedSortableFields(embeddedClass = AuditData.class)
     AuditData auditData = new AuditData();
 
-
-    public static final int MAX_NUMBER_OF_SUB_DIRECTORIES = 30000;
-
     @Id
     @SequenceGenerator(name = "product_sequence", sequenceName = "product_sequence", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_sequence")

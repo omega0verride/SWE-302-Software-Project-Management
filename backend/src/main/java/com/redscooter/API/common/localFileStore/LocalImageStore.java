@@ -1,5 +1,6 @@
 package com.redscooter.API.common.localFileStore;
 
+import com.redscooter.config.configProperties.FileStoreConfigProperties;
 import com.redscooter.exceptions.api.LocalFileStore.InvalidUploadFileType;
 import com.redscooter.util.Utilities;
 import org.apache.commons.io.FilenameUtils;
@@ -10,19 +11,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocalImageStore extends LocalFileStore {
+    private LocalImage defaultNoImageLocalImage;
 
-    private final String defaultNoImageFilename = "no_image.jpg";
-    private final String defaultNoImageRelativePath = Utilities.joinPathsAsString("public", "images");
-    private final String defaultNoImageAbsolutePath = Utilities.joinPathsAsString(Utilities.getResourcesPath_(), defaultNoImageRelativePath);
-    private final LocalImage defaultNoLocalImage = new LocalImage(defaultNoImageAbsolutePath, defaultNoImageRelativePath, defaultNoImageFilename);
-
-    public LocalImageStore(String absoluteParentRootPath, String fileStoreRelativePath, Integer maxNumberOfSubDirectories) {
+    public LocalImageStore(String absoluteParentRootPath, String fileStoreRelativePath, Integer maxNumberOfSubDirectories, LocalImage defaultNoImageLocalImage) {
         super(absoluteParentRootPath, fileStoreRelativePath, maxNumberOfSubDirectories);
+        if (defaultNoImageLocalImage == null)
+            buildDefaultNoLocalImage(Utilities.joinPathsAsString("images", "no_image.jpg"));
+        else
+            this.defaultNoImageLocalImage=defaultNoImageLocalImage;
     }
 
+    public LocalImageStore(String absoluteParentRootPath, String fileStoreRelativePath, Integer maxNumberOfSubDirectories) {
+        this(absoluteParentRootPath, fileStoreRelativePath, maxNumberOfSubDirectories, null);
+    }
 
-    public LocalImageStore(String absoluteParentRootPath, String fileStoreRelativePath) {
-        super(absoluteParentRootPath, fileStoreRelativePath);
+    public LocalImageStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties) {
+        super(fileStoreRelativePath, fileStoreConfigProperties);
+    }
+
+    private void buildDefaultNoLocalImage(String defaultNoImageRelativePath) {
+        defaultNoImageLocalImage = new LocalImage(Utilities.joinPathsAsString(this.getAbsoluteParentRootPath(), defaultNoImageRelativePath), defaultNoImageRelativePath, Utilities.getFilenameFromPath(defaultNoImageRelativePath));
     }
 
     public List<LocalImage> getImages(Long id) {
@@ -62,6 +70,7 @@ public class LocalImageStore extends LocalFileStore {
     public LocalImage saveImage(MultipartFile file, Long id) throws IOException {
         return saveImage(file, id, null);
     }
+
     public LocalImage saveImage(MultipartFile file, Long id, Integer imageIndex) throws IOException {
         String fileName = FilenameUtils.getName(file.getOriginalFilename());
         String fileType = file.getContentType();
@@ -71,7 +80,7 @@ public class LocalImageStore extends LocalFileStore {
             throw new InvalidUploadFileType(fileName, "image/.*", fileType);
         try {
             return LocalImage.fromLocalFile(saveFile(file, id, fileName, imageIndex));
-        }catch (Exception exception){
+        } catch (Exception exception) {
             System.out.println(exception);
             return null;
         }
@@ -94,7 +103,7 @@ public class LocalImageStore extends LocalFileStore {
     }
 
     public LocalImage getDefaultNoImage() {
-        return new LocalImage(defaultNoLocalImage);
+        return new LocalImage(defaultNoImageLocalImage);
     }
 
     public enum ImageNotFoundBehavior {

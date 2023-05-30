@@ -25,7 +25,7 @@ if [ $? -eq 0 ]; then
               cp $jarFile ../production/target/
               echo "Copying sprint application properties..."
               cp ./src/main/resources/application.yml ../production/target/
-              cp -r ./src/main/resources/ ../production/target/resources
+              cp -r ./src/main/resources/ ../production/target/resources/
             else
                 read -n 1 -p "Error: jar not found! Press any key to continue..." _continue
                 exit 1
