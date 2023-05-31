@@ -21,6 +21,7 @@ public class LocalImage extends LocalFile {
         super(absoluteDirPath, relativeDirPath, originalFileName, fileName);
     }
 
+    // TODO careful on NullPointerExceptions here
     public LocalImage(LocalFile f) {
         super(f.absoluteDirPath, f.relativeDirPath, f.generatedUniqueFilename, f.fileName, f.index);
     }

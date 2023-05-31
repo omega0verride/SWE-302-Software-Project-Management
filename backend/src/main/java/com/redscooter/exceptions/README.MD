@@ -1,4 +1,4 @@
-exceptionId can be used by the client software to identify the exceptions  
+ exceptionId can be used by the client software to identify the exceptions  
 its value matches the name of the class
 some exceptions extend others, to be able to detect "superclass" exceptions
 exceptionId will include <ex_class_0>.<ex_class_1>.<ex_class_{n}>

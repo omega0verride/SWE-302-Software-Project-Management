@@ -147,7 +147,7 @@
         <dependency>
             <groupId>grad-project.indritbreti</groupId>
             <artifactId>restprocessors</artifactId>
-            <version>0.0.15-SNAPSHOT</version>
+            <version>0.0.18-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -187,18 +187,18 @@
                     <source>17</source>
                     <target>17</target>
                     <encoding>UTF-8</encoding>
-                    <generatedSourcesDirectory>${project.build.directory}/generated-sources/</generatedSourcesDirectory>
+                    <generatedSourcesDirectory>${project.build.directory}/restprocessors-generated-sources</generatedSourcesDirectory>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${lombok.version}</version>
                         </path>
-<!--                        <path>-->
-<!--                            <groupId>grad-project.indritbreti</groupId>-->
-<!--                            <artifactId>restprocessors</artifactId>-->
-<!--                            <version>0.0.15-SNAPSHOT</version>-->
-<!--                        </path>-->
+                        <path>
+                            <groupId>grad-project.indritbreti</groupId>
+                            <artifactId>restprocessors</artifactId>
+                            <version>0.0.18-SNAPSHOT</version>
+                        </path>
                     </annotationProcessorPaths>
                     <!--                    <annotationProcessors>-->
                     <!--                        <annotationProcessor>-->
@@ -221,7 +221,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/generated-sources/</source>
+                                <source>${project.build.directory}/restprocessors-generated-sources/</source>
                             </sources>
                         </configuration>
                     </execution>

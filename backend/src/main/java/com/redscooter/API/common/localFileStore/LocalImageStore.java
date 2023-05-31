@@ -11,13 +11,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class LocalImageStore extends LocalFileStore {
-    private LocalImage defaultNoImageLocalImage;
+    private LocalImage defaultNoImageLocalImage = buildDefaultNoLocalImage(Utilities.joinPathsAsString("images", "no_image.jpg"));;
 
     public LocalImageStore(String absoluteParentRootPath, String fileStoreRelativePath, Integer maxNumberOfSubDirectories, LocalImage defaultNoImageLocalImage) {
         super(absoluteParentRootPath, fileStoreRelativePath, maxNumberOfSubDirectories);
-        if (defaultNoImageLocalImage == null)
-            buildDefaultNoLocalImage(Utilities.joinPathsAsString("images", "no_image.jpg"));
-        else
+        if (defaultNoImageLocalImage != null)
             this.defaultNoImageLocalImage=defaultNoImageLocalImage;
     }
 
@@ -29,8 +27,8 @@ public class LocalImageStore extends LocalFileStore {
         super(fileStoreRelativePath, fileStoreConfigProperties);
     }
 
-    private void buildDefaultNoLocalImage(String defaultNoImageRelativePath) {
-        defaultNoImageLocalImage = new LocalImage(Utilities.joinPathsAsString(this.getAbsoluteParentRootPath(), defaultNoImageRelativePath), defaultNoImageRelativePath, Utilities.getFilenameFromPath(defaultNoImageRelativePath));
+    private LocalImage buildDefaultNoLocalImage(String defaultNoImageRelativePath) {
+        return new LocalImage(Utilities.joinPathsAsString(this.getAbsoluteParentRootPath(), defaultNoImageRelativePath), defaultNoImageRelativePath, Utilities.getFilenameFromPath(defaultNoImageRelativePath));
     }
 
     public List<LocalImage> getImages(Long id) {

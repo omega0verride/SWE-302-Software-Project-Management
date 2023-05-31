@@ -28,7 +28,7 @@ public class FileStoreConfigProperties {
     private String publicRootPath;
 
     @Min(100)
-    private int maxNumberOfSubDirectories = 30000;
+    private Integer maxNumberOfSubDirectories = 30000;
 
     public void setRootPath(String rootPath) {
         this.rootPath = new File(rootPath).getAbsolutePath();
