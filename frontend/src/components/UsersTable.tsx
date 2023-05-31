@@ -19,41 +19,36 @@ import {
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { states, GetData } from './makeData'
+import { authorities, GetData } from './makeData'
 import { v4 as uuidv4 } from 'uuid'
 import BasicModal from './BasicModal'
 import { useSelector } from 'react-redux'
 
 export type Person = {
   id: string
-  firstName: string
-  lastName: string
+  name: string
+  surname: string
   email: string
-  age: number
-  state: string
+  phoneNumber: number
+  admin: boolean
 }
 
 const Table = () => {
   const { access_token } = useSelector((state: any) => state.user)
-  const [testData, setData] = useState()
 
+  const [createModalOpen, setCreateModalOpen] = useState(false)
+  const [tableData, setTableData] = useState<Person[]>([])
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
       const res = await GetData(access_token)
-
       // set state when the data received
-      setData(res)
+      setTableData(res)
     }
 
     dataFetch()
   }, [])
 
-  const data: Person[] = testData ?? []
-  console.log(data)
-  const [createModalOpen, setCreateModalOpen] = useState(false)
-  const [tableData, setTableData] = useState<Person[]>(() => data)
-  // setTableData(testData ?? [])
   const [validationErrors, setValidationErrors] = useState<{
     [cellId: string]: string
   }>({})
@@ -135,16 +130,18 @@ const Table = () => {
         size: 80
       },
       {
-        accessorKey: 'firstName',
+        accessorKey: 'name',
         header: 'First Name',
+        enableClickToCopy: true,
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell)
         })
       },
       {
-        accessorKey: 'lastName',
+        accessorKey: 'surname',
         header: 'Last Name',
+        enableClickToCopy: true,
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell)
@@ -153,31 +150,46 @@ const Table = () => {
       {
         accessorKey: 'email',
         header: 'Email',
+        enableClickToCopy: true,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
           type: 'email'
         })
       },
       {
-        accessorKey: 'age',
-        header: 'Age',
+        accessorKey: 'phoneNumber',
+        header: 'Phone Number',
+        enableClickToCopy: true,
         size: 80,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell),
-          type: 'number'
-        })
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<string>() || (
+              <div style={{ color: '#D12222' }}>{'No phone number'}</div>
+            )}
+          </div>
+        )
       },
       {
-        accessorKey: 'state',
-        header: 'State',
-        muiTableBodyCellEditTextFieldProps: {
+        accessorKey: 'admin',
+        header: 'Role',
+        Cell: ({ cell }) => (
+
+            <div>
+              {cell.getValue<boolean>() === true ? (
+                <div style={{ color: '#D12222' }}>{'Admin'}</div>
+              ) : (
+                <div>{'Basic User'}</div>
+              )}
+            </div>
+        ),
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           select: true, //change to select for a dropdown
-          children: states.map((state) => (
-            <MenuItem key={state} value={state}>
-              {state}
+          children: authorities.map((authority) => (
+            <MenuItem key={authority} value={authority}>
+              {authority}
             </MenuItem>
           ))
-        }
+        })
       }
     ],
     [getCommonEditTextFieldProps]
