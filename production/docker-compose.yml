@@ -27,6 +27,7 @@ services:
       PGDATABASE: *db_database
     volumes:
     - ${DATABASE_VOLUME:-./database-data}:/var/lib/postgresql/data
+    - ./postgresql_setup:/docker-entrypoint-initdb.d
     ports:
     - "${DATABASE_PORT:-5432}:5432"
     command: postgres -c listen_addresses='*' 
