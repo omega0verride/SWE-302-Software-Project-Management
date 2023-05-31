@@ -33,6 +33,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -47,13 +48,14 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/users")
 @RequiredArgsConstructor
-public class AppUserController {
+public class AppUserController  {
     private final AppUserService appUserService;
     private final JwtUtils jwtUtils;
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
     @GetMapping("")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<GetAppUserDTO>> getUsers() {
         if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
             return ResponseEntity.status(403).body(null);

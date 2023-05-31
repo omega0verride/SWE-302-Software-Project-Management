@@ -136,4 +136,9 @@ public class BaseException extends RuntimeException {
     public ResponseEntity<Object> toResponseEntity() {
         return toErrorResponse().toResponseEntity();
     }
+
+    public void printRootStackTrace() {
+        if (rootException!=null)
+            rootException.printStackTrace();
+    }
 }

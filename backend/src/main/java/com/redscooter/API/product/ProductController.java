@@ -9,8 +9,12 @@ import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthenticationFacade;
 import com.redscooter.security.JwtUtils;
 import jakarta.validation.Valid;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.PathFunctionArg;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortByFunction;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortOrder;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.restprocessors.DynamicRestMapping;
+import org.restprocessors.FieldDetailsRegistry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -39,6 +43,8 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         this.productService = productService;
         this.appUserService = appUserService;
         this.jwtUtils = jwtUtils;
+        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("custom_ts_rank", Float.class, "searchBestMatch", 1, SortOrder.DESC));
+        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("length", Long.class, "descriptionLength", 1, SortOrder.ASC, new PathFunctionArg(0, "description")));
     }
 
     @GetMapping("/{productId}")
@@ -55,19 +61,6 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp.getPageNumber(), cp.getPageSize(), cp.getSortBy(), cp.getFilters());
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
-
-//    @GetMapping("public/products")
-//    public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
-////        List<Filter<?>> filters = new ArrayList<>();
-////        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("createdAt", createdAtFilters));
-////        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("updatedAt", updatedAtFilters));
-////        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "id", productIdFilters));
-////        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "price", priceFilters));
-////        filters.addAll(FilterFactory.getLongJoinFiltersFromRHSColonExpression(Product.class, Category.class, "id", categoryFilters));
-//
-//        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
-//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
-//    }
 
     @GetMapping("/searchSuggestions")
     public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops

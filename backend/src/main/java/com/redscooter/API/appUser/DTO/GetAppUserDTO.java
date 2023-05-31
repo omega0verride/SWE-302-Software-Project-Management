@@ -2,6 +2,7 @@ package com.redscooter.API.appUser.DTO;
 
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.common.AuditBaseDTO;
+import com.redscooter.security.AuthenticationFacade;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,6 +19,8 @@ public class GetAppUserDTO extends AuditBaseDTO {
     private String phoneNumber;
     private boolean enabled;
 
+    private boolean isAdmin;
+
     public GetAppUserDTO(AppUser appUser) {
         this.id = appUser.getId();
         this.name = appUser.getName();
@@ -28,6 +31,7 @@ public class GetAppUserDTO extends AuditBaseDTO {
         this.enabled = appUser.isEnabled();
         this.createdAt = appUser.getCreatedAt();
         this.updatedAt = appUser.getUpdatedAt();
+        this.isAdmin = appUser.getRoles().stream().anyMatch(r->r.getName().equals(AuthenticationFacade.ADMIN_AUTHORITY.getAuthority()));
     }
 
     public static GetAppUserDTO fromAppUser(AppUser appUser) {

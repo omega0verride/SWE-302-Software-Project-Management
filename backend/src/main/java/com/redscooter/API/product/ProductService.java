@@ -6,17 +6,16 @@ import com.redscooter.API.common.BaseService;
 import com.redscooter.API.common.localFileStore.LocalImage;
 import com.redscooter.API.common.localFileStore.LocalImageStore;
 import com.redscooter.API.product.DTO.UpdateProductDTO;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.SortableFieldDetails;
+import com.redscooter.util.Utilities;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.CriteriaOperator.CriteriaOperator;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.Filter;
+import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.FullTextSearchFilter;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.FunctionArg;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.LiteralFunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.MultiColumnSort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.*;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,10 +42,14 @@ public class ProductService extends BaseService<Product> {
     }
 
     public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, int page, int size, MultiColumnSort sortBy, List<Filter<?>> filters) {
+        Hashtable<String, FunctionArg[]> arguments = new Hashtable<>();
         if (isVisibleRequired)
             filters.add(new Filter<>("visible", CriteriaOperator.EQUAL, true));
-
-        return ProductRepository.findAllByCriteria(page, size, sortBy, filters);
+        if (Utilities.notNullOrEmpty(searchQuery)) {
+            filters.add(new FullTextSearchFilter(searchQuery));
+            arguments.put("searchBestMatch", new FunctionArg[]{new LiteralFunctionArg(0, searchQuery)});
+        }
+        return ProductRepository.findAllByCriteria(page, size, sortBy, filters, arguments);
     }
 
     public List<Product> addAllProducts(ArrayList<Product> products) {

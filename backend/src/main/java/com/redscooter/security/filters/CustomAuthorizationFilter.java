@@ -1,13 +1,16 @@
 package com.redscooter.security.filters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.exceptions.BaseException;
 import com.redscooter.exceptions.GlobalResponseEntityExceptionHandler;
 import com.redscooter.exceptions.UnknownException;
-import com.redscooter.exceptions.api.unauthorized.*;
 import com.redscooter.security.JwtUtils;
 import com.redscooter.security.TokenDetails;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,19 +57,20 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        for (String antPattern : PUBLIC_UNPROTECTED_ENDPOINTS_ANT_MATCHERS) {
-            if (ANT_PATH_MATCHER.match(antPattern, request.getServletPath())) {
+        try {
+            for (String antPattern : PUBLIC_UNPROTECTED_ENDPOINTS_ANT_MATCHERS) {
+                if (ANT_PATH_MATCHER.match(antPattern, request.getServletPath())) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            }
+
+            String authorizationHeader = request.getHeader(AUTHORIZATION);
+            if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
-        }
 
-        String authorizationHeader = request.getHeader(AUTHORIZATION);
-        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-        try {
             TokenDetails tokenDetails = jwtUtils.getTokenDetailsFromAuthorizationHeader(authorizationHeader, appUserService);
 
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenDetails.getAppUser().getUsername(), null, tokenDetails.getAuthorities());
@@ -90,7 +90,6 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
             }
         }
     }
-
 
 
 }

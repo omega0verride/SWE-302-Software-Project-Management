@@ -55,6 +55,7 @@ public class SecurityConfig {
 
         // high priority filter that must be accessed only on specific conditions
         http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/**").permitAll());
+//        http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/api/users/").permitAll());
 
         // open/public endpoints with permitAll !!pay extra attention as order matters in this config first matcher gets returned!!
         // CustomAuthorizationFilter permits authentication and token refresh endpoints by default

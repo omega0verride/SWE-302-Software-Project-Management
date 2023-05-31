@@ -53,7 +53,7 @@ spring:
                 jdbc:
                     batch_size: 50
                     time_zone: UTC
-#                metadata_builder_contributor: com.redscooter.config.SqlFunctionsMetadataBuilderContributor
+                metadata_builder_contributor: com.redscooter.config.SqlFunctionsMetadataBuilderContributor
         hibernate:
             ddl-auto: create-drop # none, create, create-drop, validate, and update
             enhancer:

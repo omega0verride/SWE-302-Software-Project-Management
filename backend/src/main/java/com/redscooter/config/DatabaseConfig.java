@@ -9,9 +9,9 @@ import com.redscooter.API.category.CategoryService;
 import com.redscooter.API.product.Product;
 import com.redscooter.API.product.ProductService;
 import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.util.PostgreSQLFullTextSearchUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +24,7 @@ import java.util.Random;
 @AllArgsConstructor
 public class DatabaseConfig {
 
+    private final PostgreSQLFullTextSearchUtils customNativeRepository;
     private final RoleService roleService;
     private final AppUserService appUserService;
 
@@ -37,7 +38,7 @@ public class DatabaseConfig {
     @Bean
     CommandLineRunner rolesConfig() {
         return args -> {
-               if (roleService.existsByName(USER_ROLE.getName()))
+            if (roleService.existsByName(USER_ROLE.getName()))
                 USER_ROLE = roleService.getByName(USER_ROLE.getName());
             else
                 USER_ROLE = roleService.save(USER_ROLE);
@@ -50,6 +51,15 @@ public class DatabaseConfig {
             ADMIN_USER.setRoles(List.of(ADMIN_ROLE));
             ADMIN_USER.setEnabled(true);
             ADMIN_USER = appUserService.saveUser(ADMIN_USER);
+        };
+    }
+
+    @Bean
+    CommandLineRunner dbSetupCommandLineRunner() {
+        return args -> {
+            customNativeRepository.addUnAccentExtension();
+            customNativeRepository.createCustomUnAccent();
+            customNativeRepository.addSearchTokenizerListenerToTable("products", "search_vector", List.of("title", "description"));
         };
     }
 

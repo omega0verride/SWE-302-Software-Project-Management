@@ -12,11 +12,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<Object> invalidCriteriaOperatorExceptionHandler(BaseException ex) {
+        ex.printRootStackTrace();
         return ex.toResponseEntity();
     }
 
     @ExceptionHandler(org.restprocessors.exceptions.BaseException.class)
     public ResponseEntity<Object> invalidCriteriaOperatorExceptionHandler(org.restprocessors.exceptions.BaseException ex) {
+        ex.printRootStackTrace();
         return ex.toResponseEntity();
     }
 
