@@ -26,7 +26,7 @@ public class OrderVerificationListener implements ApplicationListener<OnOrderCon
         Order order = event.getOrder();
         String recipientAddress = order.getOrderBilling().getClientEmail();
         String recipientName = order.getOrderBilling().getClientName();
-        String subject = "Konfirmimi i porosisë ne AZAL";
+        String subject = "Konfirmimi i porosisë ne RedScooter";
         try {
             emailSender.sendEmail(recipientAddress, subject, OrderConfirmationHTMLBuilder.buildOrderConfirmationHTML(order));
         } catch (MailSendException ex) { // TODO how to handle cases when email not sent

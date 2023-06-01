@@ -1,6 +1,8 @@
 package com.redscooter.security;
 
+import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
+import com.redscooter.exceptions.api.forbidden.ForbiddenException;
 import com.redscooter.util.Utilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -37,8 +39,24 @@ public class AuthenticationFacade {
     public static boolean isAdminAuthorization(String authorizationHeader, JwtUtils jwtUtils, AppUserService appUserService) {
         try {
             return Utilities.notNullAndContains(jwtUtils.getTokenDetailsFromAuthorizationHeader(authorizationHeader, appUserService).getAuthorities(), ADMIN_AUTHORITY);
-        }catch (Exception ex){
+        } catch (Exception ex) {
             return false;
         }
+    }
+
+    public static void ensureAdmin() {
+        if (!isAdminOnCurrentSecurityContext())
+            throw new ForbiddenException();
+    }
+
+    public static void ensureAdminOrCurrentUserOnCurrentSecurityContext(String username) {
+        if (!isAdminOrCurrentUserOnCurrentSecurityContext(username))
+            throw new ForbiddenException("The authorization token provided cannot access resources for user: ["+username+"]. The token of the user itself or an admin user must be used.");
+    }
+
+    public static boolean isAdminOrCurrentUserOnCurrentSecurityContext(AppUser appUser) {
+        if (appUser==null)
+            return isAdminOnCurrentSecurityContext();
+        return isAdminOrCurrentUserOnCurrentSecurityContext(appUser.getUsername());
     }
 }

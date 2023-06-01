@@ -9,6 +9,7 @@ import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthenticationFacade;
 import com.redscooter.security.JwtUtils;
 import jakarta.validation.Valid;
+import org.checkerframework.checker.units.qual.A;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.PathFunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortByFunction;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortOrder;
@@ -50,7 +51,6 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 
     @GetMapping("/{productId}")
     public GetProductDTO getProductByID(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "productId", required = true) Long productId) {
-//        Long productId_ = Utilities.tryParseLong(productId, "productId");
         Product product = productService.getById(productId);
         if (!product.isVisible() && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             throw new ResourceRequiresAdminPrivileges("Product", "Id", productId.toString());
@@ -72,8 +72,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 
     @PostMapping("")
     public ResponseEntity<Object> createProduct(@Valid @RequestBody CreateProductDTO createProductDTO) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product product = new Product(createProductDTO);
         product = productService.addCategories(product, createProductDTO.getCategories()); // this will also save the new product
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Product", "Id", product.getId());
@@ -82,48 +81,42 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 
     @PatchMapping("/{productId}")
     public ResponseEntity<Object> updateProduct(@PathVariable(name = "productId") Long productId, @Valid @RequestBody UpdateProductDTO updateProductDTO) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.updateProduct(productId, updateProductDTO);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
     @PatchMapping("/{productId}/setCustomFields")
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.setCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
     @PatchMapping("/{productId}/setCustomFieldsFromList")
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody List<Map.Entry<String, Object>> customFields) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.setCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
     @PatchMapping("/{productId}/addCustomFields")
     public ResponseEntity<Object> addCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.addCustomFields(productId, customFields);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
     @PatchMapping("/{productId}/removeCustomFields")
     public ResponseEntity<Object> removeCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Set<String> keys) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.removeCustomFields(productId, keys);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
     @PatchMapping("/{productId}/removeCustomField")
     public ResponseEntity<Object> removeCustomField(@PathVariable(name = "productId") Long productId, @RequestBody String key) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Product updatedProduct = productService.removeCustomField(productId, key);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
@@ -131,8 +124,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 
     @DeleteMapping("/{productId}")
     public ResponseEntity<Object> deleteProduct(@PathVariable(name = "productId") Long productId) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         productService.delete(productId);
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }
@@ -140,8 +132,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
     // THESE METHODS HANDLE IMAGE UPLOAD/DELETE/THUMBNAIL_CHANGE
     @PostMapping("/uploadImage/{productId}")
     public ResponseEntity<Object> uploadImage(@RequestParam(name = "file", required = true) MultipartFile file, @PathVariable(name = "productId", required = true) Long productId, @RequestParam(name = "isThumbnail", required = false, defaultValue = "false") boolean isThumbnail) throws IOException {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         LocalImage savedImage = productService.uploadImage(file, productId, isThumbnail);
         // TODO create response
         Map<String, Object> response = new HashMap<>();
@@ -153,8 +144,7 @@ public class ProductController extends com.redscooter.API.product.ProductControl
 
     @DeleteMapping("/deleteImage")
     public ResponseEntity<Object> deleteImage(@RequestParam(name = "filePath", required = true) String filePath) throws IOException {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         productService.deleteImage(filePath);
 
         Map<String, Object> response = new HashMap<>();

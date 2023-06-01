@@ -52,24 +52,21 @@ public class CategoryController {
 
     @PostMapping("")
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CreateCategoryDTO createCategoryDTO) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Category insertedCategory = categoryService.create(createCategoryDTO);
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Category", "categoryId", insertedCategory.getId());
     }
 
     @PatchMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable(name = "categoryId", required = true) Long categoryId, @Valid @RequestBody UpdateCategoryDTO updateCategoryDTO) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         Category updatedCategory = categoryService.update(categoryId, updateCategoryDTO);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Category", "categoryId", categoryId, updatedCategory.toGetCategoryDTO());
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable(name = "categoryId", required = true) Long categoryId) {
-        if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-            return ResponseEntity.status(403).body(null);
+        AuthenticationFacade.ensureAdmin();
         categoryService.delete(categoryId);
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }

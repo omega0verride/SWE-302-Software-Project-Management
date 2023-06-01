@@ -15,9 +15,9 @@ if [ $? -eq 0 ]; then
     cp -r ./out/* ../production/target/html/
     
     echo "[2/3][0] Building backend jar..."
-    cd ../backend && mvn package
+    cd ../backend && mvn clean package
     if [ $? -eq 0 ]; then
-        echo "[2/3][1] mvn package executed succesfully!"
+        echo "[2/3][1] mvn clean package executed succesfully!"
         jarFile=$( find ./target/ -name "*.jar" -print0 | xargs -r -0 ls -1 -t | head -) # get latest jar file
         if [ $? -eq 0 ]; then
             if ! [[ -z "$jarFile" ]]; then
@@ -35,7 +35,7 @@ if [ $? -eq 0 ]; then
             exit 1
         fi
     else
-        read -n 1 -p "Error: [mvn package] failed. Press any key to continue..." _continue
+        read -n 1 -p "Error: [mvn clean package] failed. Press any key to continue..." _continue
         exit 1
     fi
 else
