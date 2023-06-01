@@ -1,25 +1,22 @@
 package com.redscooter.API.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redscooter.API.category.Category;
 import com.redscooter.API.common.AuditData;
 import com.redscooter.API.common.Auditable;
 import com.redscooter.API.product.DTO.CreateProductDTO;
 import com.redscooter.API.product.DTO.GetModerateProductDTO;
 import com.redscooter.API.product.DTO.GetProductDTO;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.EmbeddedSortableFields;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.SortableField;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
+import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
-import org.restprocessors.RESTField;
 import org.springframework.stereotype.Repository;
-import com.vladmihalcea.hibernate.type.json.JsonBinaryType;
 
-import jakarta.persistence.*;
 import java.util.*;
 
 @Entity(name = "products")
@@ -30,7 +27,6 @@ import java.util.*;
 @Repository
 public class Product extends ProductBase implements Auditable {
     @Embedded
-    @EmbeddedSortableFields(embeddedClass = AuditData.class)
     AuditData auditData = new AuditData();
 
     @Id
@@ -40,7 +36,6 @@ public class Product extends ProductBase implements Auditable {
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @EqualsAndHashCode.Include // limit the hash generator to PK
     @Access(AccessType.PROPERTY)
-    @RESTField
     private Long id;
 
     @Column(length = 2048)
@@ -51,10 +46,8 @@ public class Product extends ProductBase implements Auditable {
     @Column(length = 2048)
     private String thumbnailFilename;
 
-    @SortableField
     private boolean visible = true;
 
-    @SortableField
     private Integer stock = 0;
 
     @Type(JsonBinaryType.class)
@@ -123,24 +116,25 @@ public class Product extends ProductBase implements Auditable {
     public GetModerateProductDTO toGetModerateProductDTO(ProductService productService) {
         return new GetModerateProductDTO(this, productService);
     }
+
     public void addCustomFields(Map<String, Object> customFields) {
-        if (this.customFields==null)
-            this.customFields=new HashMap<>();
-        if (customFields!=null)
+        if (this.customFields == null)
+            this.customFields = new HashMap<>();
+        if (customFields != null)
             this.customFields.putAll(customFields);
     }
 
     public void removeCustomField(String key) {
-        if (this.customFields==null)
+        if (this.customFields == null)
             return;
-        if (key!=null)
+        if (key != null)
             this.customFields.remove(key);
     }
 
     public void removeCustomFields(Set<String> keys) {
-        if (this.customFields==null)
+        if (this.customFields == null)
             return;
-        for (String key:keys)
+        for (String key : keys)
             this.customFields.remove(key);
     }
 

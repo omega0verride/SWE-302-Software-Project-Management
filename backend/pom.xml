@@ -147,7 +147,7 @@
         <dependency>
             <groupId>grad-project.indritbreti</groupId>
             <artifactId>restprocessors</artifactId>
-            <version>0.0.20-SNAPSHOT</version>
+            <version>0.0.24-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -197,7 +197,7 @@
                         <path>
                             <groupId>grad-project.indritbreti</groupId>
                             <artifactId>restprocessors</artifactId>
-                            <version>0.0.20-SNAPSHOT</version>
+                            <version>0.0.24-SNAPSHOT</version>
                         </path>
                     </annotationProcessorPaths>
                     <!--                    <annotationProcessors>-->

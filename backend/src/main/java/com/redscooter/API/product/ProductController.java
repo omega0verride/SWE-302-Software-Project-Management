@@ -15,6 +15,7 @@ import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortOrder;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.restprocessors.DynamicRestMapping;
 import org.restprocessors.FieldDetailsRegistry;
+import org.restprocessors.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
@@ -56,24 +57,16 @@ public class ProductController extends com.redscooter.API.product.ProductControl
         return product.toGetProductDTO(productService);
     }
 
-    @DynamicRestMapping(path = "", requestMethod = org.restprocessors.RequestMethod.GET, entity = Product.class)
+    @DynamicRestMapping(path = "", requestMethod = RequestMethod.GET, entity = Product.class)
     public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
-        Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp.getPageNumber(), cp.getPageSize(), cp.getSortBy(), cp.getFilters());
+        Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
 
-    @GetMapping("/searchSuggestions")
-    public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "pageSize", defaultValue = "30") int pageSize, @RequestParam(name = "pageNumber", defaultValue = "0") int pageNumber) { // todo create decorator to set available filter ops
-//        List<Filter<?>> filters = new ArrayList<>();
-//        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("createdAt", createdAtFilters));
-//        filters.addAll(FilterFactory.getLocalDateTimeFiltersFromRHSColonExpression("updatedAt", updatedAtFilters));
-//        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "id", productIdFilters));
-//        filters.addAll(FilterFactory.getNumericFiltersFromRHSColonExpression(Long.class, "price", priceFilters));
-//        filters.addAll(FilterFactory.getLongJoinFiltersFromRHSColonExpression(Product.class, Category.class, "id", categoryFilters));
-
-//        Page<Product> resultsPage = productService.getAllByCriteria(true, null, pageNumber, pageSize);
-//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
-        return null;
+    @DynamicRestMapping(path = "/searchSuggestions", requestMethod = RequestMethod.GET, entity = Product.class)
+    public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
+        Page<Product> resultsPage = productService.getAllByCriteria(!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
+        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
     }
 
 

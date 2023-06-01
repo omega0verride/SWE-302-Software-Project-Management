@@ -1,11 +1,16 @@
 package com.redscooter.config;
 
+import com.redscooter.API.OrderLine.OrderLine;
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.API.appUser.Role;
 import com.redscooter.API.appUser.RoleService;
 import com.redscooter.API.category.Category;
 import com.redscooter.API.category.CategoryService;
+import com.redscooter.API.order.Order;
+import com.redscooter.API.order.OrderBilling;
+import com.redscooter.API.order.OrderService;
+import com.redscooter.API.order.PaymentOption;
 import com.redscooter.API.product.Product;
 import com.redscooter.API.product.ProductService;
 import com.redscooter.security.AuthenticationFacade;
@@ -27,6 +32,7 @@ public class DatabaseConfig {
     private final PostgreSQLFullTextSearchUtils customNativeRepository;
     private final RoleService roleService;
     private final AppUserService appUserService;
+    private final OrderService orderService;
 
     @Getter
     private static Role USER_ROLE = new Role(AuthenticationFacade.USER_AUTHORITY.getAuthority());
@@ -133,6 +139,13 @@ public class DatabaseConfig {
             productService.addCategory(p12.getId(), Skutera.getId());
             productService.addCategory(a.getId(), Skutera.getId());
             productService.addCategory(a.getId(), Aksesore.getId());
+
+            Order order = new Order();
+            List<OrderLine> orderLines = new ArrayList<>() {{
+                add(new OrderLine(new Product("test", "test", 0, 100.0, 0, 7, "asd", "asd"), 2));
+            }};
+            OrderBilling orderBilling = new OrderBilling("asd", "asd", "asd", "asd", "asd,", "asd", PaymentOption.CASH);
+            orderService.create(order, orderLines, orderBilling);
         };
     }
 }

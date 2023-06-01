@@ -5,7 +5,6 @@ import com.redscooter.API.appUser.DTO.GetAppUserDTO;
 import com.redscooter.API.common.AuditData;
 import com.redscooter.API.common.Auditable;
 import com.redscooter.security.thirdPartyLogin.AuthType;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.EmbeddedSortableFields;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import lombok.Getter;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class AppUser implements Auditable {
     @Embedded
-    @EmbeddedSortableFields(embeddedClass = AuditData.class)
     AuditData auditData = new AuditData();
 
 

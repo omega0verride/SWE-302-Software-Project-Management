@@ -13,6 +13,7 @@ import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.FullT
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.FunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.LiteralFunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.MultiColumnSort;
+import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -41,15 +42,14 @@ public class ProductService extends BaseService<Product> {
         return ProductRepository.findAllById(ids);
     }
 
-    public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, int page, int size, MultiColumnSort sortBy, List<Filter<?>> filters) {
-        Hashtable<String, FunctionArg[]> arguments = new Hashtable<>();
+    public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, CriteriaParameters cp) {
         if (isVisibleRequired)
-            filters.add(new Filter<>("visible", CriteriaOperator.EQUAL, true));
+            cp.addFilter(new Filter<>("visible", CriteriaOperator.EQUAL, true));
         if (Utilities.notNullOrEmpty(searchQuery)) {
-            filters.add(new FullTextSearchFilter(searchQuery));
-            arguments.put("searchBestMatch", new FunctionArg[]{new LiteralFunctionArg(0, searchQuery)});
+            cp.addFilter(new FullTextSearchFilter(searchQuery));
+            cp.addSortByFunctionArg("searchBestMatch", new LiteralFunctionArg(0, searchQuery));
         }
-        return ProductRepository.findAllByCriteria(page, size, sortBy, filters, arguments);
+        return ProductRepository.findAllByCriteria(cp);
     }
 
     public List<Product> addAllProducts(ArrayList<Product> products) {
