@@ -10,9 +10,7 @@ import com.redscooter.util.Utilities;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.CriteriaOperator.CriteriaOperator;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.Filter;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.FullTextSearchFilter;
-import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.FunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.LiteralFunctionArg;
-import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.MultiColumnSort;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,20 +24,20 @@ import java.util.stream.Collectors;
 @Service
 public class ProductService extends BaseService<Product> {
 
-    private final com.redscooter.API.product.ProductRepository ProductRepository;
+    private final ProductRepository productRepository;
     private final CategoryService categoryService;
     private final ProductImageStore productImageStore;
 
     @Autowired
-    public ProductService(com.redscooter.API.product.ProductRepository ProductRepository, CategoryService categoryService, ProductImageStore productImageStore) {
+    public ProductService(ProductRepository ProductRepository, CategoryService categoryService, ProductImageStore productImageStore) {
         super(ProductRepository, "Product");
-        this.ProductRepository = ProductRepository;
+        this.productRepository = ProductRepository;
         this.categoryService = categoryService;
         this.productImageStore = productImageStore;
     }
 
     public Collection<Product> getAllByIds(List<Long> ids) {
-        return ProductRepository.findAllById(ids);
+        return productRepository.findAllById(ids);
     }
 
     public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, CriteriaParameters cp) {
@@ -49,11 +47,11 @@ public class ProductService extends BaseService<Product> {
             cp.addFilter(new FullTextSearchFilter(searchQuery));
             cp.addSortByFunctionArg("searchBestMatch", new LiteralFunctionArg(0, searchQuery));
         }
-        return ProductRepository.findAllByCriteria(cp);
+        return productRepository.findAllByCriteria(cp);
     }
 
     public List<Product> addAllProducts(ArrayList<Product> products) {
-        return ProductRepository.saveAll(products);
+        return productRepository.saveAll(products);
     }
 
 
@@ -125,9 +123,9 @@ public class ProductService extends BaseService<Product> {
 
     public void addCategory(Long productId, Long categoryId) {
         Category category = categoryService.getById(categoryId);
-        Product product = ProductRepository.findProductById(productId);
+        Product product = productRepository.findProductById(productId);
         product.addCategory(category);
-        ProductRepository.save(product);
+        productRepository.save(product);
     }
 
     public Product addCategories(Product product, List<Long> categoryIds) {
@@ -138,7 +136,7 @@ public class ProductService extends BaseService<Product> {
         for (Long id : categoryIds)
             product.addCategory(categoryService.getById(id));
         if (persist)
-            return ProductRepository.save(product);
+            return productRepository.save(product);
         return product;
     }
 
