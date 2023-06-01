@@ -12,20 +12,22 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
   IconButton,
+  InputLabel,
   MenuItem,
+  Select,
   Stack,
   TextField,
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { authorities, GetData } from './makeData'
-import { v4 as uuidv4 } from 'uuid'
+import { authorities, GetData, SendData } from './makeData'
 import BasicModal from './BasicModal'
 import { useSelector } from 'react-redux'
 
 export type Person = {
-  id: string
+  id: number
   name: string
   surname: string
   email: string
@@ -53,7 +55,11 @@ const Table = () => {
     [cellId: string]: string
   }>({})
 
-  const handleCreateNewRow = (values: Person) => {
+  const handleCreateNewRow = async (values: Person) => {
+    const { name, surname, email, password, phoneNumber } = values
+    const res = await SendData(access_token, { name, surname, email, password, phoneNumber })
+    console.log(res)
+
     tableData.push(values)
     setTableData([...tableData])
   }
@@ -63,6 +69,7 @@ const Table = () => {
       if (!Object.keys(validationErrors).length) {
         tableData[row.index] = values
         //send/receive api updates here, then refetch or update local table data for re-render
+
         setTableData([...tableData])
         exitEditingMode() //required to exit editing mode and close modal
       }
@@ -97,8 +104,6 @@ const Table = () => {
           const isValid =
             cell.column.id === 'email'
               ? validateEmail(event.target.value)
-              : cell.column.id === 'age'
-              ? validateAge(+event.target.value)
               : validateRequired(event.target.value)
           if (!isValid) {
             //set validation error for cell if invalid
@@ -173,14 +178,13 @@ const Table = () => {
         accessorKey: 'admin',
         header: 'Role',
         Cell: ({ cell }) => (
-
-            <div>
-              {cell.getValue<boolean>() === true ? (
-                <div style={{ color: '#D12222' }}>{'Admin'}</div>
-              ) : (
-                <div>{'Basic User'}</div>
-              )}
-            </div>
+          <div>
+            {cell.getValue<boolean>() === true ? (
+              <div style={{ color: '#D12222' }}>{'Admin'}</div>
+            ) : (
+              <div>{'Basic User'}</div>
+            )}
+          </div>
         ),
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           select: true, //change to select for a dropdown
@@ -280,23 +284,30 @@ export const CreateNewAccountModal = ({
 
   const handleSubmit = () => {
     //put your validation logic here
+
     const arrayOfErros: string[] = []
-    if (!validateAge(values?.age)) {
-      arrayOfErros.push('Please enter a vaild age!')
-    }
     if (!validateEmail(values?.email)) {
       arrayOfErros.push('Please enter a valid email!')
     }
-    if (!values?.firstName) {
+    if (!validateRequired(values?.name)) {
       arrayOfErros.push('Please enter a valid first name!')
     }
-    if (!values?.lastName) {
+    if (!validateRequired(values?.surname)) {
       arrayOfErros.push('Please enter a valid last name!')
     }
-    if (!values?.state) {
-      arrayOfErros.push('Please enter a valid state!')
+    if (!validateRequired(values?.admin)) {
+      arrayOfErros.push('Please enter a valid role!')
     }
-    const newValues = { ...values, id: uuidv4() }
+    if (!validateRequired(values?.password)) {
+      arrayOfErros.push('Please enter a valid password!')
+    }
+
+    const newValues = {
+      ...values,
+      admin: values?.admin === 'Admin' ? true : false
+    }
+
+    // console.log(newValues)
 
     setErrors(arrayOfErros)
     if (arrayOfErros.length === 0) {
@@ -304,7 +315,6 @@ export const CreateNewAccountModal = ({
       onClose()
       setValues('')
     }
-    console.log(newValues)
   }
 
   return (
@@ -319,19 +329,52 @@ export const CreateNewAccountModal = ({
               gap: '1.5rem'
             }}
           >
-            {columns.map(
-              (column, index) =>
-                column.accessorKey !== 'id' && (
-                  <TextField
-                    key={index}
-                    label={column.header}
-                    name={column.accessorKey}
-                    onChange={(e) =>
-                      setValues({ ...values, [e.target.name]: e.target.value })
-                    }
-                  />
+            {columns.map((column, index) =>
+              column.accessorKey !== 'id' && column.accessorKey !== 'admin' ? (
+                <TextField
+                  key={index}
+                  label={column.header}
+                  name={column.accessorKey}
+                  onChange={(e) =>
+                    setValues({ ...values, [e.target.name]: e.target.value })
+                  }
+                />
+              ) : (
+                column.accessorKey === 'admin' && (
+                  <FormControl fullWidth>
+                    <InputLabel id='demo-simple-select-label'>Role</InputLabel>
+                    <Select
+                      labelId='demo-simple-select-label'
+                      id={column.accessorKey}
+                      key={index}
+                      label={column.header}
+                      name={column.accessorKey}
+                      onChange={(e) =>
+                        setValues({
+                          ...values,
+                          [e.target.name]: e.target.value
+                        })
+                      }
+                    >
+                      {authorities.map((auth, index) => (
+                        <MenuItem key={index} value={auth}>
+                          {auth}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 )
+              )
             )}
+            <TextField
+              id='outlined-password-input'
+              label='Password'
+              name='password'
+              type='password'
+              onChange={(e) =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
           </Stack>
         </form>
       </DialogContent>
@@ -374,6 +417,5 @@ const validateEmail = (email: string) =>
     .match(
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     )
-const validateAge = (age: number) => age >= 18 && age <= 50
 
 export default Table
