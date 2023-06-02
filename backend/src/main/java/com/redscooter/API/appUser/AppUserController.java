@@ -107,6 +107,7 @@ public class AppUserController {
             VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
         }
+        appUserService.saveUser(appUser);
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("User", "Id", appUser.getId());
     }
 

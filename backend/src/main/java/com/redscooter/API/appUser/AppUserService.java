@@ -72,6 +72,7 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
             throw buildResourceAlreadyExistsException("username", user.getUsername());
         if (user.isPasswordUpdated())
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPasswordUpdated(false);
         return appUserRepository.save(user);
     }
 
