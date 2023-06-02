@@ -22,9 +22,9 @@ import {
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { authorities, GetData, SendData } from './makeData'
+import { authorities, GetData, SendData, DeleteData } from './makeData'
 import BasicModal from './BasicModal'
-import { useSelector } from 'react-redux'
+import { getFromStorage } from '../store/localStorage/manageStorage'
 
 export type Person = {
   id: number
@@ -33,10 +33,11 @@ export type Person = {
   email: string
   phoneNumber: number
   admin: boolean
+  password?: string
 }
 
 const Table = () => {
-  const { access_token } = useSelector((state: any) => state.user)
+  const access_token: string = getFromStorage('access_token')!
 
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState<Person[]>([])
@@ -57,7 +58,13 @@ const Table = () => {
 
   const handleCreateNewRow = async (values: Person) => {
     const { name, surname, email, password, phoneNumber } = values
-    const res = await SendData(access_token, { name, surname, email, password, phoneNumber })
+    const res = await SendData(access_token, {
+      name,
+      surname,
+      email,
+      password,
+      phoneNumber
+    })
     console.log(res)
 
     tableData.push(values)
@@ -80,13 +87,15 @@ const Table = () => {
   }
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<Person>) => {
+    async (row: MRT_Row<Person>) => {
       if (
         !confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
       ) {
         return
       }
       //send api delete request here, then refetch or update local table data for re-render
+      const id = 5
+      const res = await DeleteData(access_token, id)
       tableData.splice(row.index, 1)
       setTableData([...tableData])
     },
@@ -155,6 +164,7 @@ const Table = () => {
       {
         accessorKey: 'email',
         header: 'Email',
+        enableEditing: false,
         enableClickToCopy: true,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
@@ -302,12 +312,14 @@ export const CreateNewAccountModal = ({
       arrayOfErros.push('Please enter a valid password!')
     }
 
+    if (values?.password !== values?.confirmPassword) {
+      arrayOfErros.push('Your password must be the same as confirm password!')
+    }
+
     const newValues = {
       ...values,
       admin: values?.admin === 'Admin' ? true : false
     }
-
-    // console.log(newValues)
 
     setErrors(arrayOfErros)
     if (arrayOfErros.length === 0) {
@@ -370,6 +382,15 @@ export const CreateNewAccountModal = ({
               id='outlined-password-input'
               label='Password'
               name='password'
+              type='password'
+              onChange={(e) =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
+            <TextField
+              id='outlined-password-input'
+              label='Confirm Password'
+              name='confirmPassword'
               type='password'
               onChange={(e) =>
                 setValues({ ...values, [e.target.name]: e.target.value })

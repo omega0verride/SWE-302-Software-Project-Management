@@ -87,6 +87,11 @@ const LoginMain = ({ register }) => {
           />
 
           <Link href={goTo.split('.')[1]}>{goTo.split('.')[0]}</Link>
+          {!register && (
+            <Link style={{ marginTop: '1rem', display: 'block' }} href='/forgotPassword'>
+              Forgot password?
+            </Link>
+          )}
 
           <LoginButton
             register={register}
