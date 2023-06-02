@@ -102,7 +102,7 @@ public class AppUserController {
         if (skipVerification) {
             if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
                 throw new ForbiddenException("Only admin users can skip email verification! Set skipVerification=false.");
-            appUser.setEnabled(true);
+            appUserService.enableUser(appUser);
         } else {
             VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
@@ -142,7 +142,7 @@ public class AppUserController {
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             verificationToken = appUserService.createVerificationToken(user);
             eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
-            return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML
+            return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML or redirect to frontend endpoint that states this message
         }
         appUserService.enableUser(user);
         // return "Successfully Verified Your Account";

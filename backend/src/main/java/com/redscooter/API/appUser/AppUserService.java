@@ -213,7 +213,8 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
             AuthenticationFacade.ensureAdmin();
             if (updateAppUserDTO.getIsAdmin())
                 addRoleToUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
-            removeRoleFromUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+            else
+                removeRoleFromUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
         }
         return saveUser(existingAppUser);
     }
