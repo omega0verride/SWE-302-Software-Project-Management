@@ -1,4 +1,3 @@
-import {Person} from '../components/UsersTable'
 
 export const GetData = async (access_token:string) => {
   try {
@@ -22,10 +21,10 @@ export const GetData = async (access_token:string) => {
 
 }
 
-export const SendData = async (access_token:string, data: object) => {
+export const SendData = async (access_token:string, data: object, admin: boolean) => {
   try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/register?isAdmin=${admin}`,
         {
         method: 'POST',
         headers: new Headers({

@@ -57,17 +57,21 @@ const Table = () => {
   }>({})
 
   const handleCreateNewRow = async (values: Person) => {
-    const { name, surname, email, password, phoneNumber } = values
-    const res = await SendData(access_token, {
-      name,
-      surname,
-      email,
-      password,
-      phoneNumber
-    })
+    const { name, surname, email, password, phoneNumber, admin } = values
+    const res = await SendData(
+      access_token,
+      {
+        name,
+        surname,
+        email,
+        password,
+        phoneNumber
+      },
+      admin
+    )
     console.log(res)
-
-    tableData.push(values)
+    const response = await GetData(access_token)
+    tableData.push(response)
     setTableData([...tableData])
   }
 
@@ -190,14 +194,15 @@ const Table = () => {
         Cell: ({ cell }) => (
           <div>
             {cell.getValue<boolean>() === true ? (
-              <div style={{ color: '#D12222' }}>{'Admin'}</div>
+              <div style={{ color: '#D12222' }}>{authorities[0]}</div>
             ) : (
-              <div>{'Basic User'}</div>
+              <div>{authorities[1]}</div>
             )}
           </div>
         ),
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           select: true, //change to select for a dropdown
+          defaultValue: 'Admin',
           children: authorities.map((authority) => (
             <MenuItem key={authority} value={authority}>
               {authority}
@@ -311,7 +316,6 @@ export const CreateNewAccountModal = ({
     if (!validateRequired(values?.password)) {
       arrayOfErros.push('Please enter a valid password!')
     }
-
     if (values?.password !== values?.confirmPassword) {
       arrayOfErros.push('Your password must be the same as confirm password!')
     }
@@ -380,6 +384,7 @@ export const CreateNewAccountModal = ({
             )}
             <TextField
               id='outlined-password-input'
+              key={25}
               label='Password'
               name='password'
               type='password'
@@ -389,6 +394,7 @@ export const CreateNewAccountModal = ({
             />
             <TextField
               id='outlined-password-input'
+              key={26}
               label='Confirm Password'
               name='confirmPassword'
               type='password'
