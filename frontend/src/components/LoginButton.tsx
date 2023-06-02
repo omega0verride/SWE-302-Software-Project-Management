@@ -2,6 +2,7 @@ import React from 'react'
 import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLogin } from '../store/reducers/user'
+import { saveToStorage } from '../store/localStorage/manageStorage'
 
 interface myProps {
   register: boolean
@@ -50,14 +51,10 @@ const SendData = async (
     }
 
     if (response?.access_token) {
-      dispatch(
-        setLogin({
-          access_token: response?.access_token,
-          refresh_token: response?.refresh_token,
-          expires_at: response?.expires_at,
-          username: response?.username
-        })
-      )
+      saveToStorage('access_token', response?.access_token)
+      saveToStorage('refresh_token', response?.refresh_token)
+      saveToStorage('expires_at', response?.expires_at)
+      saveToStorage('username', response?.username)
       router.push('/users')
     }
   } catch (err) {
