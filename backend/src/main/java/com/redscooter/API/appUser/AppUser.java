@@ -10,6 +10,7 @@ import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.restprocessors.IgnoreRESTField;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
@@ -38,7 +39,9 @@ public class AppUser implements Auditable {
 
     @Column(unique = true)
     private String username;
+
     @JsonIgnore
+    @IgnoreRESTField
     private String password;
 
     private String phoneNumber;
