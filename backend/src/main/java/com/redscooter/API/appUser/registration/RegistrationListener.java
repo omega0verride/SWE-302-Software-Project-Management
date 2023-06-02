@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
+
+import java.net.URL;
 
 @Component
 public class RegistrationListener implements ApplicationListener<OnRegistrationCompleteEvent> {
@@ -26,7 +29,9 @@ public class RegistrationListener implements ApplicationListener<OnRegistrationC
         VerificationToken verificationToken = event.getVerificationToken();
         AppUser user = verificationToken.getUser();
 
-        String confirmationURL = ServletUriComponentsBuilder.fromRequestUri(event.getHttpServletRequest()).build().toUriString() + "/api/users/register/confirm?token=" + verificationToken.getToken() + "&username=" + user.getUsername();
+        UriComponents uriComponents = ServletUriComponentsBuilder.fromRequestUri(event.getHttpServletRequest()).build();
+        String port = uriComponents.getPort() == -1 ? "" : ":" + uriComponents.getPort();
+        String confirmationURL = uriComponents.getScheme() + "://" + uriComponents.getHost() + port + "/api/users/register/confirm?token=" + verificationToken.getToken() + "&username=" + user.getUsername();
         String recipientAddress = user.getUsername();
         String subject = "Konfirmimi i regjistrimit ne RedScooter.";
         emailSender.sendEmailWithDefaultExceptionHandler(recipientAddress, subject, ConfirmUserRegistrationHTMLBuilder.buildConfirmUserRegistrationHTML(user, confirmationURL, verificationToken));
