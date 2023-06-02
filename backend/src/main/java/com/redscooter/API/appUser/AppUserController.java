@@ -2,6 +2,7 @@ package com.redscooter.API.appUser;
 
 import com.redscooter.API.appUser.DTO.CreateAppUserDTO;
 import com.redscooter.API.appUser.DTO.GetAppUserDTO;
+import com.redscooter.API.appUser.DTO.UpdateAppUserDTO;
 import com.redscooter.API.appUser.passwordReset.OnResetPasswordEvent;
 import com.redscooter.API.appUser.passwordReset.PasswordDto;
 import com.redscooter.API.appUser.passwordReset.PasswordResetToken;
@@ -76,13 +77,9 @@ public class AppUserController {
     }
 
     @PatchMapping("/{username}")
-    public ResponseEntity<GetAppUserDTO> updateUserByUsername(@PathVariable String username) {
+    public ResponseEntity<GetAppUserDTO> updateUserByUsername(@PathVariable String username, @RequestBody UpdateAppUserDTO updateAppUserDTO) {
         AuthenticationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
-        return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(null);
-//        AppUser user = appUserService.getUser(username).orElseThrow(() -> {
-//            throw new ResourceNotFoundException("User", "username", username);
-//        });
-//        return new ResponseEntity<AppUser>(user, HttpStatus.OK);
+        return new ResponseEntity<GetAppUserDTO>(appUserService.updateUser(username, updateAppUserDTO).toGetAppUserDTO(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{username}")
@@ -95,11 +92,11 @@ public class AppUserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, Boolean isAdmin, HttpServletRequest request) {
+    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
         if (isAdmin){
             if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
-                throw new ForbiddenException("Only admin users can skip email verification! Set skipVerification=false.");
+                throw new ForbiddenException("Only admin user can register admin accounts! Set isAdmin=false.");
             appUserService.addRoleToUser(appUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
         }
         if (skipVerification) {

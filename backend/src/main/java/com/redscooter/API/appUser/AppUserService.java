@@ -1,11 +1,15 @@
 package com.redscooter.API.appUser;
 
+import com.redscooter.API.appUser.DTO.UpdateAppUserDTO;
 import com.redscooter.API.appUser.passwordReset.PasswordResetToken;
 import com.redscooter.API.appUser.passwordReset.PasswordResetTokenRepository;
 import com.redscooter.API.appUser.registration.VerificationToken;
 import com.redscooter.API.appUser.registration.VerificationTokenRepository;
 import com.redscooter.API.common.BaseService;
+import com.redscooter.API.product.DTO.UpdateProductDTO;
+import com.redscooter.API.product.Product;
 import com.redscooter.exceptions.api.verificationTokens.VerificationTokenException;
+import com.redscooter.security.AuthenticationFacade;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -89,8 +93,19 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     public void addRoleToUser(AppUser appUser, String roleName) {
         appUser.getRoles().add(roleService.getByName(roleName));
     }
+
     public void addRoleToUser(String username, String roleName) {
         addRoleToUser(getByUsername(username), roleName);
+    }
+
+
+
+    public void removeRoleFromUser(AppUser appUser, String roleName) {
+        appUser.getRoles().remove(roleService.getByName(roleName));
+    }
+
+    public void removeRoleFromUser(String username, String roleName) {
+        removeRoleFromUser(getByUsername(username), roleName);
     }
 
     @Override
@@ -179,5 +194,27 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
 
     public void deleteAllPasswordResetTokesByUser(AppUser appUser) {
         passwordResetTokenRepository.deleteAllByUser(appUser);
+    }
+
+
+    public AppUser updateUser(String username, UpdateAppUserDTO updateAppUserDTO) {
+        AppUser existingAppUser = getByUsername(username);
+        if (updateAppUserDTO.getName() != null)
+            existingAppUser.setName(updateAppUserDTO.getName());
+        if (updateAppUserDTO.getSurname() != null)
+            existingAppUser.setSurname(updateAppUserDTO.getSurname());
+        if (updateAppUserDTO.getPhoneNumber() != null)
+            existingAppUser.setPhoneNumber(updateAppUserDTO.getPhoneNumber());
+        if (updateAppUserDTO.getIsEnabled() != null) {
+            AuthenticationFacade.ensureAdmin();
+            existingAppUser.setEnabled(updateAppUserDTO.getIsEnabled());
+        }
+        if (updateAppUserDTO.getIsAdmin() != null) {
+            AuthenticationFacade.ensureAdmin();
+            if (updateAppUserDTO.getIsAdmin())
+                addRoleToUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+            removeRoleFromUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+        }
+        return saveUser(existingAppUser);
     }
 }
