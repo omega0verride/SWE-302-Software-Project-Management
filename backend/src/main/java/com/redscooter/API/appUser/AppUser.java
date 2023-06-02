@@ -14,9 +14,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -51,7 +50,8 @@ public class AppUser implements Auditable {
     private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    private Collection<Role> roles = new HashSet<>();
+
     @Transient
     private boolean passwordUpdated = false;
 

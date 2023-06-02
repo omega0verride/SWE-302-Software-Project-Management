@@ -86,10 +86,11 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
     }
 
 
-    public AppUser addRoleToUser(String username, String roleName) {
-        AppUser user = getByUsername(username);
-        user.getRoles().add(roleService.getByName(roleName));
-        return save(user);
+    public void addRoleToUser(AppUser appUser, String roleName) {
+        appUser.getRoles().add(roleService.getByName(roleName));
+    }
+    public void addRoleToUser(String username, String roleName) {
+        addRoleToUser(getByUsername(username), roleName);
     }
 
     @Override

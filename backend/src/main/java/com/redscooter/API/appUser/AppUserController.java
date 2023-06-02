@@ -95,12 +95,16 @@ public class AppUserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, HttpServletRequest request) {
+    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, Boolean isAdmin, HttpServletRequest request) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
-        if (skipVerification) {
-            if (!AuthenticationFacade.isAdminOnCurrentSecurityContext()) {
+        if (isAdmin){
+            if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
                 throw new ForbiddenException("Only admin users can skip email verification! Set skipVerification=false.");
-            }
+            appUserService.addRoleToUser(appUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+        }
+        if (skipVerification) {
+            if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+                throw new ForbiddenException("Only admin users can skip email verification! Set skipVerification=false.");
             appUser.setEnabled(true);
         } else {
             VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
