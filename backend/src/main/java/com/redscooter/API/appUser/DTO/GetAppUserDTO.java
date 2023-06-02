@@ -3,11 +3,10 @@ package com.redscooter.API.appUser.DTO;
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.common.AuditBaseDTO;
 import com.redscooter.security.AuthenticationFacade;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetAppUserDTO extends AuditBaseDTO {

@@ -54,7 +54,7 @@ public class AppUserController {
         return ResponseEntity.ok().body(appUserService.getUsers().stream().map(u -> u.toGetAppUserDTO()).collect(Collectors.toList()));
     }
 
-    @DeleteMapping("/{ids}")
+    @DeleteMapping("/batchDelete/{ids}")
     public ResponseEntity<Object> deleteUsers(@PathVariable List<Long> ids) {
         AuthenticationFacade.ensureAdmin();
         List<AbstractMap.SimpleEntry<Long, String>> response = new ArrayList<>();
@@ -92,7 +92,7 @@ public class AppUserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin) {
+    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
         if (isAdmin){
             if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
@@ -105,25 +105,25 @@ public class AppUserController {
             appUser.setEnabled(true);
         } else {
             VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
         }
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("User", "Id", appUser.getId());
     }
 
     @PostMapping("/register/resendVerification")
-    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest request) {
+    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
         if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             throw new ForbiddenAccessException("Unauthorized! Cannot resend verification email without verifying account credentials from a non admin context.");
         if (appUser.isEnabled())
             throw new UserAccountAlreadyActivatedException();
         VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/register/confirm")
-    public Object confirmRegistration(@RequestParam(name = "token") String token, @RequestParam(name = "username", required = false) String username) {
+    public Object confirmRegistration(@RequestParam(name = "token") String token, @RequestParam(name = "username", required = false) String username, HttpServletRequest httpServletRequest) {
         VerificationToken verificationToken = appUserService.getVerificationToken(token);
         if (verificationToken == null) {
             if (username != null) {
@@ -141,7 +141,7 @@ public class AppUserController {
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             verificationToken = appUserService.createVerificationToken(user);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
             return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML
         }
         appUserService.enableUser(user);
