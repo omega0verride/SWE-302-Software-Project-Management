@@ -184,7 +184,7 @@ public class JwtUtils implements Serializable {
 
     public DetailedTokenDetailsDTO generateDetailedTokenPair(String accessToken, String refreshToken) {
         TokenPair tokens = generateTokenPair(accessToken, refreshToken);
-        return new DetailedTokenDetailsDTO(tokens, getExpirationDateFromToken(tokens.getAccessToken()), getRolesFromAccessToken(tokens.getAccessToken()), getUsernameFromToken(tokens.getAccessToken()));
+        return new DetailedTokenDetailsDTO(tokens, getExpirationDateFromToken(tokens.getAccessToken()).getTime(), getRolesFromAccessToken(tokens.getAccessToken()), getUsernameFromToken(tokens.getAccessToken()));
     }
     // ------------- access-refresh-pair -------------
 
