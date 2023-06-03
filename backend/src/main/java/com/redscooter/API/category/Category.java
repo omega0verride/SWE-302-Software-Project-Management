@@ -1,20 +1,19 @@
 package com.redscooter.API.category;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.redscooter.API.category.DTO.CreateCategoryDTO;
 import com.redscooter.API.category.DTO.GetCategoryDTO;
 import com.redscooter.API.category.DTO.GetMinimalCategoryDTO;
 import com.redscooter.API.common.AuditData;
 import com.redscooter.API.common.Auditable;
 import com.redscooter.API.product.Product;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.EmbeddedSortableFields;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +27,6 @@ import java.util.List;
 public class Category implements Auditable {
 
     @Embedded
-    @EmbeddedSortableFields(embeddedClass = AuditData.class)
     AuditData auditData = new AuditData();
 
     @Id

@@ -16,6 +16,7 @@ import java.util.stream.Stream;
 @Getter
 public class Utilities {
     public static final String RESOURCES_ROOT_PATH = "/resources";
+//    public static final String RESOURCES_ROOT_PATH = "C:\\Users\\indri\\SWE-302-Software-Project-Management\\backend\\src\\main\\resources";
     public static final String STATIC_FOLDER_DIR = Utilities.joinPathsAsString(RESOURCES_ROOT_PATH, "static");
     public static final String HTML_TEMPLATES_FOLDER_DIR = joinPathsAsString(STATIC_FOLDER_DIR, "htmlTemplates");
     public static String capitalizeFirstLetter(String s) {
@@ -88,13 +89,6 @@ public class Utilities {
         return targetPath.normalize().startsWith(rootAllowedPath.normalize());
     }
 
-    public static void testPathNormalize() {
-//        Path p = Paths.get("C:/Users/indri/Downloads", "schema.ini");
-//        boolean s=Paths.get("C:/Users/indri/Downloads", "../schema.ini").normalize().startsWith(Paths.get("C:/Users/indri/Downloads").normalize())==false;
-//        s=Paths.get("C:/Users/indri/Downloads", "..\\schema.ini").normalize().startsWith(Paths.get("C:/Users/indri/Downloads").normalize())==false;
-//        s=Paths.get("C:/Users/indri/Downloads", "../schema.ini").normalize().startsWith(Paths.get("C:/Users\\indri/Downloads").normalize())==false;
-//        s=Paths.get("C:/Users/indri/Downloads", "/schema.ini").normalize().startsWith(Paths.get("C:/Users/indri/\\../indri/Downloads").normalize())==true;
-    }
 
 //    public static void main(String[] args) throws URISyntaxException {
 //        System.out.println(ROOT_WORKING_DIR);

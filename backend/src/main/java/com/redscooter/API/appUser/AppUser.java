@@ -5,19 +5,18 @@ import com.redscooter.API.appUser.DTO.GetAppUserDTO;
 import com.redscooter.API.common.AuditData;
 import com.redscooter.API.common.Auditable;
 import com.redscooter.security.thirdPartyLogin.AuthType;
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.EmbeddedSortableFields;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.restprocessors.IgnoreRESTField;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import jakarta.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Locale;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Entity
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class AppUser implements Auditable {
     @Embedded
-    @EmbeddedSortableFields(embeddedClass = AuditData.class)
     AuditData auditData = new AuditData();
 
 
@@ -41,7 +39,9 @@ public class AppUser implements Auditable {
 
     @Column(unique = true)
     private String username;
+
     @JsonIgnore
+    @IgnoreRESTField
     private String password;
 
     private String phoneNumber;
@@ -53,8 +53,10 @@ public class AppUser implements Auditable {
     private boolean enabled;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+    private Collection<Role> roles = new HashSet<>();
+
     @Transient
+    @IgnoreRESTField
     private boolean passwordUpdated = false;
 
     public AppUser(String name, String surname, String username, String password, String email, String phoneNumber, Collection<Role> roles) {

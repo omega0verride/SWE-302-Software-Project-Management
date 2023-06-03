@@ -1,6 +1,5 @@
 package com.redscooter.API.common;
 
-import com.redscooter.util.DynamicQueryBuilder.DynamicSortBuilder.annotations.SortableField;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -21,11 +19,9 @@ import lombok.Setter;
 public class AuditData {
 
     @Column(updatable = false)
-    @SortableField(apiName = "created_at")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long createdAt;
 
-    @SortableField(apiName = "updated_at")
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     Long updatedAt;
 
