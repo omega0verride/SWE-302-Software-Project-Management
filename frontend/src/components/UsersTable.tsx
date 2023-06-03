@@ -22,7 +22,14 @@ import {
   Tooltip
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { authorities, GetData, SendData, DeleteData } from './makeData'
+import {
+  authorities,
+  userStatus,
+  getUsers,
+  createUser,
+  deleteUser,
+  updateUser
+} from './UsersCrud'
 import BasicModal from './BasicModal'
 import { getFromStorage } from '../store/localStorage/manageStorage'
 
@@ -34,6 +41,7 @@ export type Person = {
   phoneNumber: number
   admin: boolean
   password?: string
+  enabled: boolean
 }
 
 const Table = () => {
@@ -44,7 +52,7 @@ const Table = () => {
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
-      const res = await GetData(access_token)
+      const res = await getUsers(access_token)
       // set state when the data received
       setTableData(res)
     }
@@ -57,22 +65,23 @@ const Table = () => {
   }>({})
 
   const handleCreateNewRow = async (values: Person) => {
-    const { name, surname, email, password, phoneNumber, admin } = values
-    const res = await SendData(
+    const { name, surname, email, password, phoneNumber, admin, enabled } =
+      values
+    const res = await createUser(
       access_token,
       {
         name,
         surname,
         email,
         password,
-        phoneNumber
+        phoneNumber: phoneNumber || ''
       },
-      admin
+      admin,
+      enabled
     )
     console.log(res)
-    const response = await GetData(access_token)
-    tableData.push(response)
-    setTableData([...tableData])
+    const response = await getUsers(access_token)
+    setTableData(response)
   }
 
   const handleSaveRowEdits: MaterialReactTableProps<Person>['onEditingRowSave'] =
@@ -80,8 +89,23 @@ const Table = () => {
       if (!Object.keys(validationErrors).length) {
         tableData[row.index] = values
         //send/receive api updates here, then refetch or update local table data for re-render
-
-        setTableData([...tableData])
+        const isAdmin =
+          values?.admin === true || values?.admin === 'Admin' ? true : false
+        const isEnabled =
+          values?.enabled === true || values?.enabled === 'Enabled'
+            ? true
+            : false
+        const { name, surname, phoneNumber } = values
+        const res = await updateUser(access_token, row.getValue('email'), {
+          name,
+          surname,
+          phoneNumber,
+          isAdmin,
+          isEnabled
+        })
+        console.log(res)
+        const response = await getUsers(access_token)
+        setTableData(response)
         exitEditingMode() //required to exit editing mode and close modal
       }
     }
@@ -93,15 +117,14 @@ const Table = () => {
   const handleDeleteRow = useCallback(
     async (row: MRT_Row<Person>) => {
       if (
-        !confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
+        !confirm(`Are you sure you want to delete ${row.getValue('email')}`)
       ) {
         return
       }
       //send api delete request here, then refetch or update local table data for re-render
-      const id = 5
-      const res = await DeleteData(access_token, id)
-      tableData.splice(row.index, 1)
-      setTableData([...tableData])
+      await deleteUser(access_token, row.getValue('email'))
+      const response = await getUsers(access_token)
+      setTableData(response)
     },
     [tableData]
   )
@@ -191,6 +214,7 @@ const Table = () => {
       {
         accessorKey: 'admin',
         header: 'Role',
+        size: 80,
         Cell: ({ cell }) => (
           <div>
             {cell.getValue<boolean>() === true ? (
@@ -206,6 +230,29 @@ const Table = () => {
           children: authorities.map((authority) => (
             <MenuItem key={authority} value={authority}>
               {authority}
+            </MenuItem>
+          ))
+        })
+      },
+      {
+        accessorKey: 'enabled',
+        header: 'Status',
+        size: 80,
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<boolean>() === true ? (
+              <div style={{ color: '#D12222' }}>{'Enabled'}</div>
+            ) : (
+              <div>{'Disabled'}</div>
+            )}
+          </div>
+        ),
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          select: true, //change to select for a dropdown
+          defaultValue: 'Enabled',
+          children: userStatus.map((status, index) => (
+            <MenuItem key={index} value={status}>
+              {status}
             </MenuItem>
           ))
         })
@@ -313,6 +360,9 @@ export const CreateNewAccountModal = ({
     if (!validateRequired(values?.admin)) {
       arrayOfErros.push('Please enter a valid role!')
     }
+    if (!validateRequired(values?.enabled)) {
+      arrayOfErros.push('Please enter a valid skip verification!')
+    }
     if (!validateRequired(values?.password)) {
       arrayOfErros.push('Please enter a valid password!')
     }
@@ -322,7 +372,8 @@ export const CreateNewAccountModal = ({
 
     const newValues = {
       ...values,
-      admin: values?.admin === 'Admin' ? true : false
+      admin: values?.admin === 'Admin' ? true : false,
+      enabled: values?.enabled === 'Enabled' ? true : false
     }
 
     setErrors(arrayOfErros)
@@ -346,7 +397,9 @@ export const CreateNewAccountModal = ({
             }}
           >
             {columns.map((column, index) =>
-              column.accessorKey !== 'id' && column.accessorKey !== 'admin' ? (
+              column.accessorKey !== 'id' &&
+              column.accessorKey !== 'admin' &&
+              column.accessorKey !== 'enabled' ? (
                 <TextField
                   key={index}
                   label={column.header}
@@ -382,6 +435,30 @@ export const CreateNewAccountModal = ({
                 )
               )
             )}
+            <FormControl fullWidth>
+              <InputLabel id='demo-simple-select-label'>
+                Skip Verification
+              </InputLabel>
+              <Select
+                labelId='demo-simple-select-label'
+                id={'enabled'}
+                key={'enabled'}
+                label={'Status'}
+                name={'enabled'}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    [e.target.name]: e.target.value
+                  })
+                }
+              >
+                {userStatus.map((status, index) => (
+                  <MenuItem key={index} value={status}>
+                    {status === 'Enabled' ? 'True' : 'False'}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
             <TextField
               id='outlined-password-input'
               key={25}
