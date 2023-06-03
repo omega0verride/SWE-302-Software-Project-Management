@@ -43,14 +43,14 @@ public class OrderController {
     }
 
 
-//    @DynamicRestMapping(path = "orders", requestMethod = RequestMethod.GET, entity = Order.class)
-////    @Parameters({@Parameter(name = "createdAt_", in = ParameterIn.QUERY, required = false, example = "propertyName:<asc|desc>"), @Parameter(name = "sortBy", in = ParameterIn.QUERY, required = false, schema = @Schema(description = "var 1", type = "string", allowableValues = {"1", "2"}))})
-////    @ApiResponse(responseCode = "200", description = "OK", content = {@Content(schema = @Schema(implementation = Page<GetOrderDTO>.))})
-//    public ResponseEntity<PageResponse<GetOrderDTO>> getAllOrders(CriteriaParameters cp) {
-//        AuthorizationFacade.ensureAdmin();
-//        Page<Order> resultsPage = orderService.getAllByCriteria(cp);
-//        return ResponseFactory.buildPageResponse(resultsPage, GetOrderDTO::new);
-//    }
+    @DynamicRestMapping(path = "orders", requestMethod = RequestMethod.GET, entity = Order.class)
+//    @Parameters({@Parameter(name = "createdAt_", in = ParameterIn.QUERY, required = false, example = "propertyName:<asc|desc>"), @Parameter(name = "sortBy", in = ParameterIn.QUERY, required = false, schema = @Schema(description = "var 1", type = "string", allowableValues = {"1", "2"}))})
+//    @ApiResponse(responseCode = "200", description = "OK", content = {@Content(schema = @Schema(implementation = Page<GetOrderDTO>.))})
+    public ResponseEntity<PageResponse<GetOrderDTO>> getAllOrders(CriteriaParameters cp) {
+        AuthorizationFacade.ensureAdmin();
+        Page<Order> resultsPage = orderService.getAllByCriteria(cp);
+        return ResponseFactory.buildPageResponse(resultsPage, GetOrderDTO::new);
+    }
 
     @PostMapping("orders")
     public ResponseEntity<Object> createOrder(@Valid @RequestBody CreateOrderDTO createOrderDTO, @RequestParam(name = "skipVerification", defaultValue = "false") boolean skipVerification) {

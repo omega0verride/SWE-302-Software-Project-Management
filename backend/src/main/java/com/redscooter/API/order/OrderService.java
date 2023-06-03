@@ -29,9 +29,9 @@ public class OrderService extends BaseService<Order> {
         this.eventPublisher = eventPublisher;
     }
 
-//    public Page<Order> getAllByCriteria(CriteriaParameters cp) {
-//        return orderRepository.findAllByCriteria(cp);
-//    }
+    public Page<Order> getAllByCriteria(CriteriaParameters cp) {
+        return orderRepository.findAllByCriteria(cp);
+    }
 
     public Order create(Order order, List<OrderLine> orderLines, OrderBilling orderBilling) {
         for (OrderLine o : orderLines)

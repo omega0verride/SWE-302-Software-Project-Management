@@ -10,6 +10,7 @@ import com.redscooter.util.Utilities;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.CriteriaOperator.CriteriaOperator;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.Filter;
 import org.restprocessors.DynamicQueryBuilder.DynamicFilterBuilder.Filters.FullTextSearchFilter;
+import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.LiteralFunctionArg;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -40,15 +41,15 @@ public class ProductService extends BaseService<Product> {
         return productRepository.findAllById(ids);
     }
 
-//    public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, CriteriaParameters cp) {
-//        if (isVisibleRequired)
-//            cp.addFilter(new Filter<>("visible", CriteriaOperator.EQUAL, true));
-//        if (Utilities.notNullOrEmpty(searchQuery)) {
-//            cp.addFilter(new FullTextSearchFilter(searchQuery));
-//            cp.addSortByFunctionArg("searchBestMatch", new LiteralFunctionArg(0, searchQuery));
-//        }
-//        return productRepository.findAllByCriteria(cp);
-//    }
+    public Page<Product> getAllByCriteria(boolean isVisibleRequired, String searchQuery, CriteriaParameters cp) {
+        if (isVisibleRequired)
+            cp.addFilter(new Filter<>("visible", CriteriaOperator.EQUAL, true));
+        if (Utilities.notNullOrEmpty(searchQuery)) {
+            cp.addFilter(new FullTextSearchFilter(searchQuery));
+            cp.addSortByFunctionArg("searchBestMatch", new LiteralFunctionArg(0, searchQuery));
+        }
+        return productRepository.findAllByCriteria(cp);
+    }
 
     public List<Product> addAllProducts(ArrayList<Product> products) {
         return productRepository.saveAll(products);
