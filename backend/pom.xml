@@ -16,7 +16,7 @@
     <description>RedScooter SpringBoot API - Build by Epoka University Students as part of SWE302 course</description>
     <properties>
         <java.version>17</java.version>
-        <restprocessor.version>0.1.02-SNAPSHOT</restprocessor.version>
+        <restprocessor.version>0.1.2-SNAPSHOT</restprocessor.version>
     </properties>
     <dependencies>
         <dependency>
@@ -158,15 +158,15 @@
                     <target>17</target>
                     <encoding>UTF-8</encoding>
                     <verbose>true</verbose>
-                    <proc>only</proc>
-                    <generatedSourcesDirectory>${project.build.directory}/restprocessors-generated-sources</generatedSourcesDirectory>
-                    <annotationProcessorPaths>
-                        <path>
-                            <groupId>grad-project.indritbreti</groupId>
-                            <artifactId>restprocessors</artifactId>
-                            <version>${restprocessor.version}</version>
-                        </path>
-                    </annotationProcessorPaths>
+<!--                    <proc>only</proc>-->
+                    <generatedSourcesDirectory>${project.build.directory}/generated-sources</generatedSourcesDirectory>
+<!--                    <annotationProcessorPaths>-->
+<!--                        <path>-->
+<!--                            <groupId>grad-project.indritbreti</groupId>-->
+<!--                            <artifactId>restprocessors</artifactId>-->
+<!--                            <version>${restprocessor.version}</version>-->
+<!--                        </path>-->
+<!--                    </annotationProcessorPaths>-->
 <!--                    <annotationProcessors>-->
 <!--                        <annotationProcessor>org.restprocessors.RestProcessor</annotationProcessor>-->
 <!--                        <annotationProcessor>lombok.launch.AnnotationProcessorHider$AnnotationProcessor</annotationProcessor>-->
@@ -209,7 +209,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${project.build.directory}/restprocessors-generated-sources/</source>
+                                <source>${project.build.directory}/generated-sources/</source>
                             </sources>
                         </configuration>
                     </execution>
