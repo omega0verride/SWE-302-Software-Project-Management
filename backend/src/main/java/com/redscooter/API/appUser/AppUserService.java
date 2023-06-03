@@ -135,9 +135,9 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         log.info("Fetching all users");
         return appUserRepository.findAll();
     }
-    public Page<AppUser> getAllByCriteria(CriteriaParameters cp) {
-        return appUserRepository.findAllByCriteria(cp);
-    }
+//    public Page<AppUser> getAllByCriteria(CriteriaParameters cp) {
+//        return appUserRepository.findAllByCriteria(cp);
+//    }
 
 
     public AppUser getByUsername(String username) {

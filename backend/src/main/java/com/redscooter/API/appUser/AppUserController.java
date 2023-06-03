@@ -55,11 +55,11 @@ public class AppUserController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    @DynamicRestMapping(path = "", entity = AppUser.class, requestMethod = RequestMethod.GET)
-    public ResponseEntity<PageResponse<GetAppUserDTO>> getUsers(CriteriaParameters cp) {
-        AuthorizationFacade.ensureAdmin();
-        return ResponseFactory.buildPageResponse(appUserService.getAllByCriteria(cp), GetAppUserDTO::new);
-    }
+//    @DynamicRestMapping(path = "", entity = AppUser.class, requestMethod = RequestMethod.GET)
+//    public ResponseEntity<PageResponse<GetAppUserDTO>> getUsers(CriteriaParameters cp) {
+//        AuthorizationFacade.ensureAdmin();
+//        return ResponseFactory.buildPageResponse(appUserService.getAllByCriteria(cp), GetAppUserDTO::new);
+//    }
 
     @DeleteMapping("/batchDelete/{ids}")
     public ResponseEntity<Object> deleteUsers(@PathVariable List<Long> ids) {

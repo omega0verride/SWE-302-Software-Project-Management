@@ -9,8 +9,8 @@ import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.JwtUtils;
 import jakarta.validation.Valid;
-import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.PathFunctionArg;
-import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortByFunction;
+//import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.PathFunctionArg;
+//import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortByFunction;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortOrder;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.restprocessors.DynamicRestMapping;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping(path = "api/products")
-public class ProductController {
+public class ProductController extends com.redscooter.API.product.ProductControllerBase {
     private final ProductService productService;
 
     private final AppUserService appUserService;
@@ -44,8 +44,8 @@ public class ProductController {
         this.productService = productService;
         this.appUserService = appUserService;
         this.jwtUtils = jwtUtils;
-        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("custom_ts_rank", Float.class, "searchBestMatch", 1, SortOrder.DESC));
-        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("length", Long.class, "descriptionLength", 1, SortOrder.ASC, new PathFunctionArg(0, "description")));
+//        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("custom_ts_rank", Float.class, "searchBestMatch", 1, SortOrder.DESC));
+//        FieldDetailsRegistry.instance().bindField(Product.class, new SortByFunction<Float>("length", Long.class, "descriptionLength", 1, SortOrder.ASC, new PathFunctionArg(0, "description")));
     }
 
     @GetMapping("/{productId}")
@@ -58,15 +58,16 @@ public class ProductController {
 
     @DynamicRestMapping(path = "", requestMethod = RequestMethod.GET, entity = Product.class)
     public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
-        Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
-        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
+        return null;
+//        Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
+//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
 
-    @DynamicRestMapping(path = "/searchSuggestions", requestMethod = RequestMethod.GET, entity = Product.class)
-    public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
-        Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
-        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
-    }
+//    @DynamicRestMapping(path = "/searchSuggestions", requestMethod = RequestMethod.GET, entity = Product.class)
+//    public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
+//        Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
+//        return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
+//    }
 
 
     @PostMapping("")
