@@ -13,7 +13,7 @@ import com.redscooter.API.order.OrderService;
 import com.redscooter.API.order.PaymentOption;
 import com.redscooter.API.product.Product;
 import com.redscooter.API.product.ProductService;
-import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.util.PostgreSQLFullTextSearchUtils;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,9 +35,9 @@ public class DatabaseConfig {
     private final OrderService orderService;
 
     @Getter
-    private static Role USER_ROLE = new Role(AuthenticationFacade.USER_AUTHORITY.getAuthority());
+    private static Role USER_ROLE = new Role(AuthorizationFacade.USER_AUTHORITY.getAuthority());
     @Getter
-    private static Role ADMIN_ROLE = new Role(AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+    private static Role ADMIN_ROLE = new Role(AuthorizationFacade.ADMIN_AUTHORITY.getAuthority());
     @Getter
     private static AppUser ADMIN_USER = new AppUser("admin", "admin", "admin", "admin", "admin@gmail.com", "", new ArrayList<>());
 

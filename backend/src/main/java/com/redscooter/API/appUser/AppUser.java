@@ -56,6 +56,7 @@ public class AppUser implements Auditable {
     private Collection<Role> roles = new HashSet<>();
 
     @Transient
+    @IgnoreRESTField
     private boolean passwordUpdated = false;
 
     public AppUser(String name, String surname, String username, String password, String email, String phoneNumber, Collection<Role> roles) {

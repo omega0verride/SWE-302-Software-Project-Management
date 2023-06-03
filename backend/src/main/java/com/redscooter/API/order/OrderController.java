@@ -9,7 +9,7 @@ import com.redscooter.API.order.DTO.CreateOrderDTO;
 import com.redscooter.API.order.DTO.GetOrderDTO;
 import com.redscooter.API.order.DTO.OrderConfirmationTokenDTO;
 import com.redscooter.exceptions.api.forbidden.ForbiddenException;
-import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.security.AuthorizationFacade;
 import jakarta.validation.Valid;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.restprocessors.DynamicRestMapping;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "api")
-public class OrderController extends com.redscooter.API.order.OrderControllerBase {
+public class OrderController {
     private final OrderService orderService;
     private final AppUserService appUserService;
     private final InMemoryConfirmationTokenStore<Order> inMemoryConfirmationTokenStore;
@@ -37,7 +37,7 @@ public class OrderController extends com.redscooter.API.order.OrderControllerBas
     @GetMapping("orders/{orderId}")
     public GetOrderDTO getOrderByID(@PathVariable(name = "orderId", required = true) Long orderId) {
         Order order = orderService.getById(orderId);
-        if (!AuthenticationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(appUserService.getById(order.getUserId(), false)))
+        if (!AuthorizationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(appUserService.getById(order.getUserId(), false)))
             throw new ForbiddenException();
         return order.toGetOrderDTO();
     }
@@ -47,7 +47,7 @@ public class OrderController extends com.redscooter.API.order.OrderControllerBas
 //    @Parameters({@Parameter(name = "createdAt_", in = ParameterIn.QUERY, required = false, example = "propertyName:<asc|desc>"), @Parameter(name = "sortBy", in = ParameterIn.QUERY, required = false, schema = @Schema(description = "var 1", type = "string", allowableValues = {"1", "2"}))})
 //    @ApiResponse(responseCode = "200", description = "OK", content = {@Content(schema = @Schema(implementation = Page<GetOrderDTO>.))})
     public ResponseEntity<PageResponse<GetOrderDTO>> getAllOrders(CriteriaParameters cp) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         Page<Order> resultsPage = orderService.getAllByCriteria(cp);
         return ResponseFactory.buildPageResponse(resultsPage, GetOrderDTO::new);
     }
@@ -70,7 +70,7 @@ public class OrderController extends com.redscooter.API.order.OrderControllerBas
 
     @PatchMapping("orders/{orderId}/changeStatus/{orderStatus}")
     public ResponseEntity<Object> changeOrderStatus(@PathVariable(name = "orderId", required = true) Long orderId, @PathVariable(name = "orderStatus", required = true) OrderStatus orderStatus, @RequestParam(name = "adminNotesOnStatusChange", required = false) String adminNotesOnStatusChange) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         Order updatedOrder = orderService.changeOrderStatus(orderId, orderStatus, adminNotesOnStatusChange);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Order", "orderId", orderId, updatedOrder.toGetOrderDTO());
     }

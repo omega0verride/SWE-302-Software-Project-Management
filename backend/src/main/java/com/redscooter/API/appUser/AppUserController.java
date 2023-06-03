@@ -8,7 +8,10 @@ import com.redscooter.API.appUser.passwordReset.PasswordDto;
 import com.redscooter.API.appUser.passwordReset.PasswordResetToken;
 import com.redscooter.API.appUser.registration.OnRegistrationCompleteEvent;
 import com.redscooter.API.appUser.registration.VerificationToken;
+import com.redscooter.API.common.responseFactory.PageResponse;
 import com.redscooter.API.common.responseFactory.ResponseFactory;
+import com.redscooter.API.order.DTO.GetOrderDTO;
+import com.redscooter.API.order.Order;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 import com.redscooter.exceptions.api.UserAccountAlreadyActivatedException;
 import com.redscooter.exceptions.api.badRequest.BadRequestBodyException;
@@ -16,7 +19,7 @@ import com.redscooter.exceptions.api.forbidden.ForbiddenAccessException;
 import com.redscooter.exceptions.api.forbidden.ForbiddenException;
 import com.redscooter.exceptions.api.unauthorized.InvalidCredentialsException;
 import com.redscooter.exceptions.api.unauthorized.UserAccountNotActivatedException;
-import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.DTO.BasicCredentialsDTO;
 import com.redscooter.security.JwtUtils;
 import com.redscooter.util.Utilities;
@@ -25,8 +28,12 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
+import org.restprocessors.DynamicRESTController.CriteriaParameters;
+import org.restprocessors.DynamicRestMapping;
+import org.restprocessors.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,15 +55,15 @@ public class AppUserController {
     @Autowired
     ApplicationEventPublisher eventPublisher;
 
-    @GetMapping("")
-    public ResponseEntity<List<GetAppUserDTO>> getUsers() {
-        AuthenticationFacade.ensureAdmin();
-        return ResponseEntity.ok().body(appUserService.getUsers().stream().map(u -> u.toGetAppUserDTO()).collect(Collectors.toList()));
+    @DynamicRestMapping(path = "", entity = AppUser.class, requestMethod = RequestMethod.GET)
+    public ResponseEntity<PageResponse<GetAppUserDTO>> getUsers(CriteriaParameters cp) {
+        AuthorizationFacade.ensureAdmin();
+        return ResponseFactory.buildPageResponse(appUserService.getAllByCriteria(cp), GetAppUserDTO::new);
     }
 
     @DeleteMapping("/batchDelete/{ids}")
     public ResponseEntity<Object> deleteUsers(@PathVariable List<Long> ids) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         List<AbstractMap.SimpleEntry<Long, String>> response = new ArrayList<>();
         for (Long id : ids) {
             AbstractMap.SimpleEntry<Long, String> pair;
@@ -71,20 +78,20 @@ public class AppUserController {
 
     @GetMapping("/{username}")
     public ResponseEntity<GetAppUserDTO> getUserByUsername(@PathVariable String username) {
-        AuthenticationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
+        AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         AppUser user = appUserService.getByUsername(username);
         return new ResponseEntity<GetAppUserDTO>(user.toGetAppUserDTO(), HttpStatus.OK);
     }
 
     @PatchMapping("/{username}")
     public ResponseEntity<GetAppUserDTO> updateUserByUsername(@PathVariable String username, @RequestBody UpdateAppUserDTO updateAppUserDTO) {
-        AuthenticationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
+        AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         return new ResponseEntity<GetAppUserDTO>(appUserService.updateUser(username, updateAppUserDTO).toGetAppUserDTO(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{username}")
     public ResponseEntity<Object> deleteUserByUsername(@PathVariable String username) {
-        AuthenticationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
+        AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         if (!appUserService.existsByUsername(username))
             throw new ResourceNotFoundException("User", "username", username);
         appUserService.delete(username);
@@ -95,12 +102,12 @@ public class AppUserController {
     public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
         if (isAdmin){
-            if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            if (!AuthorizationFacade.isAdminOnCurrentSecurityContext())
                 throw new ForbiddenException("Only admin user can register admin accounts! Set isAdmin=false.");
-            appUserService.addRoleToUser(appUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+            appUserService.addRoleToUser(appUser, AuthorizationFacade.ADMIN_AUTHORITY.getAuthority());
         }
         if (skipVerification) {
-            if (!AuthenticationFacade.isAdminOnCurrentSecurityContext())
+            if (!AuthorizationFacade.isAdminOnCurrentSecurityContext())
                 throw new ForbiddenException("Only admin users can skip email verification! Set skipVerification=false.");
             appUserService.enableUser(appUser);
         } else {
@@ -114,7 +121,7 @@ public class AppUserController {
     @PostMapping("/register/resendVerification")
     public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
-        if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
+        if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             throw new ForbiddenAccessException("Unauthorized! Cannot resend verification email without verifying account credentials from a non admin context.");
         if (appUser.isEnabled())
             throw new UserAccountAlreadyActivatedException();

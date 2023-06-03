@@ -6,7 +6,7 @@ import com.redscooter.API.category.DTO.GetCategoryDTO;
 import com.redscooter.API.category.DTO.UpdateCategoryDTO;
 import com.redscooter.API.common.responseFactory.ResponseFactory;
 import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
-import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +35,7 @@ public class CategoryController {
     @GetMapping("")
     public List<GetCategoryDTO> getAllCategories(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         List<Category> categories;
-        if (!AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
+        if (!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             categories = categoryService.getCategoriesIfVisible();
         else
             categories = categoryService.getCategories();
@@ -45,28 +45,28 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public GetCategoryDTO getCategoryById(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "categoryId", required = true) Long categoryId) {
         Category category = categoryService.getById(categoryId);
-        if (!category.isVisible() && !AuthenticationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
+        if (!category.isVisible() && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             throw new ResourceRequiresAdminPrivileges("Category", "Id", categoryId.toString());
         return category.toGetCategoryDTO();
     }
 
     @PostMapping("")
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CreateCategoryDTO createCategoryDTO) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         Category insertedCategory = categoryService.create(createCategoryDTO);
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Category", "categoryId", insertedCategory.getId());
     }
 
     @PatchMapping("/{categoryId}")
     public ResponseEntity<Object> updateCategory(@PathVariable(name = "categoryId", required = true) Long categoryId, @Valid @RequestBody UpdateCategoryDTO updateCategoryDTO) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         Category updatedCategory = categoryService.update(categoryId, updateCategoryDTO);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Category", "categoryId", categoryId, updatedCategory.toGetCategoryDTO());
     }
 
     @DeleteMapping("/{categoryId}")
     public ResponseEntity<Object> deleteCategory(@PathVariable(name = "categoryId", required = true) Long categoryId) {
-        AuthenticationFacade.ensureAdmin();
+        AuthorizationFacade.ensureAdmin();
         categoryService.delete(categoryId);
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }

@@ -6,12 +6,13 @@ import com.redscooter.API.appUser.passwordReset.PasswordResetTokenRepository;
 import com.redscooter.API.appUser.registration.VerificationToken;
 import com.redscooter.API.appUser.registration.VerificationTokenRepository;
 import com.redscooter.API.common.BaseService;
-import com.redscooter.API.product.DTO.UpdateProductDTO;
-import com.redscooter.API.product.Product;
+import com.redscooter.API.order.Order;
 import com.redscooter.exceptions.api.verificationTokens.VerificationTokenException;
-import com.redscooter.security.AuthenticationFacade;
+import com.redscooter.security.AuthorizationFacade;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
+import org.restprocessors.DynamicRESTController.CriteriaParameters;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -134,6 +135,9 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         log.info("Fetching all users");
         return appUserRepository.findAll();
     }
+    public Page<AppUser> getAllByCriteria(CriteriaParameters cp) {
+        return appUserRepository.findAllByCriteria(cp);
+    }
 
 
     public AppUser getByUsername(String username) {
@@ -207,15 +211,15 @@ public class AppUserService extends BaseService<AppUser> implements UserDetailsS
         if (updateAppUserDTO.getPhoneNumber() != null)
             existingAppUser.setPhoneNumber(updateAppUserDTO.getPhoneNumber());
         if (updateAppUserDTO.getIsEnabled() != null) {
-            AuthenticationFacade.ensureAdmin();
+            AuthorizationFacade.ensureAdmin();
             existingAppUser.setEnabled(updateAppUserDTO.getIsEnabled());
         }
         if (updateAppUserDTO.getIsAdmin() != null) {
-            AuthenticationFacade.ensureAdmin();
+            AuthorizationFacade.ensureAdmin();
             if (updateAppUserDTO.getIsAdmin())
-                addRoleToUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+                addRoleToUser(existingAppUser, AuthorizationFacade.ADMIN_AUTHORITY.getAuthority());
             else
-                removeRoleFromUser(existingAppUser, AuthenticationFacade.ADMIN_AUTHORITY.getAuthority());
+                removeRoleFromUser(existingAppUser, AuthorizationFacade.ADMIN_AUTHORITY.getAuthority());
         }
         return saveUser(existingAppUser);
     }

@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 public class ProductService extends BaseService<Product> {
 
     private final ProductRepository productRepository;
+
     private final CategoryService categoryService;
     private final ProductImageStore productImageStore;
 
@@ -133,8 +134,10 @@ public class ProductService extends BaseService<Product> {
     }
 
     public Product addCategories(Product product, List<Long> categoryIds, boolean persist) {
-        for (Long id : categoryIds)
-            product.addCategory(categoryService.getById(id));
+        if (categoryIds!=null) {
+            for (Long id : categoryIds)
+                product.addCategory(categoryService.getById(id));
+        }
         if (persist)
             return productRepository.save(product);
         return product;
