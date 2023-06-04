@@ -1,9 +1,9 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState, useEffect } from 'react'
 import MaterialReactTable, {
   type MaterialReactTableProps,
   type MRT_Cell,
   type MRT_ColumnDef,
-  type MRT_Row
+  type MRT_Row,
 } from 'material-react-table'
 import {
   Box,
@@ -16,33 +16,58 @@ import {
   MenuItem,
   Stack,
   TextField,
-  Tooltip
+  Tooltip,
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
-import { data, status } from './ProductsData'
-import { v4 as uuidv4 } from 'uuid'
+import {
+  getProducts,
+  updateProduct,
+  productStatus,
+  createProduct,
+} from './ProductsData'
 import BasicModal from './BasicModal'
 import Image from 'next/image'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { getFromStorage } from '../store/localStorage/manageStorage'
+import Dropzone from 'react-dropzone'
 
 export type Product = {
-  id: string
-  name: string
-  code: string
-  status: string
-  image: string
+  id: number
+  title: string
+  description: string
+  price: number
+  range: number
+  discount: number
+  used: boolean
+  stock: number
+  thumbnail: string
+  instagramPostURL: string
+  facebookPostURL: string
 }
 
 const ProductsTable = () => {
+  const access_token: string = getFromStorage('access_token')!
   const [createModalOpen, setCreateModalOpen] = useState(false)
-  const [tableData, setTableData] = useState<Product[]>(() => data)
+  const [tableData, setTableData] = useState<Product[]>([])
+  useEffect(() => {
+    // fetch data
+    const dataFetch = async () => {
+      const res = await getProducts()
+      // set state when the data received
+      setTableData(res)
+    }
+
+    dataFetch()
+  }, [])
   const [validationErrors, setValidationErrors] = useState<{
     [cellId: string]: string
   }>({})
 
-  const handleCreateNewRow = (values: Product) => {
+  const handleCreateNewRow = async (values: Product) => {
+    console.log(JSON.stringify(values))
+    // const res = await createProduct()
     tableData.push(values)
     setTableData([...tableData])
   }
@@ -50,7 +75,17 @@ const ProductsTable = () => {
   const handleSaveRowEdits: MaterialReactTableProps<Product>['onEditingRowSave'] =
     async ({ exitEditingMode, row, values }) => {
       if (!Object.keys(validationErrors).length) {
-        tableData[row.index] = values
+        const newValues = {
+          ...values,
+          used: values?.used === 'New' ? false : true,
+        }
+        const res = await updateProduct(
+          access_token,
+          row.getValue('id'),
+          newValues,
+        )
+        console.log(res)
+        tableData[row.index] = newValues
         //send/receive api updates here, then refetch or update local table data for re-render
         setTableData([...tableData])
         exitEditingMode() //required to exit editing mode and close modal
@@ -70,48 +105,42 @@ const ProductsTable = () => {
       tableData.splice(row.index, 1)
       setTableData([...tableData])
     },
-    [tableData]
+    [tableData],
   )
 
   const getCommonEditTextFieldProps = useCallback(
     (
-      cell: MRT_Cell<Product>
+      cell: MRT_Cell<Product>,
     ): MRT_ColumnDef<Product>['muiTableBodyCellEditTextFieldProps'] => {
       return {
         error: !!validationErrors[cell.id],
         helperText: validationErrors[cell.id],
-        onBlur: (event) => {
-          const isValid =
-            cell.column.id === 'email' && validateRequired(event.target.value)
-          if (!isValid) {
+        onBlur: event => {
+          const isTitleValid =
+            cell.column.id === 'title' && validateRequired(event.target.value)
+          const isDescriptionValid =
+            cell.column.id === 'description' &&
+            validateRequired(event.target.value)
+          const isPriceVaild =
+            cell.column.id === 'price' && validateRequired(event.target.value)
+          if (!isTitleValid && !isPriceVaild && !isDescriptionValid) {
             //set validation error for cell if invalid
             setValidationErrors({
               ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`
+              [cell.id]: `${cell.column.columnDef.header} is required`,
             })
           } else {
             //remove validation error for cell if valid
             delete validationErrors[cell.id]
             setValidationErrors({
-              ...validationErrors
+              ...validationErrors,
             })
           }
-        }
+        },
       }
     },
-    [validationErrors]
+    [validationErrors],
   )
-
-  const statusColor: { value: string; color: string }[] = [
-    { value: 'IN STOCK', color: '#18CB78' },
-    { value: 'LOW STOCK', color: '#FFB82E' },
-    { value: 'OUT OF STOCK', color: '#FE5464' }
-  ]
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getStatusColor = (cl: string) => {
-    return statusColor.find((obj) => obj?.value === cl)?.color
-  }
 
   const columns = useMemo<MRT_ColumnDef<Product>[]>(
     () => [
@@ -121,13 +150,13 @@ const ProductsTable = () => {
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
-        size: 200
+        maxSize: 1,
       },
       {
-        accessorKey: 'image',
+        accessorKey: 'thumbnail',
         header: 'Image',
-        size: 200,
-        enableEditing: false,
+        size: 20,
+        // enableEditing: false,
         enableColumnOrdering: false,
         enableSorting: false,
         Cell: ({ cell }) => (
@@ -135,75 +164,162 @@ const ProductsTable = () => {
             src={cell.getValue<string>()}
             width={40}
             height={40}
-            alt='Picture of the product'
+            alt="Picture of the product"
           />
-        )
+        ),
       },
       {
-        accessorKey: 'name',
-        header: 'Name',
-        size: 200,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell)
-        })
-      },
-      {
-        accessorKey: 'code',
-        header: 'Code',
-        size: 200,
-        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell)
-        })
-      },
-      {
-        accessorKey: 'status',
-        header: 'Status',
-        size: 200,
+        accessorKey: 'title',
+        header: 'Title',
+        size: 20,
         Cell: ({ cell }) => (
-          <div style={{ color: getStatusColor(cell.getValue<string>()) }}>
-            {cell.getValue<string>()}
+          <div>
+            {cell.getValue<string>().length > 5 ? (
+              <div>{`${cell.getValue<string>().slice(0, 8)}...`}</div>
+            ) : cell.getValue<string>().length === 0 ? (
+              <div style={{ color: '#D12222' }}>No description</div>
+            ) : (
+              <div>{cell.getValue<string>()}</div>
+            )}
+          </div>
+        ),
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          ...getCommonEditTextFieldProps(cell),
+        }),
+      },
+      {
+        accessorKey: 'description',
+        header: 'Description',
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<string>().length > 5 ? (
+              <div>{`${cell.getValue<string>().slice(0, 8)}...`}</div>
+            ) : cell.getValue<string>().length === 0 ? (
+              <div style={{ color: '#D12222' }}>No description</div>
+            ) : (
+              <div>{cell.getValue<string>()}</div>
+            )}
+          </div>
+        ),
+        size: 20,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          ...getCommonEditTextFieldProps(cell),
+        }),
+      },
+      {
+        accessorKey: 'price',
+        header: 'Price',
+        size: 20,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          ...getCommonEditTextFieldProps(cell),
+        }),
+      },
+      {
+        accessorKey: 'range',
+        header: 'Range',
+        size: 20,
+      },
+      {
+        accessorKey: 'discount',
+        header: 'Discount',
+        size: 20,
+      },
+      {
+        accessorKey: 'used',
+        header: 'Prodcut Status',
+        maxSize: 20,
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<boolean>() === true ? (
+              <div style={{ color: '#D12222' }}>{productStatus[1]}</div>
+            ) : (
+              <div>{productStatus[0]}</div>
+            )}
           </div>
         ),
         muiTableBodyCellEditTextFieldProps: {
           select: true, //change to select for a dropdown
-          children: status.map((stat) => (
+          children: productStatus.map(stat => (
             <MenuItem key={stat} value={stat}>
               {stat}
             </MenuItem>
-          ))
-        }
-      }
+          )),
+        },
+      },
+      {
+        accessorKey: 'stock',
+        header: 'Stock',
+        size: 15,
+      },
+      {
+        accessorKey: 'instagramPostURL',
+        header: 'Instagram Post URL',
+        size: 20,
+        enableColumnOrdering: false,
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<boolean>() === true ? (
+              <div>{cell.getValue<string>()}</div>
+            ) : (
+              <div style={{ color: '#D12222' }}>No URL</div>
+            )}
+          </div>
+        ),
+      },
+      {
+        accessorKey: 'facebookPostURL',
+        header: 'Facebook Post URL',
+        size: 20,
+        enableColumnOrdering: false,
+        enableSorting: false,
+        Cell: ({ cell }) => (
+          <div>
+            {cell.getValue<boolean>() === true ? (
+              <div>{cell.getValue<string>()}</div>
+            ) : (
+              <div style={{ color: '#D12222' }}>No URL</div>
+            )}
+          </div>
+        ),
+      },
     ],
-    [getCommonEditTextFieldProps, getStatusColor]
+    [getCommonEditTextFieldProps],
   )
 
   return (
     <>
       <MaterialReactTable
+        muiTableProps={{
+          sx: {
+            tableLayout: 'fixed',
+          },
+        }}
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
-              align: 'center'
+              align: 'left',
             },
-            size: 120
-          }
+            size: 1,
+          },
         }}
+        initialState={{ pagination: { pageSize: 5, pageIndex: 0 } }}
         columns={columns}
         data={tableData}
-        editingMode='modal' //default
+        editingMode="modal" //default
         enableColumnOrdering
         enableEditing
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement='left' title='Edit'>
+            <Tooltip arrow placement="left" title="Edit">
               <IconButton onClick={() => table.setEditingRow(row)}>
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement='right' title='Delete'>
-              <IconButton color='error' onClick={() => handleDeleteRow(row)}>
+            <Tooltip arrow placement="right" title="Delete">
+              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -212,7 +328,7 @@ const ProductsTable = () => {
         renderTopToolbarCustomActions={() => (
           <Button
             onClick={() => setCreateModalOpen(true)}
-            variant='contained'
+            variant="contained"
             sx={{
               textTransform: 'inherit',
               backgroundColor: '#D12222',
@@ -220,10 +336,9 @@ const ProductsTable = () => {
               '&:hover': {
                 borderColor: '#1E2125',
                 boxShadow: 'none',
-                backgroundColor: '#1E2125'
-              }
-            }}
-          >
+                backgroundColor: '#1E2125',
+              },
+            }}>
             Create New Product
           </Button>
         )}
@@ -250,30 +365,50 @@ export const CreateNewProductModal = ({
   open,
   columns,
   onClose,
-  onSubmit
+  onSubmit,
 }: CreateModalProps) => {
   const [values, setValues] = useState<any>(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = ''
       return acc
-    }, {} as any)
+    }, {} as any),
   )
   const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = () => {
     //put your validation logic here
     const arrayOfErros: string[] = []
-    if (!values?.name) {
-      arrayOfErros.push('Please enter a valid name!')
+    if (!validateRequired(values?.title)) {
+      arrayOfErros.push('Please enter a valid title!')
     }
-    if (!values?.code) {
-      arrayOfErros.push('Please enter a valid code!')
+    if (!validateRequired(values?.description)) {
+      arrayOfErros.push('Please enter a valid description!')
     }
-    if (!values?.status) {
-      arrayOfErros.push('Please enter a valid status!')
+    if (!validateNumber(values?.price)) {
+      arrayOfErros.push('Please enter a valid price!')
     }
-    const newValues = { ...values, id: uuidv4() }
-    console.log(newValues)
+    if (values?.file?.length > 1) {
+      arrayOfErros.push('Please enter only one file!')
+    }
+    if (values?.file?.length === 1) {
+      const typeOfFile = values?.file[0]?.type?.split('/')[0]
+      if (typeOfFile !== 'image') {
+        arrayOfErros.push('Please make sure that your file is an image!')
+      }
+    }
+
+    const newValues = {
+      ...values,
+      thumbnail: values?.file
+        ? values?.file[0]?.path
+        : 'images/no_image.jpg/no_image.jpg',
+      used: values?.used === 'New' ? false : true,
+      price: Number(values?.price),
+      discount: values?.discount ? Number(values?.discount) : 0,
+      range: values?.range ? Number(values?.range) : 0,
+      stock: values?.stock ? Number(values?.stock) : 0,
+    }
+
     setErrors(arrayOfErros)
     if (arrayOfErros.length === 0) {
       onSubmit(newValues)
@@ -284,79 +419,142 @@ export const CreateNewProductModal = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign='center'>Create New Product</DialogTitle>
+      <DialogTitle textAlign="center">Create New Product</DialogTitle>
       <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={e => e.preventDefault()}>
           <Stack
             sx={{
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem'
-            }}
-          >
+              gap: '1.5rem',
+            }}>
+            <Dropzone
+              onDrop={acceptedFiles =>
+                setValues({ ...values, file: acceptedFiles })
+              }>
+              {({ getRootProps, getInputProps }) => (
+                <section>
+                  <div
+                    {...getRootProps()}
+                    style={{
+                      color: 'gray',
+                      borderStyle: 'dashed',
+                      borderColor: 'lightgray',
+                      paddingLeft: '0.8rem',
+                      cursor: 'pointer',
+                    }}>
+                    <input {...getInputProps()} />
+                    <p>
+                      {values?.file
+                        ? values?.file[0].name
+                        : 'Drag and drop some files here, or click to select files'}
+                    </p>
+                  </div>
+                </section>
+              )}
+            </Dropzone>
             {columns.map((column, index) =>
-              column.accessorKey === 'name' || column.accessorKey === 'code' ? (
+              column.accessorKey !== 'id' &&
+              column.accessorKey !== 'thumbnail' &&
+              column.accessorKey !== 'range' &&
+              column.accessorKey !== 'price' &&
+              column.accessorKey !== 'stock' &&
+              column.accessorKey !== 'discount' &&
+              column.accessorKey !== 'used' ? (
                 <TextField
                   key={index}
                   label={column.header}
                   name={column.accessorKey}
-                  onChange={(e) =>
+                  onChange={e =>
                     setValues({ ...values, [e.target.name]: e.target.value })
                   }
                 />
               ) : (
-                column.accessorKey === 'status' && (
+                column.accessorKey === 'used' && (
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>
-                      Status
+                    <InputLabel id="demo-simple-select-label">
+                      Product Status
                     </InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
+                      labelId="demo-simple-select-label"
                       id={column.accessorKey}
                       key={index}
                       label={column.header}
                       name={column.accessorKey}
-                      onChange={(e) =>
+                      onChange={e =>
                         setValues({
                           ...values,
-                          [e.target.name]: e.target.value
+                          [e.target.name]: e.target.value,
                         })
-                      }
-                    >
-                      {status.map((stat, index) => (
-                        <MenuItem key={index} value={stat}>
-                          {stat}
+                      }>
+                      {productStatus.map((status: string, index: number) => (
+                        <MenuItem key={index} value={status}>
+                          {status}
                         </MenuItem>
                       ))}
                     </Select>
                   </FormControl>
                 )
-              )
+              ),
             )}
+            <TextField
+              key="price"
+              label="Price"
+              name="price"
+              type="number"
+              onChange={e =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
+            <TextField
+              key="stock"
+              label="Stock"
+              name="stock"
+              type="number"
+              onChange={e =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
+            <TextField
+              key="discount"
+              label="Discount"
+              name="discount"
+              type="number"
+              onChange={e =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
+            <TextField
+              key="range"
+              label="Range"
+              name="range"
+              type="number"
+              onChange={e =>
+                setValues({ ...values, [e.target.name]: e.target.value })
+              }
+            />
           </Stack>
         </form>
       </DialogContent>
       <DialogActions sx={{ p: '1.25rem' }}>
         <Button
           onClick={onClose}
-          variant='outlined'
-          sx={{ borderColor: 'lightblue' }}
-        >
+          variant="outlined"
+          sx={{ borderColor: 'lightblue' }}>
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
-          variant='contained'
+          variant="contained"
           sx={{
             backgroundColor: '#D12222',
             color: '#FFF',
             '&:hover': {
               borderColor: '#1E2125',
               boxShadow: 'none',
-              backgroundColor: '#1E2125'
-            }
-          }}
-        >
+              backgroundColor: '#1E2125',
+            },
+          }}>
           Create New Product
         </Button>
         {errors?.length > 0 && (
@@ -368,5 +566,6 @@ export const CreateNewProductModal = ({
 }
 
 const validateRequired = (value: string) => !!value?.length
+const validateNumber = (value: number) => value >= 0
 
 export default ProductsTable

@@ -15,7 +15,7 @@ const SendData = async (
   dataToBeSubmitted: object,
   router: any,
   setErrorMessage: any,
-  dispatch: any
+  dispatch: any,
 ) => {
   console.log(dataToBeSubmitted)
 
@@ -25,9 +25,9 @@ const SendData = async (
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${apiExtension}`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(dataToBeSubmitted)
+        body: JSON.stringify(dataToBeSubmitted),
       })
     ).json()
 
@@ -81,7 +81,7 @@ const LoginButton = (props: myProps) => {
           borderRadius: '8px',
           width: '100%',
           cursor: 'pointer',
-          marginTop: '2rem'
+          marginTop: '2rem',
         }}
         onClick={(e: any) =>
           SendData(
@@ -89,10 +89,9 @@ const LoginButton = (props: myProps) => {
             dataToBeSubmitted,
             router,
             setErrorMessage,
-            dispatch
+            dispatch,
           )
-        }
-      >
+        }>
         {register ? 'Register' : 'Log In'}
       </button>
     </div>
