@@ -13,6 +13,7 @@ import LoginMain from '../components/LoginMain'
 import Footer from '../components/LoginFooter'
 import RegisterPage from './register'
 import { ProductControllerService } from '../services/services/ProductControllerService'
+import { GetModerateProductDTO } from '../services/models/GetModerateProductDTO'
 
 interface Product {
   id: number;
@@ -31,7 +32,7 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSort, setSelectedSort] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<GetModerateProductDTO[]>([]);
 
   const itemsPerPage = 9;
 
@@ -63,8 +64,7 @@ export default function Home() {
 
   useEffect(() => {
     ProductControllerService.getAllProducts().then(response => {
-      // Assuming the product data is available in the `items` property
-      setProducts(response.data);
+      setProducts(response.items || []);
     }).catch(error => {
       console.error('Error fetching products:', error);
     });
