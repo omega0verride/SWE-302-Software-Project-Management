@@ -1,4 +1,5 @@
 import img from '../assets/icons/dummyLogo.jpg'
+import { checkTokenExpiration } from '../store/localStorage/refreshToken'
 import { Product } from './ProductsTable'
 //     image: img.src,
 
@@ -101,6 +102,3 @@ export const updateProduct = async (
 }
 
 export const productStatus = ['New', 'Used']
-function checkTokenExpiration(): string | PromiseLike<string> {
-  throw new Error('Function not implemented.')
-}

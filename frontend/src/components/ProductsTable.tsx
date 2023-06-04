@@ -32,6 +32,7 @@ import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { getFromStorage } from '../store/localStorage/manageStorage'
 import Dropzone from 'react-dropzone'
+import FormData from 'form-data'
 
 export type Product = {
   id: number
@@ -66,8 +67,8 @@ const ProductsTable = () => {
   }>({})
 
   const handleCreateNewRow = async (values: Product) => {
-    console.log(JSON.stringify(values))
-    // const res = await createProduct()
+    const res = await createProduct(values)
+    console.log(res)
     tableData.push(values)
     setTableData([...tableData])
   }
@@ -376,6 +377,7 @@ export const CreateNewProductModal = ({
   const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = () => {
+    const form = new FormData()
     //put your validation logic here
     const arrayOfErros: string[] = []
     if (!validateRequired(values?.title)) {
@@ -395,13 +397,13 @@ export const CreateNewProductModal = ({
       if (typeOfFile !== 'image') {
         arrayOfErros.push('Please make sure that your file is an image!')
       }
-    }
 
+      form.append('file', values?.file[0])
+      form.append('name', values?.file[0]?.name)
+    }
     const newValues = {
       ...values,
-      thumbnail: values?.file
-        ? values?.file[0]?.path
-        : 'images/no_image.jpg/no_image.jpg',
+      thumbnail: values?.file ? form : 'images/no_image.jpg/no_image.jpg',
       used: values?.used === 'New' ? false : true,
       price: Number(values?.price),
       discount: values?.discount ? Number(values?.discount) : 0,
@@ -409,6 +411,7 @@ export const CreateNewProductModal = ({
       stock: values?.stock ? Number(values?.stock) : 0,
     }
 
+    delete newValues?.file
     setErrors(arrayOfErros)
     if (arrayOfErros.length === 0) {
       onSubmit(newValues)
