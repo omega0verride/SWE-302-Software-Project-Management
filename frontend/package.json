@@ -3,11 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "openapi -i services.yaml -o src/services && next dev",
+    "dev": "openapi -i http://75.119.149.135/api/api-docs/v3.yaml -o src/services && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "export": "openapi -i services.yaml -o src/services && next build && next export"
+    "export": "openapi -i http://75.119.149.135/api/api-docs/v3.yaml -o src/services && next build && next export"
   },
   "dependencies": {
     "@apollo/client": "^3.7.15",
