@@ -6,12 +6,11 @@ export const uploadImage = async (formData, productId: number) => {
   try {
     const access_token: string = await checkTokenExpiration()
     const uploadImageResponse = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products/uploadImage/${productId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products/uploadImage/${productId}?isThumbnail=true`,
       {
         method: 'POST',
         headers: new Headers({
           Authorization: `Bearer ${access_token}`,
-          'Content-Type': 'multipart/formdata',
         }),
         body: formData,
       },

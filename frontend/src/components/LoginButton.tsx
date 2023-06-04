@@ -26,6 +26,7 @@ const SendData = async (
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${undefined}`,
         },
         body: JSON.stringify(dataToBeSubmitted),
       })
