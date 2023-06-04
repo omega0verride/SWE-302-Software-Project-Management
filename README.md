@@ -39,3 +39,6 @@ export JWT_SECRET='RANDROM_SECRET_W&gN*^eBp*Yb?bAkzz_@Vh?=3jTL^UAR?'
 
 ## Deployment Diagram
 ![deployment_diagram](https://github.com/omega0verride/SWE-302-Software-Project-Management/assets/64291401/ab875351-6252-4155-821a-b3136f912339)
+
+
+*on the latest updates, backend uses "RestProcessors" (@DynamicRestMapping), created by ibreti20@epoka.edu.al for his graduation project. This dependency is not included and is not available from public maven repositories.
