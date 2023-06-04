@@ -1,12 +1,15 @@
 package com.redscooter.exceptions;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,10 +72,20 @@ public class ErrorResponse {
 
     private void buildDetails(Exception exception) {
         Class<?> class_ = exception.getClass();
+        ObjectMapper objectMapper = new ObjectMapper();
         while (class_ != null && class_ != BaseException.class) {
             for (Field f : class_.getDeclaredFields()) {
+                if (Modifier.isTransient(f.getModifiers()))
+                    continue;
                 try {
-                    details.put(f.getName(), f.get(exception));
+                    Object value = f.get(exception);
+                    try {
+                        objectMapper.writeValueAsString(value);
+                        details.put(f.getName(), value);
+                    } catch (JsonProcessingException e) {
+                        details.put(f.getName(), value.toString());
+                        System.out.println("Could not serialize data for field '" + f.getName() + "' of type '" + f.getType() + "' to build exception details. Reporting it as string."); // TODO change to log
+                    }
                 } catch (IllegalAccessException ex) {
                     System.out.println("Could not access field '" + f.getName() + "' to build exception details. Check if this field is declared as public in the exception class '" + class_ + "'."); // TODO change to log
                 }
