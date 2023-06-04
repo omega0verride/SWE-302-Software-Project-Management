@@ -12,6 +12,14 @@ import Header from '../components/LoginHeader'
 import LoginMain from '../components/LoginMain'
 import Footer from '../components/LoginFooter'
 import RegisterPage from './register'
+import { ProductControllerService } from '../services/services/ProductControllerService'
+
+interface Product {
+  id: number;
+  title: string;
+  description: string;
+  // Add other properties as needed
+}
 
 
 export default function Home() {
@@ -23,6 +31,8 @@ export default function Home() {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSort, setSelectedSort] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+  const [products, setProducts] = useState<Product[]>([]);
+
   const itemsPerPage = 9;
 
   const nextPage = () => {
@@ -50,6 +60,15 @@ export default function Home() {
   const dispatch = useDispatch()
 
   useEffect(() => { }, [user]);
+
+  useEffect(() => {
+    ProductControllerService.getAllProducts().then(response => {
+      // Assuming the product data is available in the `items` property
+      setProducts(response.data);
+    }).catch(error => {
+      console.error('Error fetching products:', error);
+    });
+  }, []);
 
   return (
     <div style={{
@@ -237,7 +256,25 @@ export default function Home() {
         </div>
         <div style={{ backgroundColor: 'white', width: '80%', height: '100%', borderRadius: '8px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            
+            {products.map(product => (
+              <div
+                key={product.id}
+                style={{
+                  width: '30%',
+                  height: '30%',
+                  border: '1px solid black',
+                  margin: '10px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <h4>{product.title}</h4>
+                <p>{product.description}</p>
+              </div>
+            ))}
+
             <div //Page Indicators
               style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
               <button onClick={prevPage} disabled={currentPage === 1}>

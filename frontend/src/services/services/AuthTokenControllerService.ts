@@ -11,13 +11,13 @@ import { request as __request } from '../core/request';
 export class AuthTokenControllerService {
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns DetailedTokenDetailsDTO OK
      * @throws ApiError
      */
     public static authenticate(
-requestBody: MultiAuthIdentityProviderDTO,
-): CancelablePromise<DetailedTokenDetailsDTO> {
+        requestBody: MultiAuthIdentityProviderDTO,
+    ): CancelablePromise<DetailedTokenDetailsDTO> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/token',

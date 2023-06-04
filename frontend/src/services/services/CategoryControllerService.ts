@@ -12,13 +12,13 @@ import { request as __request } from '../core/request';
 export class CategoryControllerService {
 
     /**
-     * @param authorization 
+     * @param authorization
      * @returns GetCategoryDTO OK
      * @throws ApiError
      */
     public static getAllCategories(
-authorization?: string,
-): CancelablePromise<Array<GetCategoryDTO>> {
+        authorization?: string,
+    ): CancelablePromise<Array<GetCategoryDTO>> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/categories',
@@ -32,13 +32,13 @@ authorization?: string,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static createCategory(
-requestBody: CreateCategoryDTO,
-): CancelablePromise<any> {
+        requestBody: CreateCategoryDTO,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/categories',
@@ -51,15 +51,15 @@ requestBody: CreateCategoryDTO,
     }
 
     /**
-     * @param categoryId 
-     * @param authorization 
+     * @param categoryId
+     * @param authorization
      * @returns GetCategoryDTO OK
      * @throws ApiError
      */
     public static getCategoryById(
-categoryId: number,
-authorization?: string,
-): CancelablePromise<GetCategoryDTO> {
+        categoryId: number,
+        authorization?: string,
+    ): CancelablePromise<GetCategoryDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/categories/{categoryId}',
@@ -76,13 +76,13 @@ authorization?: string,
     }
 
     /**
-     * @param categoryId 
+     * @param categoryId
      * @returns any OK
      * @throws ApiError
      */
     public static deleteCategory(
-categoryId: number,
-): CancelablePromise<any> {
+        categoryId: number,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/categories/{categoryId}',
@@ -96,15 +96,15 @@ categoryId: number,
     }
 
     /**
-     * @param categoryId 
-     * @param requestBody 
+     * @param categoryId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static updateCategory(
-categoryId: number,
-requestBody: UpdateCategoryDTO,
-): CancelablePromise<any> {
+        categoryId: number,
+        requestBody: UpdateCategoryDTO,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/categories/{categoryId}',
