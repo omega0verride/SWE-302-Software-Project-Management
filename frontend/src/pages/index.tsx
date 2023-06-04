@@ -26,6 +26,7 @@ export default function Home() {
   const [selectedSort, setSelectedSort] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [products, setProducts] = useState<GetModerateProductDTO[]>([]);
+
   const itemsPerPage = 9;
 
   const nextPage = () => {
