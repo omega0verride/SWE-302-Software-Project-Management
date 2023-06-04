@@ -3,7 +3,7 @@ import MaterialReactTable, {
   type MaterialReactTableProps,
   type MRT_Cell,
   type MRT_ColumnDef,
-  type MRT_Row
+  type MRT_Row,
 } from 'material-react-table'
 import {
   Box,
@@ -19,7 +19,7 @@ import {
   Select,
   Stack,
   TextField,
-  Tooltip
+  Tooltip,
 } from '@mui/material'
 import { Delete, Edit } from '@mui/icons-material'
 import {
@@ -28,10 +28,9 @@ import {
   getUsers,
   createUser,
   deleteUser,
-  updateUser
+  updateUser,
 } from './UsersCrud'
 import BasicModal from './BasicModal'
-import { getFromStorage } from '../store/localStorage/manageStorage'
 
 export type Person = {
   id: number
@@ -45,14 +44,12 @@ export type Person = {
 }
 
 const Table = () => {
-  const access_token: string = getFromStorage('access_token')!
-
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState<Person[]>([])
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
-      const res = await getUsers(access_token)
+      const res = await getUsers()
       // set state when the data received
       setTableData(res)
     }
@@ -68,19 +65,18 @@ const Table = () => {
     const { name, surname, email, password, phoneNumber, admin, enabled } =
       values
     const res = await createUser(
-      access_token,
       {
         name,
         surname,
         email,
         password,
-        phoneNumber: phoneNumber || ''
+        phoneNumber: phoneNumber || '',
       },
       admin,
-      enabled
+      enabled,
     )
     console.log(res)
-    const response = await getUsers(access_token)
+    const response = await getUsers()
     setTableData(response)
   }
 
@@ -96,15 +92,15 @@ const Table = () => {
             ? true
             : false
         const { name, surname, phoneNumber } = values
-        const res = await updateUser(access_token, row.getValue('email'), {
+        const res = await updateUser(row.getValue('email'), {
           name,
           surname,
           phoneNumber,
           isAdmin,
-          isEnabled
+          isEnabled,
         })
         console.log(res)
-        const response = await getUsers(access_token)
+        const response = await getUsers()
         setTableData(response)
         exitEditingMode() //required to exit editing mode and close modal
       }
@@ -122,21 +118,21 @@ const Table = () => {
         return
       }
       //send api delete request here, then refetch or update local table data for re-render
-      await deleteUser(access_token, row.getValue('email'))
-      const response = await getUsers(access_token)
+      await deleteUser(row.getValue('email'))
+      const response = await getUsers()
       setTableData(response)
     },
-    [tableData]
+    [tableData],
   )
 
   const getCommonEditTextFieldProps = useCallback(
     (
-      cell: MRT_Cell<Person>
+      cell: MRT_Cell<Person>,
     ): MRT_ColumnDef<Person>['muiTableBodyCellEditTextFieldProps'] => {
       return {
         error: !!validationErrors[cell.id],
         helperText: validationErrors[cell.id],
-        onBlur: (event) => {
+        onBlur: event => {
           const isValid =
             cell.column.id === 'email'
               ? validateEmail(event.target.value)
@@ -145,19 +141,19 @@ const Table = () => {
             //set validation error for cell if invalid
             setValidationErrors({
               ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`
+              [cell.id]: `${cell.column.columnDef.header} is required`,
             })
           } else {
             //remove validation error for cell if valid
             delete validationErrors[cell.id]
             setValidationErrors({
-              ...validationErrors
+              ...validationErrors,
             })
           }
-        }
+        },
       }
     },
-    [validationErrors]
+    [validationErrors],
   )
 
   const columns = useMemo<MRT_ColumnDef<Person>[]>(
@@ -168,7 +164,7 @@ const Table = () => {
         enableColumnOrdering: false,
         enableEditing: false, //disable editing on this column
         enableSorting: false,
-        size: 80
+        size: 80,
       },
       {
         accessorKey: 'name',
@@ -176,8 +172,8 @@ const Table = () => {
         enableClickToCopy: true,
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell)
-        })
+          ...getCommonEditTextFieldProps(cell),
+        }),
       },
       {
         accessorKey: 'surname',
@@ -185,8 +181,8 @@ const Table = () => {
         enableClickToCopy: true,
         size: 140,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
-          ...getCommonEditTextFieldProps(cell)
-        })
+          ...getCommonEditTextFieldProps(cell),
+        }),
       },
       {
         accessorKey: 'email',
@@ -195,8 +191,8 @@ const Table = () => {
         enableClickToCopy: true,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
-          type: 'email'
-        })
+          type: 'email',
+        }),
       },
       {
         accessorKey: 'phoneNumber',
@@ -209,7 +205,7 @@ const Table = () => {
               <div style={{ color: '#D12222' }}>{'No phone number'}</div>
             )}
           </div>
-        )
+        ),
       },
       {
         accessorKey: 'admin',
@@ -227,12 +223,12 @@ const Table = () => {
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           select: true, //change to select for a dropdown
           defaultValue: 'Admin',
-          children: authorities.map((authority) => (
+          children: authorities.map(authority => (
             <MenuItem key={authority} value={authority}>
               {authority}
             </MenuItem>
-          ))
-        })
+          )),
+        }),
       },
       {
         accessorKey: 'enabled',
@@ -254,11 +250,11 @@ const Table = () => {
             <MenuItem key={index} value={status}>
               {status}
             </MenuItem>
-          ))
-        })
-      }
+          )),
+        }),
+      },
     ],
-    [getCommonEditTextFieldProps]
+    [getCommonEditTextFieldProps],
   )
 
   return (
@@ -267,27 +263,27 @@ const Table = () => {
         displayColumnDefOptions={{
           'mrt-row-actions': {
             muiTableHeadCellProps: {
-              align: 'center'
+              align: 'center',
             },
-            size: 120
-          }
+            size: 120,
+          },
         }}
         columns={columns}
         data={tableData}
-        editingMode='modal' //default
+        editingMode="modal" //default
         enableColumnOrdering
         enableEditing
         onEditingRowSave={handleSaveRowEdits}
         onEditingRowCancel={handleCancelRowEdits}
         renderRowActions={({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Tooltip arrow placement='left' title='Edit'>
+            <Tooltip arrow placement="left" title="Edit">
               <IconButton onClick={() => table.setEditingRow(row)}>
                 <Edit />
               </IconButton>
             </Tooltip>
-            <Tooltip arrow placement='right' title='Delete'>
-              <IconButton color='error' onClick={() => handleDeleteRow(row)}>
+            <Tooltip arrow placement="right" title="Delete">
+              <IconButton color="error" onClick={() => handleDeleteRow(row)}>
                 <Delete />
               </IconButton>
             </Tooltip>
@@ -296,7 +292,7 @@ const Table = () => {
         renderTopToolbarCustomActions={() => (
           <Button
             onClick={() => setCreateModalOpen(true)}
-            variant='contained'
+            variant="contained"
             sx={{
               textTransform: 'inherit',
               backgroundColor: '#D12222',
@@ -304,10 +300,9 @@ const Table = () => {
               '&:hover': {
                 borderColor: '#1E2125',
                 boxShadow: 'none',
-                backgroundColor: '#1E2125'
-              }
-            }}
-          >
+                backgroundColor: '#1E2125',
+              },
+            }}>
             Create New Account
           </Button>
         )}
@@ -334,13 +329,13 @@ export const CreateNewAccountModal = ({
   open,
   columns,
   onClose,
-  onSubmit
+  onSubmit,
 }: CreateModalProps) => {
   const [values, setValues] = useState<any>(() =>
     columns.reduce((acc, column) => {
       acc[column.accessorKey ?? ''] = ''
       return acc
-    }, {} as any)
+    }, {} as any),
   )
   const [errors, setErrors] = useState<string[]>([])
 
@@ -373,7 +368,7 @@ export const CreateNewAccountModal = ({
     const newValues = {
       ...values,
       admin: values?.admin === 'Admin' ? true : false,
-      enabled: values?.enabled === 'Enabled' ? true : false
+      enabled: values?.enabled === 'Enabled' ? true : false,
     }
 
     setErrors(arrayOfErros)
@@ -386,16 +381,15 @@ export const CreateNewAccountModal = ({
 
   return (
     <Dialog open={open}>
-      <DialogTitle textAlign='center'>Create New Account</DialogTitle>
+      <DialogTitle textAlign="center">Create New Account</DialogTitle>
       <DialogContent>
-        <form onSubmit={(e) => e.preventDefault()}>
+        <form onSubmit={e => e.preventDefault()}>
           <Stack
             sx={{
               width: '100%',
               minWidth: { xs: '300px', sm: '360px', md: '400px' },
-              gap: '1.5rem'
-            }}
-          >
+              gap: '1.5rem',
+            }}>
             {columns.map((column, index) =>
               column.accessorKey !== 'id' &&
               column.accessorKey !== 'admin' &&
@@ -404,27 +398,26 @@ export const CreateNewAccountModal = ({
                   key={index}
                   label={column.header}
                   name={column.accessorKey}
-                  onChange={(e) =>
+                  onChange={e =>
                     setValues({ ...values, [e.target.name]: e.target.value })
                   }
                 />
               ) : (
                 column.accessorKey === 'admin' && (
                   <FormControl fullWidth>
-                    <InputLabel id='demo-simple-select-label'>Role</InputLabel>
+                    <InputLabel id="demo-simple-select-label">Role</InputLabel>
                     <Select
-                      labelId='demo-simple-select-label'
+                      labelId="demo-simple-select-label"
                       id={column.accessorKey}
                       key={index}
                       label={column.header}
                       name={column.accessorKey}
-                      onChange={(e) =>
+                      onChange={e =>
                         setValues({
                           ...values,
-                          [e.target.name]: e.target.value
+                          [e.target.name]: e.target.value,
                         })
-                      }
-                    >
+                      }>
                       {authorities.map((auth, index) => (
                         <MenuItem key={index} value={auth}>
                           {auth}
@@ -433,25 +426,24 @@ export const CreateNewAccountModal = ({
                     </Select>
                   </FormControl>
                 )
-              )
+              ),
             )}
             <FormControl fullWidth>
-              <InputLabel id='demo-simple-select-label'>
+              <InputLabel id="demo-simple-select-label">
                 Skip Verification
               </InputLabel>
               <Select
-                labelId='demo-simple-select-label'
+                labelId="demo-simple-select-label"
                 id={'enabled'}
                 key={'enabled'}
                 label={'Status'}
                 name={'enabled'}
-                onChange={(e) =>
+                onChange={e =>
                   setValues({
                     ...values,
-                    [e.target.name]: e.target.value
+                    [e.target.name]: e.target.value,
                   })
-                }
-              >
+                }>
                 {userStatus.map((status, index) => (
                   <MenuItem key={index} value={status}>
                     {status === 'Enabled' ? 'True' : 'False'}
@@ -460,22 +452,22 @@ export const CreateNewAccountModal = ({
               </Select>
             </FormControl>
             <TextField
-              id='outlined-password-input'
+              id="outlined-password-input"
               key={25}
-              label='Password'
-              name='password'
-              type='password'
-              onChange={(e) =>
+              label="Password"
+              name="password"
+              type="password"
+              onChange={e =>
                 setValues({ ...values, [e.target.name]: e.target.value })
               }
             />
             <TextField
-              id='outlined-password-input'
+              id="outlined-password-input"
               key={26}
-              label='Confirm Password'
-              name='confirmPassword'
-              type='password'
-              onChange={(e) =>
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              onChange={e =>
                 setValues({ ...values, [e.target.name]: e.target.value })
               }
             />
@@ -485,24 +477,22 @@ export const CreateNewAccountModal = ({
       <DialogActions sx={{ p: '1.25rem' }}>
         <Button
           onClick={onClose}
-          variant='outlined'
-          sx={{ borderColor: 'lightblue' }}
-        >
+          variant="outlined"
+          sx={{ borderColor: 'lightblue' }}>
           Cancel
         </Button>
         <Button
           onClick={handleSubmit}
-          variant='contained'
+          variant="contained"
           sx={{
             backgroundColor: '#D12222',
             color: '#FFF',
             '&:hover': {
               borderColor: '#1E2125',
               boxShadow: 'none',
-              backgroundColor: '#1E2125'
-            }
-          }}
-        >
+              backgroundColor: '#1E2125',
+            },
+          }}>
           Create New Account
         </Button>
         {errors?.length > 0 && (
@@ -519,7 +509,7 @@ const validateEmail = (email: string) =>
   email
     .toLowerCase()
     .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     )
 
 export default Table
