@@ -14,10 +14,10 @@ public class DetailedTokenDetailsDTO {
     String access_token;
     String refresh_token;
     String username;
-    Date expires_at;
+    Long expires_at;
     List<String> authorities;
 
-    public DetailedTokenDetailsDTO(TokenPair tokenPair, Date expires_at, List<String> authorities, String username) {
+    public DetailedTokenDetailsDTO(TokenPair tokenPair, Long expires_at, List<String> authorities, String username) {
         setUsername(username);
         setAccess_token(tokenPair.getAccessToken());
         setRefresh_token(tokenPair.getRefreshToken());

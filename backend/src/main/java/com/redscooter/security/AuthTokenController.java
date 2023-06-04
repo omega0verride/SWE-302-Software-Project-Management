@@ -18,6 +18,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,7 +35,7 @@ public class AuthTokenController {
     private JwtUtils jwtUtils;
     protected final Log logger = LogFactory.getLog(this.getClass());
 
-    @PostMapping(value = JWTConfigProperties.DEFAULT_REFRESH_TOKEN_ENDPOINT_VALUE)
+    @GetMapping(value = JWTConfigProperties.DEFAULT_REFRESH_TOKEN_ENDPOINT_VALUE)
     public DetailedTokenDetailsDTO refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))

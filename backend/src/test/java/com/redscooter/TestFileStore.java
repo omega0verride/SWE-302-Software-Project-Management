@@ -1,4 +1,4 @@
-package com.redscooter.api;
+package com.redscooter;
 
 import com.redscooter.util.Utilities;
 import org.junit.jupiter.api.Assertions;

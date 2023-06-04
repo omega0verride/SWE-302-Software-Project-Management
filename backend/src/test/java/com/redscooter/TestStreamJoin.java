@@ -1,4 +1,4 @@
-package com.redscooter.api;
+package com.redscooter;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

@@ -10,8 +10,6 @@ import com.redscooter.API.appUser.registration.OnRegistrationCompleteEvent;
 import com.redscooter.API.appUser.registration.VerificationToken;
 import com.redscooter.API.common.responseFactory.PageResponse;
 import com.redscooter.API.common.responseFactory.ResponseFactory;
-import com.redscooter.API.order.DTO.GetOrderDTO;
-import com.redscooter.API.order.Order;
 import com.redscooter.exceptions.api.ResourceNotFoundException;
 import com.redscooter.exceptions.api.UserAccountAlreadyActivatedException;
 import com.redscooter.exceptions.api.badRequest.BadRequestBodyException;
@@ -33,7 +31,6 @@ import org.restprocessors.DynamicRestMapping;
 import org.restprocessors.RequestMethod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +41,6 @@ import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/users")
@@ -101,7 +97,7 @@ public class AppUserController {
     @PostMapping("/register")
     public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
-        if (isAdmin){
+        if (isAdmin) {
             if (!AuthorizationFacade.isAdminOnCurrentSecurityContext())
                 throw new ForbiddenException("Only admin user can register admin accounts! Set isAdmin=false.");
             appUserService.addRoleToUser(appUser, AuthorizationFacade.ADMIN_AUTHORITY.getAuthority());
