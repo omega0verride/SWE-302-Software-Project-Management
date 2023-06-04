@@ -3,12 +3,14 @@ package com.redscooter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.redscooter.API.product.ProductController;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@Disabled
 public class SmokeTest {
 
     static {

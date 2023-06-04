@@ -21,6 +21,8 @@ import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.DTO.BasicCredentialsDTO;
 import com.redscooter.security.JwtUtils;
 import com.redscooter.util.Utilities;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -52,12 +54,14 @@ public class AppUserController {
     ApplicationEventPublisher eventPublisher;
 
     @DynamicRestMapping(path = "", entity = AppUser.class, requestMethod = RequestMethod.GET)
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<PageResponse<GetAppUserDTO>> getUsers(CriteriaParameters cp) {
         AuthorizationFacade.ensureAdmin();
         return ResponseFactory.buildPageResponse(appUserService.getAllByCriteria(cp), GetAppUserDTO::new);
     }
 
     @DeleteMapping("/batchDelete/{ids}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> deleteUsers(@PathVariable List<Long> ids) {
         AuthorizationFacade.ensureAdmin();
         List<AbstractMap.SimpleEntry<Long, String>> response = new ArrayList<>();
@@ -73,6 +77,7 @@ public class AppUserController {
     }
 
     @GetMapping("/{username}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<GetAppUserDTO> getUserByUsername(@PathVariable String username) {
         AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         AppUser user = appUserService.getByUsername(username);
@@ -80,12 +85,14 @@ public class AppUserController {
     }
 
     @PatchMapping("/{username}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<GetAppUserDTO> updateUserByUsername(@PathVariable String username, @RequestBody UpdateAppUserDTO updateAppUserDTO) {
         AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         return new ResponseEntity<GetAppUserDTO>(appUserService.updateUser(username, updateAppUserDTO).toGetAppUserDTO(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{username}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> deleteUserByUsername(@PathVariable String username) {
         AuthorizationFacade.ensureAdminOrCurrentUserOnCurrentSecurityContext(username);
         if (!appUserService.existsByUsername(username))
@@ -115,6 +122,7 @@ public class AppUserController {
     }
 
     @PostMapping("/register/resendVerification")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
         if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))

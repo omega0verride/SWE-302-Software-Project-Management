@@ -72,6 +72,7 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             response.setStatus(baseException.getHttpStatusCode());
             response.setContentType(APPLICATION_JSON_VALUE);
             logger.error(baseException);
+            baseException.printRootStackTrace();
             try {
                 new ObjectMapper().writeValue(response.getOutputStream(), baseException.toErrorResponse());
             } catch (IOException e) {

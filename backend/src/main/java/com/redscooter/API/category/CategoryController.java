@@ -8,6 +8,8 @@ import com.redscooter.API.common.responseFactory.ResponseFactory;
 import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.JwtUtils;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,7 @@ public class CategoryController {
     }
 
     @GetMapping("")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public List<GetCategoryDTO> getAllCategories(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader) {
         List<Category> categories;
         if (!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -43,6 +46,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public GetCategoryDTO getCategoryById(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "categoryId", required = true) Long categoryId) {
         Category category = categoryService.getById(categoryId);
         if (!category.isVisible() && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -51,6 +55,7 @@ public class CategoryController {
     }
 
     @PostMapping("")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> createCategory(@Valid @RequestBody CreateCategoryDTO createCategoryDTO) {
         AuthorizationFacade.ensureAdmin();
         Category insertedCategory = categoryService.create(createCategoryDTO);
@@ -58,6 +63,7 @@ public class CategoryController {
     }
 
     @PatchMapping("/{categoryId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> updateCategory(@PathVariable(name = "categoryId", required = true) Long categoryId, @Valid @RequestBody UpdateCategoryDTO updateCategoryDTO) {
         AuthorizationFacade.ensureAdmin();
         Category updatedCategory = categoryService.update(categoryId, updateCategoryDTO);
@@ -65,6 +71,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{categoryId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> deleteCategory(@PathVariable(name = "categoryId", required = true) Long categoryId) {
         AuthorizationFacade.ensureAdmin();
         categoryService.delete(categoryId);

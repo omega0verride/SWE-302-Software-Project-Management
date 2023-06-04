@@ -1,14 +1,20 @@
 package com.redscooter.config;
 
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
-
-import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@io.swagger.v3.oas.annotations.security.SecurityScheme(
+        name = "bearerAuth",
+        type = SecuritySchemeType.HTTP,
+        bearerFormat = "JWT",
+        scheme = "bearer"
+)
 public class SwaggerConfig {
 
     @Bean
@@ -18,14 +24,8 @@ public class SwaggerConfig {
                         .description("API documentation for REDSCOOTER. Please note that most filtering/sorting capabilities are not fully documented. Use the metadata endpoints to learn more.")
                         .version("1.0")
                         .contact(new Contact().name("Indrit Breti").url("https://github.com/omega0verride").email("indritbreti@gmail.com"))
-                        .license(null));
-//                .components(new Components()
-//                        .addSecuritySchemes("api_auth",
-//                                new SecurityScheme()
-//                                        .type(SecurityScheme.Type.HTTP)
-//                                        .name("api_auth")
-//                                        .scheme("basic")
-//                                        .in(SecurityScheme.In.HEADER)
-//                                        .name("Authorization")));
+                        .license(null))
+                .components(new Components()
+                );
     }
 }
