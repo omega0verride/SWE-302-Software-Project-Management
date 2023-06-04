@@ -7,7 +7,7 @@ const refreshTokenFunction = async (refresh_token: string) => {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/token/refresh`,
       {
-        method: 'POST',
+        method: 'GET',
         headers: new Headers({
           Authorization: `Bearer ${refresh_token}`,
         }),
@@ -31,7 +31,7 @@ export const checkTokenExpiration = async () => {
   // console.log(expiredToInt < Date.now() / 1000)
   const response = await refreshTokenFunction(refresh_token)
   console.log(response)
-  if (expiredTo < Date.now() / 1000) {
+  if (expiredToInt < Date.now() / 1000) {
     console.log('INSIDE')
     // localStorage.clear()
     // const response = await refreshTokenFunction(refresh_token)
