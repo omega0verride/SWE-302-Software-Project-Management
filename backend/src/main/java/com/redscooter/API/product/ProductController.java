@@ -143,6 +143,7 @@ public class ProductController {
     // THESE METHODS HANDLE IMAGE UPLOAD/DELETE/THUMBNAIL_CHANGE
     @PostMapping(path = "/uploadImage/{productId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> uploadImage(@RequestParam(name = "file", required = true) MultipartFile file, @PathVariable(name = "productId", required = true) Long productId, @RequestParam(name = "isThumbnail", required = false, defaultValue = "false") boolean isThumbnail) throws IOException {
         AuthorizationFacade.ensureAdmin();
         LocalImage savedImage = productService.uploadImage(file, productId, isThumbnail);

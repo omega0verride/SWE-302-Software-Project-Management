@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "openapi -i http://75.119.149.135/api/api-docs/v3.yaml -o src/services && next dev",
+    "dev": "openapi -i http://localhost:8080/api/api-docs/v3.yaml -o src/services && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

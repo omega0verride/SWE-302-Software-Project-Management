@@ -1,12 +1,22 @@
 package com.redscooter.config;
 
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.Parameter;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.method.HandlerMethod;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Configuration
 @io.swagger.v3.oas.annotations.security.SecurityScheme(
@@ -27,5 +37,25 @@ public class SwaggerConfig {
                         .license(null))
                 .components(new Components()
                 );
+    }
+
+    @Bean
+    public OperationCustomizer customGlobalHeaders() {
+
+        return (Operation operation, HandlerMethod handlerMethod) -> {
+
+            Parameter missingParam1 = new Parameter()
+                    .in(ParameterIn.HEADER.toString())
+                    .schema(new StringSchema())
+                    .name("Authorization")
+                    .description("JWT Bearer Authorization Header")
+                    .required(false);
+
+
+            if (operation.getParameters()!=null &&operation.getParameters().stream().noneMatch(p-> p.getName().equalsIgnoreCase("authorization")))
+                operation.addParametersItem(missingParam1);
+
+            return operation;
+        };
     }
 }
