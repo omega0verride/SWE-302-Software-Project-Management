@@ -24,15 +24,16 @@ import {
   updateProduct,
   productStatus,
   createProduct,
+  deleteProduct,
 } from './ProductsData'
 import BasicModal from './BasicModal'
 import Image from 'next/image'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import { getFromStorage } from '../store/localStorage/manageStorage'
+import Select from '@mui/material/Select'
 import Dropzone from 'react-dropzone'
 import FormData from 'form-data'
+import { uploadImage } from './uploadImage'
 
 export type Product = {
   id: number
@@ -43,15 +44,15 @@ export type Product = {
   discount: number
   used: boolean
   stock: number
-  thumbnail: string
-  instagramPostURL: string
-  facebookPostURL: string
+  thumbnail: URL
+  instagramPostURL: URL
+  facebookPostURL: URL
 }
 
 const ProductsTable = () => {
-  const access_token: string = getFromStorage('access_token')!
   const [createModalOpen, setCreateModalOpen] = useState(false)
   const [tableData, setTableData] = useState<Product[]>([])
+  const [imageValue, setImageValue] = useState({})
   useEffect(() => {
     // fetch data
     const dataFetch = async () => {
@@ -67,8 +68,9 @@ const ProductsTable = () => {
   }>({})
 
   const handleCreateNewRow = async (values: Product) => {
-    const res = await createProduct(values)
-    console.log(res)
+    // const res = await createProduct(values)
+    console.log(values)
+    // const newValues = await getProducts()
     tableData.push(values)
     setTableData([...tableData])
   }
@@ -80,15 +82,18 @@ const ProductsTable = () => {
           ...values,
           used: values?.used === 'New' ? false : true,
         }
-        const res = await updateProduct(
-          access_token,
-          row.getValue('id'),
-          newValues,
-        )
-        console.log(res)
-        tableData[row.index] = newValues
-        //send/receive api updates here, then refetch or update local table data for re-render
-        setTableData([...tableData])
+        //console.log(imageValue[0])
+        const fd = new FormData()
+        fd.append('file', imageValue[0])
+        fd.append('name', imageValue[0]?.name)
+        const promisesArray = await Promise.all([
+          uploadImage(fd, row.getValue('id')),
+          updateProduct(row.getValue('id'), newValues),
+        ])
+        console.log(promisesArray)
+        setImageValue({})
+        const getProductsFromApi = await getProducts()
+        setTableData(getProductsFromApi)
         exitEditingMode() //required to exit editing mode and close modal
       }
     }
@@ -98,13 +103,17 @@ const ProductsTable = () => {
   }
 
   const handleDeleteRow = useCallback(
-    (row: MRT_Row<Product>) => {
-      if (!confirm(`Are you sure you want to delete ${row.getValue('name')}`)) {
+    async (row: MRT_Row<Product>) => {
+      if (
+        !confirm(`Are you sure you want to delete ${row.getValue('title')}`)
+      ) {
         return
       }
       //send api delete request here, then refetch or update local table data for re-render
+      await deleteProduct(row.getValue('id'))
+      const response = await getProducts()
+      setTableData(response)
       tableData.splice(row.index, 1)
-      setTableData([...tableData])
     },
     [tableData],
   )
@@ -168,6 +177,29 @@ const ProductsTable = () => {
             alt="Picture of the product"
           />
         ),
+        Edit: ({ cell, column, table }) => (
+          <Dropzone onDrop={acceptedFiles => setImageValue(acceptedFiles)}>
+            {({ getRootProps, getInputProps }) => (
+              <section>
+                <div
+                  {...getRootProps()}
+                  style={{
+                    color: 'gray',
+                    borderStyle: 'dashed',
+                    borderColor: 'lightgray',
+                    paddingLeft: '0.8rem',
+                    cursor: 'pointer',
+                  }}>
+                  <input {...getInputProps()} />
+                  <p>
+                    {imageValue[0]?.name ??
+                      'Drag and drop some files here, or click to select files'}
+                  </p>
+                </div>
+              </section>
+            )}
+          </Dropzone>
+        ),
       },
       {
         accessorKey: 'title',
@@ -213,17 +245,24 @@ const ProductsTable = () => {
         size: 20,
         muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
           ...getCommonEditTextFieldProps(cell),
+          type: 'number',
         }),
       },
       {
         accessorKey: 'range',
         header: 'Range',
         size: 20,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          type: 'number',
+        }),
       },
       {
         accessorKey: 'discount',
         header: 'Discount',
         size: 20,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          type: 'number',
+        }),
       },
       {
         accessorKey: 'used',
@@ -240,8 +279,8 @@ const ProductsTable = () => {
         ),
         muiTableBodyCellEditTextFieldProps: {
           select: true, //change to select for a dropdown
-          children: productStatus.map(stat => (
-            <MenuItem key={stat} value={stat}>
+          children: productStatus.map((stat, index) => (
+            <MenuItem key={index} value={stat}>
               {stat}
             </MenuItem>
           )),
@@ -251,6 +290,9 @@ const ProductsTable = () => {
         accessorKey: 'stock',
         header: 'Stock',
         size: 15,
+        muiTableBodyCellEditTextFieldProps: ({ cell }) => ({
+          type: 'number',
+        }),
       },
       {
         accessorKey: 'instagramPostURL',
@@ -260,8 +302,8 @@ const ProductsTable = () => {
         enableSorting: false,
         Cell: ({ cell }) => (
           <div>
-            {cell.getValue<boolean>() === true ? (
-              <div>{cell.getValue<string>()}</div>
+            {cell.getValue<URL>() ? (
+              <div>{cell.getValue<URL>()}</div>
             ) : (
               <div style={{ color: '#D12222' }}>No URL</div>
             )}
@@ -276,8 +318,8 @@ const ProductsTable = () => {
         enableSorting: false,
         Cell: ({ cell }) => (
           <div>
-            {cell.getValue<boolean>() === true ? (
-              <div>{cell.getValue<string>()}</div>
+            {cell.getValue<URL>() ? (
+              <div>{cell.getValue<URL>()}</div>
             ) : (
               <div style={{ color: '#D12222' }}>No URL</div>
             )}
@@ -285,7 +327,7 @@ const ProductsTable = () => {
         ),
       },
     ],
-    [getCommonEditTextFieldProps],
+    [getCommonEditTextFieldProps, imageValue],
   )
 
   return (
