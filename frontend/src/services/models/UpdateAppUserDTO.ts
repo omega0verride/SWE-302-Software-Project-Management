@@ -9,3 +9,4 @@ export type UpdateAppUserDTO = {
     isAdmin?: boolean;
     isEnabled?: boolean;
 };
+

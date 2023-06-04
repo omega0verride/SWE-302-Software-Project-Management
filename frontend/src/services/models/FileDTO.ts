@@ -6,3 +6,4 @@ export type FileDTO = {
     relativePath?: string;
     fileName?: string;
 };
+

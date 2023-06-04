@@ -10,3 +10,4 @@ export type PageResponseGetModerateProductDTO = {
     totalPages?: number;
     items?: Array<GetModerateProductDTO>;
 };
+

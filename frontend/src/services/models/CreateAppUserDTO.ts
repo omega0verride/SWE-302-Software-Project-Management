@@ -9,3 +9,4 @@ export type CreateAppUserDTO = {
     password: string;
     phoneNumber: string;
 };
+

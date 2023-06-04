@@ -15,13 +15,13 @@ import { request as __request } from '../core/request';
 export class AppUserControllerService {
 
     /**
-     * @param username 
+     * @param username
      * @returns any OK
      * @throws ApiError
      */
     public static resetPassword(
-username: string,
-): CancelablePromise<any> {
+        username: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/resetPassword',
@@ -35,17 +35,17 @@ username: string,
     }
 
     /**
-     * @param requestBody 
-     * @param skipVerification 
-     * @param isAdmin 
+     * @param requestBody
+     * @param skipVerification
+     * @param isAdmin
      * @returns any OK
      * @throws ApiError
      */
     public static registerUser(
-requestBody: CreateAppUserDTO,
-skipVerification: boolean = false,
-isAdmin: boolean = false,
-): CancelablePromise<any> {
+        requestBody: CreateAppUserDTO,
+        skipVerification: boolean = false,
+        isAdmin: boolean = false,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/register',
@@ -62,15 +62,15 @@ isAdmin: boolean = false,
     }
 
     /**
-     * @param requestBody 
-     * @param authorization 
+     * @param requestBody
+     * @param authorization
      * @returns any OK
      * @throws ApiError
      */
     public static registerUser1(
-requestBody: BasicCredentialsDTO,
-authorization?: string,
-): CancelablePromise<any> {
+        requestBody: BasicCredentialsDTO,
+        authorization?: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/register/resendVerification',
@@ -86,13 +86,13 @@ authorization?: string,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static changePassword(
-requestBody: PasswordDto,
-): CancelablePromise<any> {
+        requestBody: PasswordDto,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/changePassword',
@@ -105,13 +105,13 @@ requestBody: PasswordDto,
     }
 
     /**
-     * @param username 
+     * @param username
      * @returns GetAppUserDTO OK
      * @throws ApiError
      */
     public static getUserByUsername(
-username: string,
-): CancelablePromise<GetAppUserDTO> {
+        username: string,
+    ): CancelablePromise<GetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/{username}',
@@ -125,13 +125,13 @@ username: string,
     }
 
     /**
-     * @param username 
+     * @param username
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUserByUsername(
-username: string,
-): CancelablePromise<any> {
+        username: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/{username}',
@@ -145,15 +145,15 @@ username: string,
     }
 
     /**
-     * @param username 
-     * @param requestBody 
+     * @param username
+     * @param requestBody
      * @returns GetAppUserDTO OK
      * @throws ApiError
      */
     public static updateUserByUsername(
-username: string,
-requestBody: UpdateAppUserDTO,
-): CancelablePromise<GetAppUserDTO> {
+        username: string,
+        requestBody: UpdateAppUserDTO,
+    ): CancelablePromise<GetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/users/{username}',
@@ -169,37 +169,37 @@ requestBody: UpdateAppUserDTO,
     }
 
     /**
-     * @param pageSize 
-     * @param pageNumber 
-     * @param sortBy 
-     * @param username 
-     * @param id 
-     * @param surname 
-     * @param email 
-     * @param userAuthType 
-     * @param updatedAt 
-     * @param enabled 
-     * @param createdAt 
-     * @param name 
-     * @param phoneNumber 
+     * @param pageSize
+     * @param pageNumber
+     * @param sortBy
+     * @param username
+     * @param id
+     * @param surname
+     * @param email
+     * @param userAuthType
+     * @param updatedAt
+     * @param enabled
+     * @param createdAt
+     * @param name
+     * @param phoneNumber
      * @returns PageResponseGetAppUserDTO OK
      * @throws ApiError
      */
     public static getUsers(
-pageSize: number = 30,
-pageNumber?: number,
-sortBy?: string,
-username?: string,
-id?: string,
-surname?: string,
-email?: string,
-userAuthType?: string,
-updatedAt?: string,
-enabled?: string,
-createdAt?: string,
-name?: string,
-phoneNumber?: string,
-): CancelablePromise<PageResponseGetAppUserDTO> {
+        pageSize: number = 30,
+        pageNumber?: number,
+        sortBy?: string,
+        username?: string,
+        id?: string,
+        surname?: string,
+        email?: string,
+        userAuthType?: string,
+        updatedAt?: string,
+        enabled?: string,
+        createdAt?: string,
+        name?: string,
+        phoneNumber?: string,
+    ): CancelablePromise<PageResponseGetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users',
@@ -225,15 +225,15 @@ phoneNumber?: string,
     }
 
     /**
-     * @param token 
-     * @param username 
+     * @param token
+     * @param username
      * @returns any OK
      * @throws ApiError
      */
     public static confirmRegistration(
-token: string,
-username?: string,
-): CancelablePromise<any> {
+        token: string,
+        username?: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/register/confirm',
@@ -248,13 +248,13 @@ username?: string,
     }
 
     /**
-     * @param ids 
+     * @param ids
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUsers(
-ids: Array<number>,
-): CancelablePromise<any> {
+        ids: Array<number>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/batchDelete/{ids}',

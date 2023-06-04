@@ -6,3 +6,4 @@ export type GetMinimalCategoryDTO = {
     id?: number;
     name?: string;
 };
+

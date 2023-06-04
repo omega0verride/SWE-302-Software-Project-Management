@@ -9,3 +9,4 @@ export type GetMinimalProductDTO = {
     range?: number;
     thumbnail?: string;
 };
+

@@ -14,3 +14,4 @@ export type GetAppUserDTO = {
     enabled?: boolean;
     admin?: boolean;
 };
+

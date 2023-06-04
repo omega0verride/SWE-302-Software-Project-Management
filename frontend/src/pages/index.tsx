@@ -28,6 +28,7 @@ export default function Home() {
   const [products, setProducts] = useState<GetModerateProductDTO[]>([]);
 
   const itemsPerPage = 9;
+  const rowsPerPage = 3;
 
   const nextPage = () => {
     setCurrentPage(currentPage + 1);
@@ -78,204 +79,618 @@ export default function Home() {
       right: 0,
       bottom: 0
     }}>
-      <div //Header
+      <div // Header
         style={{
           height: '10%',
-          width: '100vw',
           paddingLeft: 42,
           paddingRight: 42,
           paddingTop: 25,
           paddingBottom: 25,
-          display: "flex",
+          display: 'flex',
           flexDirection: 'row',
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}>
-        <div //Logo and Shop name
-          style={{ display: "flex", flexDirection: 'row', }}>
+          alignItems: 'center',
+          justifyContent: 'space-between',
+        }}
+      >
+        <div // Logo and Shop name
+          style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}
+        >
           <PageLogo></PageLogo>
           <ShopName></ShopName>
         </div>
-        <div //Search bar
+        <div // Search bar and Red button wrapper
           style={{
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#EDEDF0',
-            borderRadius: '100px',
-            padding: '4px',
-            width: '700px'
+            width: '70%',
+            justifyContent: 'space-between',
           }}
         >
-          <input
-            type="text"
-            placeholder="Search..."
+          <div // Search bar
             style={{
-              border: 'none',
-              backgroundColor: 'transparent',
-              padding: '8px',
-              outline: 'none',
-              fontSize: '16px',
-              width: '100%',
+              width: '550px',
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: '#EDEDF0',
+              borderRadius: '100px',
+              padding: '4px',
+              marginRight: '10px',
             }}
-          />
-          <span
+          >
+            <input
+              type="text"
+              placeholder="Search..."
+              style={{
+                border: 'none',
+                backgroundColor: 'transparent',
+                padding: '8px',
+                outline: 'none',
+                fontSize: '16px',
+                width: '100%',
+              }}
+            />
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                padding: '8px',
+                color: '#888888',
+              }}
+            >
+            </span>
+          </div>
+          <div // Red button
             style={{
               display: 'flex',
               alignItems: 'center',
-              padding: '8px',
-              color: '#888888',
+              justifyContent: 'flex-start',
+              marginLeft: '10px',
             }}
           >
-          </span>
+            <RedBorderButton content="Login" />
+            <RedBorderButton content="Register" />
+          </div>
         </div>
-        <div //Red buttons
-          style={{ display: "flex", flexDirection: 'row', }}>
-          <RedBorderButton content="Login" />
-        </div>
-
       </div>
+
       <div //Main 
         style={{ display: 'flex', flexDirection: 'row', height: '70vh', justifyContent: 'space-evenly' }} >
         <div style={{ display: 'flex', flexDirection: 'column', width: '10vw', alignItems: 'center' }}>
-          <div>
-            <div onClick={toggleExpandCategory}>
-              <button>Categories</button>
+          <div style={{ marginBottom: '20px' }}>
+            <div
+              onClick={toggleExpandCategory}
+              style={{
+                marginBottom: '10px',
+                display: 'flex',
+                alignItems: 'center',
+                cursor: 'pointer',
+              }}
+            >
+              <button
+                style={{
+                  backgroundColor: '#D12222',
+                  color: 'white',
+                  borderRadius: '4px',
+                  border: 'none',
+                  padding: '8px 12px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Categories
+              </button>
+              <span
+                style={{
+                  marginLeft: '10px',
+                  fontSize: '14px',
+                  color: '#D12222',
+                }}
+              >
+                {isExpandedCategory ? '▲' : '▼'}
+              </span>
             </div>
             {isExpandedCategory && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Category 1"
                     checked={selectedCategory === 'Category 1'}
                     onChange={handleCategoryChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Category 1
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedCategory === 'Category 1' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedCategory === 'Category 1' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+
+
+
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Category 1
+                  </span>
                 </label>
-                <label>
+
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Category 2"
                     checked={selectedCategory === 'Category 2'}
                     onChange={handleCategoryChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Category 2
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedCategory === 'Category 2' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedCategory === 'Category 2' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+
+
+
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Category 2
+                  </span>
                 </label>
-                <label>
+
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Category 3"
                     checked={selectedCategory === 'Category 3'}
                     onChange={handleCategoryChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Category 3
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedCategory === 'Category 3' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedCategory === 'Category 3' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+
+
+
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Category 3
+                  </span>
                 </label>
-                <label>
+
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Category 4"
                     checked={selectedCategory === 'Category 4'}
                     onChange={handleCategoryChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Category 4
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedCategory === 'Category 4' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedCategory === 'Category 4' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+
+
+
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Category 4
+                  </span>
                 </label>
-                <label>
+
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Category 5"
                     checked={selectedCategory === 'Category 5'}
                     onChange={handleCategoryChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Category 5
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedCategory === 'Category 5' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedCategory === 'Category 5' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+
+
+
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Category 5
+                  </span>
                 </label>
+
               </div>
             )}
-
           </div>
+
           <div>
-            <div onClick={toggleExpandSort}>
-              <button>Sort</button>
+            <div onClick={toggleExpandSort} style={{
+              marginBottom: '10px',
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+            }}>
+              <button
+                style={{
+                  backgroundColor: '#D12222',
+                  color: 'white',
+                  borderRadius: '4px',
+                  border: 'none',
+                  padding: '8px 12px',
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Sort
+              </button>
+              <span
+                style={{
+                  marginLeft: '10px',
+                  fontSize: '14px',
+                  color: '#D12222',
+                }}
+              >
+                {isExpandedSort ? '▲' : '▼'}
+              </span>
             </div>
             {isExpandedSort && (
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Sort 1"
                     checked={selectedSort === 'Sort 1'}
                     onChange={handleSortChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Sort 1
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedSort === 'Sort 1' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedSort === 'Sort 1' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Sort 1
+                  </span>
                 </label>
-                <label>
+
+
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Sort 2"
                     checked={selectedSort === 'Sort 2'}
                     onChange={handleSortChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Sort 2
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedSort === 'Sort 2' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedSort === 'Sort 2' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Sort 2
+                  </span>
                 </label>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Sort 3"
                     checked={selectedSort === 'Sort 3'}
                     onChange={handleSortChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Sort 3
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedSort === 'Sort 3' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedSort === 'Sort 3' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Sort 3
+                  </span>
                 </label>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Sort 4"
                     checked={selectedSort === 'Sort 4'}
                     onChange={handleSortChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Sort 4
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedSort === 'Sort 4' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedSort === 'Sort 4' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Sort 4
+                  </span>
                 </label>
-                <label>
+                <label style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
                   <input
                     type="radio"
                     value="Sort 5"
                     checked={selectedSort === 'Sort 5'}
                     onChange={handleSortChange}
+                    style={{ position: 'absolute', opacity: 0 }}
                   />
-                  Sort 5
+                  <span
+                    style={{
+                      position: 'relative',
+                      display: 'inline-block',
+                      width: '16px',
+                      height: '16px',
+                      borderRadius: '50%',
+                      border: '2px solid #D12222',
+                      transition: 'background-color 0.2s ease',
+                    }}
+                  >
+                    <span
+                      style={{
+                        content: '""',
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: `translate(-50%, -50%) scale(${selectedSort === 'Sort 5' ? '1' : '0'})`,
+                        width: '8px',
+                        height: '8px',
+                        borderRadius: '50%',
+                        backgroundColor: selectedSort === 'Sort 5' ? '#D12222' : 'transparent',
+                        transition: 'transform 0.2s ease',
+                      }}
+                    ></span>
+                  </span>
+                  <span style={{ marginLeft: '5px', fontFamily: 'Arial', fontSize: '14px', color: '#333' }}>
+                    Sort 5
+                  </span>
                 </label>
               </div>
             )}
           </div>
         </div>
         <div style={{ backgroundColor: 'white', width: '80%', height: '100%', borderRadius: '8px' }}>
-          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            {products.map(product => (
-              <div
-                key={product.id}
+          <div style={{ display: 'flex', flexDirection: 'column', height: '70vh', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(product => (
+                <div
+                  key={product.id}
+                  style={{
+                    width: '30%',
+                    height: '30%',
+                    border: '1px solid black',
+                    padding: '15px',
+                    margin: '5px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                  }}
+                >
+                  <h4>{product.title}</h4>
+                  <p>{product.description}</p>
+                </div>
+              ))}
+            </div>
+            <div
+              style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', paddingBottom: '10px' }}
+            >
+              <button
+                onClick={prevPage}
+                disabled={currentPage === 1}
                 style={{
-                  width: '30%',
-                  height: '30%',
-                  border: '1px solid black',
-                  margin: '10px',
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
                   display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
                   alignItems: 'center',
+                  fontSize: '16px',
+                  color: '#D12222',
                 }}
               >
-                <h4>{product.title}</h4>
-                <p>{product.description}</p>
-              </div>
-            ))}
-
-            <div //Page Indicators
-              style={{ width: '100%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-              <button onClick={prevPage} disabled={currentPage === 1}>
-                Previous Page
+                &#9668;&nbsp;Prev
               </button>
-              <p>{currentPage}</p>
-              <button onClick={nextPage} disabled={currentPage === 3}>
-                Next Page
+              <p>{currentPage} / {Math.ceil(products.length / itemsPerPage)}</p>
+              <button
+                onClick={nextPage}
+                disabled={currentPage === Math.ceil(products.length / itemsPerPage)}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  fontSize: '16px',
+                  color: '#D12222',
+                }}
+              >
+                Next &#9658;
               </button>
             </div>
           </div>

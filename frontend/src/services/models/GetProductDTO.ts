@@ -24,3 +24,4 @@ export type GetProductDTO = {
     categories?: Array<GetMinimalCategoryDTO>;
     images?: Array<FileDTO>;
 };
+

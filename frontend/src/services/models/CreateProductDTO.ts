@@ -16,3 +16,4 @@ export type CreateProductDTO = {
     instagramPostURL?: string;
     facebookPostURL?: string;
 };
+

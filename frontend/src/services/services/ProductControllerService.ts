@@ -14,49 +14,49 @@ import { request as __request } from '../core/request';
 export class ProductControllerService {
 
     /**
-     * @param pageSize 
-     * @param pageNumber 
-     * @param sortBy 
-     * @param range 
-     * @param title 
-     * @param used 
-     * @param thumbnailFilename 
-     * @param instagramPostUrl 
-     * @param id 
-     * @param stock 
-     * @param updatedAt 
-     * @param visible 
-     * @param facebookPostUrl 
-     * @param authorization 
-     * @param discount 
-     * @param createdAt 
-     * @param searchQuery 
-     * @param price 
-     * @param description 
+     * @param pageSize
+     * @param pageNumber
+     * @param sortBy
+     * @param range
+     * @param title
+     * @param used
+     * @param thumbnailFilename
+     * @param instagramPostUrl
+     * @param id
+     * @param stock
+     * @param updatedAt
+     * @param visible
+     * @param facebookPostUrl
+     * @param authorization
+     * @param discount
+     * @param createdAt
+     * @param searchQuery
+     * @param price
+     * @param description
      * @returns PageResponseGetModerateProductDTO OK
      * @throws ApiError
      */
     public static getAllProducts(
-pageSize: number = 30,
-pageNumber?: number,
-sortBy?: string,
-range?: string,
-title?: string,
-used?: string,
-thumbnailFilename?: string,
-instagramPostUrl?: string,
-id?: string,
-stock?: string,
-updatedAt?: string,
-visible?: string,
-facebookPostUrl?: string,
-authorization?: string,
-discount?: string,
-createdAt?: string,
-searchQuery?: string,
-price?: string,
-description?: string,
-): CancelablePromise<PageResponseGetModerateProductDTO> {
+        pageSize: number = 30,
+        pageNumber?: number,
+        sortBy?: string,
+        range?: string,
+        title?: string,
+        used?: string,
+        thumbnailFilename?: string,
+        instagramPostUrl?: string,
+        id?: string,
+        stock?: string,
+        updatedAt?: string,
+        visible?: string,
+        facebookPostUrl?: string,
+        authorization?: string,
+        discount?: string,
+        createdAt?: string,
+        searchQuery?: string,
+        price?: string,
+        description?: string,
+    ): CancelablePromise<PageResponseGetModerateProductDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products',
@@ -90,13 +90,13 @@ description?: string,
     }
 
     /**
-     * @param requestBody 
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static createProduct(
-requestBody: CreateProductDTO,
-): CancelablePromise<any> {
+        requestBody: CreateProductDTO,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/products',
@@ -109,19 +109,19 @@ requestBody: CreateProductDTO,
     }
 
     /**
-     * @param productId 
-     * @param isThumbnail 
-     * @param requestBody 
+     * @param productId
+     * @param isThumbnail
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static uploadImage(
-productId: number,
-isThumbnail: boolean = false,
-requestBody?: {
-file: Blob;
-},
-): CancelablePromise<any> {
+        productId: number,
+        isThumbnail: boolean = false,
+        requestBody?: {
+            file: Blob;
+        },
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/products/uploadImage/{productId}',
@@ -140,15 +140,15 @@ file: Blob;
     }
 
     /**
-     * @param productId 
-     * @param authorization 
+     * @param productId
+     * @param authorization
      * @returns GetProductDTO OK
      * @throws ApiError
      */
     public static getProductById(
-productId: number,
-authorization?: string,
-): CancelablePromise<GetProductDTO> {
+        productId: number,
+        authorization?: string,
+    ): CancelablePromise<GetProductDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products/{productId}',
@@ -165,13 +165,13 @@ authorization?: string,
     }
 
     /**
-     * @param productId 
+     * @param productId
      * @returns any OK
      * @throws ApiError
      */
     public static deleteProduct(
-productId: number,
-): CancelablePromise<any> {
+        productId: number,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/products/{productId}',
@@ -185,15 +185,15 @@ productId: number,
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static updateProduct(
-productId: number,
-requestBody: UpdateProductDTO,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: UpdateProductDTO,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}',
@@ -209,15 +209,15 @@ requestBody: UpdateProductDTO,
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static setCustomFields(
-productId: number,
-requestBody: Record<string, any>,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: Record<string, any>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/setCustomFields',
@@ -233,18 +233,18 @@ requestBody: Record<string, any>,
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static setCustomFields1(
-productId: number,
-requestBody: Array<{
-value?: any;
-key?: string;
-}>,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: Array<{
+            value?: any;
+            key?: string;
+        }>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/setCustomFieldsFromList',
@@ -260,15 +260,15 @@ key?: string;
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomFields(
-productId: number,
-requestBody: Array<string>,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: Array<string>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/removeCustomFields',
@@ -284,15 +284,15 @@ requestBody: Array<string>,
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomField(
-productId: number,
-requestBody: string,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/removeCustomField',
@@ -308,15 +308,15 @@ requestBody: string,
     }
 
     /**
-     * @param productId 
-     * @param requestBody 
+     * @param productId
+     * @param requestBody
      * @returns any OK
      * @throws ApiError
      */
     public static addCustomFields(
-productId: number,
-requestBody: Record<string, any>,
-): CancelablePromise<any> {
+        productId: number,
+        requestBody: Record<string, any>,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/addCustomFields',
@@ -332,49 +332,49 @@ requestBody: Record<string, any>,
     }
 
     /**
-     * @param pageSize 
-     * @param pageNumber 
-     * @param sortBy 
-     * @param range 
-     * @param title 
-     * @param used 
-     * @param thumbnailFilename 
-     * @param instagramPostUrl 
-     * @param id 
-     * @param stock 
-     * @param updatedAt 
-     * @param visible 
-     * @param facebookPostUrl 
-     * @param authorization 
-     * @param discount 
-     * @param createdAt 
-     * @param searchQuery 
-     * @param price 
-     * @param description 
+     * @param pageSize
+     * @param pageNumber
+     * @param sortBy
+     * @param range
+     * @param title
+     * @param used
+     * @param thumbnailFilename
+     * @param instagramPostUrl
+     * @param id
+     * @param stock
+     * @param updatedAt
+     * @param visible
+     * @param facebookPostUrl
+     * @param authorization
+     * @param discount
+     * @param createdAt
+     * @param searchQuery
+     * @param price
+     * @param description
      * @returns PageResponseGetMinimalProductDTO OK
      * @throws ApiError
      */
     public static getProductsSearchSuggestion(
-pageSize: number = 30,
-pageNumber?: number,
-sortBy?: string,
-range?: string,
-title?: string,
-used?: string,
-thumbnailFilename?: string,
-instagramPostUrl?: string,
-id?: string,
-stock?: string,
-updatedAt?: string,
-visible?: string,
-facebookPostUrl?: string,
-authorization?: string,
-discount?: string,
-createdAt?: string,
-searchQuery?: string,
-price?: string,
-description?: string,
-): CancelablePromise<PageResponseGetMinimalProductDTO> {
+        pageSize: number = 30,
+        pageNumber?: number,
+        sortBy?: string,
+        range?: string,
+        title?: string,
+        used?: string,
+        thumbnailFilename?: string,
+        instagramPostUrl?: string,
+        id?: string,
+        stock?: string,
+        updatedAt?: string,
+        visible?: string,
+        facebookPostUrl?: string,
+        authorization?: string,
+        discount?: string,
+        createdAt?: string,
+        searchQuery?: string,
+        price?: string,
+        description?: string,
+    ): CancelablePromise<PageResponseGetMinimalProductDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products/searchSuggestions',
@@ -408,13 +408,13 @@ description?: string,
     }
 
     /**
-     * @param filePath 
+     * @param filePath
      * @returns any OK
      * @throws ApiError
      */
     public static deleteImage(
-filePath: string,
-): CancelablePromise<any> {
+        filePath: string,
+    ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/products/deleteImage',

@@ -16,3 +16,4 @@ export type UpdateProductDTO = {
     instagramPostURL?: string;
     facebookPostURL?: string;
 };
+

@@ -6,3 +6,4 @@ export type BasicCredentialsDTO = {
     username?: string;
     password?: string;
 };
+

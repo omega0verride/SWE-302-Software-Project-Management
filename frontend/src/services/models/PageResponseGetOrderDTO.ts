@@ -10,3 +10,4 @@ export type PageResponseGetOrderDTO = {
     totalPages?: number;
     items?: Array<GetOrderDTO>;
 };
+

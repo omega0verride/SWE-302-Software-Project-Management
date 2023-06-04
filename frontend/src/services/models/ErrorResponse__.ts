@@ -9,3 +9,4 @@ export type ErrorResponse__ = {
     details_list?: Array<string>;
     success?: boolean;
 };
+

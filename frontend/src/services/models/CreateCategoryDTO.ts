@@ -6,3 +6,4 @@ export type CreateCategoryDTO = {
     visible?: boolean;
     name: string;
 };
+

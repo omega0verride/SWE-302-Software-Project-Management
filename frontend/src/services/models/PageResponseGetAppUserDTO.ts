@@ -10,3 +10,4 @@ export type PageResponseGetAppUserDTO = {
     totalPages?: number;
     items?: Array<GetAppUserDTO>;
 };
+

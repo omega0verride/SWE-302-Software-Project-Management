@@ -9,3 +9,4 @@ export type DetailedTokenDetailsDTO = {
     expires_at?: number;
     authorities?: Array<string>;
 };
+

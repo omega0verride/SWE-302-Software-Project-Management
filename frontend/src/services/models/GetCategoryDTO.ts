@@ -9,3 +9,4 @@ export type GetCategoryDTO = {
     visible?: boolean;
     name?: string;
 };
+

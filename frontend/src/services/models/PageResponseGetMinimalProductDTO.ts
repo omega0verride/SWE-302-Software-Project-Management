@@ -10,3 +10,4 @@ export type PageResponseGetMinimalProductDTO = {
     totalPages?: number;
     items?: Array<GetMinimalProductDTO>;
 };
+

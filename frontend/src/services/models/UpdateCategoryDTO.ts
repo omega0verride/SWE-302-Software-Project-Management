@@ -6,3 +6,4 @@ export type UpdateCategoryDTO = {
     visible?: boolean;
     name: string;
 };
+
