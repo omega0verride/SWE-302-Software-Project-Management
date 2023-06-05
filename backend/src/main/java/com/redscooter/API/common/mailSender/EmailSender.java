@@ -28,13 +28,16 @@ public class EmailSender {
         try {
             sendEmail(recipientAddress, subject, content);
         } catch (SendFailedException ex) {
+            ex.printStackTrace();
             throw new FailedToSendEmailException(ex);
         } catch (MailSendException ex) {
+            ex.printStackTrace();
             SendFailedException sendFailedException = EmailSenderUtils.getSendFailedExceptionFromMailSendException(ex);
             if (sendFailedException == null)
                 throw new UnknownEmailSenderException(recipientAddress);
             throw new FailedToSendEmailException(sendFailedException);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new UnknownEmailSenderException(recipientAddress);
         }
     }

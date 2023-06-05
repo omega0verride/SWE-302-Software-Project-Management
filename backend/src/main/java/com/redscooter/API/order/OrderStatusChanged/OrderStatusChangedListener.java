@@ -22,10 +22,13 @@ public class OrderStatusChangedListener implements ApplicationListener<OnOrderSt
     }
 
     private void confirmRegistration(OnOrderStatusChangedEvent event) {
-        try {
+//        try {
             emailSender.sendEmailWithDefaultExceptionHandler(event.getRecipientAddress(), event.getSubject(), event.getHtml());
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        } catch (Exception ex) {
+//            if (ex instanceof BaseException ex_)
+//                ex_.printRootStackTrace();
+//            else
+//                ex.printStackTrace();
+//        }
     }
 }

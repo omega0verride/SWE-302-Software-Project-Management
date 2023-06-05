@@ -9,11 +9,11 @@ import org.springframework.context.ApplicationEvent;
 @Setter
 public class OnRegistrationCompleteEvent extends ApplicationEvent {
     private VerificationToken verificationToken;
-    private HttpServletRequest httpServletRequest;
+//    private HttpServletRequest httpServletRequest;
 
-    public OnRegistrationCompleteEvent(HttpServletRequest httpServletRequest, VerificationToken verificationToken) {
+    public OnRegistrationCompleteEvent(VerificationToken verificationToken) {
         super(verificationToken);
         this.verificationToken = verificationToken;
-        this.httpServletRequest = httpServletRequest;
+//        this.httpServletRequest = httpServletRequest;
     }
 }

@@ -24,7 +24,7 @@ public class OrderVerificationListener implements ApplicationListener<OnOrderCon
     }
 
     private void confirmRegistration(OnOrderConfirmedEvent event) {
-        try {
+//        try {
             Order order = event.getOrder();
             String recipientAddress = order.getOrderBilling().getClientEmail();
             String recipientName = order.getOrderBilling().getClientName();
@@ -39,8 +39,11 @@ public class OrderVerificationListener implements ApplicationListener<OnOrderCon
             } catch (Exception ex) {
                 throw new UnknownEmailSenderException(recipientAddress);
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+//        } catch (Exception ex) {
+//            if (ex instanceof BaseException ex_)
+//                ex_.printRootStackTrace();
+//            else
+//                ex.printStackTrace();
+//        }
     }
 }

@@ -14,49 +14,50 @@ import { request as __request } from '../core/request';
 export class ProductControllerService {
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @param sortBy
-     * @param range
-     * @param title
-     * @param used
-     * @param thumbnailFilename
-     * @param instagramPostUrl
-     * @param id
-     * @param stock
-     * @param updatedAt
-     * @param visible
-     * @param facebookPostUrl
-     * @param authorization
-     * @param discount
-     * @param createdAt
-     * @param searchQuery
-     * @param price
-     * @param description
+     * @param pageSize 
+     * @param pageNumber 
+     * @param sortBy 
+     * @param range 
+     * @param title 
+     * @param used 
+     * @param thumbnailFilename 
+     * @param instagramPostUrl 
+     * @param id 
+     * @param stock 
+     * @param updatedAt 
+     * @param visible 
+     * @param facebookPostUrl 
+     * @param authorization 
+     * @param discount 
+     * @param createdAt 
+     * @param searchQuery 
+     * @param price 
+     * @param description 
      * @returns PageResponseGetModerateProductDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getAllProducts(
-        pageSize: number = 30,
-        pageNumber?: number,
-        sortBy?: string,
-        range?: string,
-        title?: string,
-        used?: string,
-        thumbnailFilename?: string,
-        instagramPostUrl?: string,
-        id?: string,
-        stock?: string,
-        updatedAt?: string,
-        visible?: string,
-        facebookPostUrl?: string,
-        authorization?: string,
-        discount?: string,
-        createdAt?: string,
-        searchQuery?: string,
-        price?: string,
-        description?: string,
-    ): CancelablePromise<PageResponseGetModerateProductDTO> {
+pageSize: number = 30,
+pageNumber?: number,
+sortBy?: string,
+range?: string,
+title?: string,
+used?: string,
+thumbnailFilename?: string,
+instagramPostUrl?: string,
+id?: string,
+stock?: string,
+updatedAt?: string,
+visible?: string,
+facebookPostUrl?: string,
+authorization?: string,
+discount?: string,
+createdAt?: string,
+searchQuery?: string,
+price?: string,
+description?: string,
+): CancelablePromise<PageResponseGetModerateProductDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products',
@@ -90,13 +91,13 @@ export class ProductControllerService {
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns any OK
      * @throws ApiError
      */
     public static createProduct(
-        requestBody: CreateProductDTO,
-    ): CancelablePromise<any> {
+requestBody: CreateProductDTO,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/products',
@@ -109,21 +110,21 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param isThumbnail
+     * @param productId 
+     * @param isThumbnail 
      * @param authorization JWT Bearer Authorization Header
-     * @param formData
+     * @param formData 
      * @returns any OK
      * @throws ApiError
      */
     public static uploadImage(
-        productId: number,
-        isThumbnail: boolean = false,
-        authorization?: string,
-        formData?: {
-            file: Blob;
-        },
-    ): CancelablePromise<any> {
+productId: number,
+isThumbnail: boolean = false,
+authorization?: string,
+formData?: {
+file: Blob;
+},
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/products/uploadImage/{productId}',
@@ -145,15 +146,16 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param authorization
+     * @param productId 
+     * @param authorization 
      * @returns GetProductDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getProductById(
-        productId: number,
-        authorization?: string,
-    ): CancelablePromise<GetProductDTO> {
+productId: number,
+authorization?: string,
+): CancelablePromise<GetProductDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products/{productId}',
@@ -170,15 +172,15 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
+     * @param productId 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteProduct(
-        productId: number,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/products/{productId}',
@@ -195,17 +197,17 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static updateProduct(
-        productId: number,
-        requestBody: UpdateProductDTO,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: UpdateProductDTO,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}',
@@ -224,17 +226,17 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static setCustomFields(
-        productId: number,
-        requestBody: Record<string, any>,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: Record<string, any>,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/setCustomFields',
@@ -253,20 +255,20 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static setCustomFields1(
-        productId: number,
-        requestBody: Array<{
-            value?: any;
-            key?: string;
-        }>,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: Array<{
+value?: any;
+key?: string;
+}>,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/setCustomFieldsFromList',
@@ -285,17 +287,17 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomFields(
-        productId: number,
-        requestBody: Array<string>,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: Array<string>,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/removeCustomFields',
@@ -314,17 +316,17 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomField(
-        productId: number,
-        requestBody: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/removeCustomField',
@@ -343,17 +345,17 @@ export class ProductControllerService {
     }
 
     /**
-     * @param productId
-     * @param requestBody
+     * @param productId 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static addCustomFields(
-        productId: number,
-        requestBody: Record<string, any>,
-        authorization?: string,
-    ): CancelablePromise<any> {
+productId: number,
+requestBody: Record<string, any>,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/addCustomFields',
@@ -372,49 +374,50 @@ export class ProductControllerService {
     }
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @param sortBy
-     * @param range
-     * @param title
-     * @param used
-     * @param thumbnailFilename
-     * @param instagramPostUrl
-     * @param id
-     * @param stock
-     * @param updatedAt
-     * @param visible
-     * @param facebookPostUrl
-     * @param authorization
-     * @param discount
-     * @param createdAt
-     * @param searchQuery
-     * @param price
-     * @param description
+     * @param pageSize 
+     * @param pageNumber 
+     * @param sortBy 
+     * @param range 
+     * @param title 
+     * @param used 
+     * @param thumbnailFilename 
+     * @param instagramPostUrl 
+     * @param id 
+     * @param stock 
+     * @param updatedAt 
+     * @param visible 
+     * @param facebookPostUrl 
+     * @param authorization 
+     * @param discount 
+     * @param createdAt 
+     * @param searchQuery 
+     * @param price 
+     * @param description 
      * @returns PageResponseGetMinimalProductDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getProductsSearchSuggestion(
-        pageSize: number = 30,
-        pageNumber?: number,
-        sortBy?: string,
-        range?: string,
-        title?: string,
-        used?: string,
-        thumbnailFilename?: string,
-        instagramPostUrl?: string,
-        id?: string,
-        stock?: string,
-        updatedAt?: string,
-        visible?: string,
-        facebookPostUrl?: string,
-        authorization?: string,
-        discount?: string,
-        createdAt?: string,
-        searchQuery?: string,
-        price?: string,
-        description?: string,
-    ): CancelablePromise<PageResponseGetMinimalProductDTO> {
+pageSize: number = 30,
+pageNumber?: number,
+sortBy?: string,
+range?: string,
+title?: string,
+used?: string,
+thumbnailFilename?: string,
+instagramPostUrl?: string,
+id?: string,
+stock?: string,
+updatedAt?: string,
+visible?: string,
+facebookPostUrl?: string,
+authorization?: string,
+discount?: string,
+createdAt?: string,
+searchQuery?: string,
+price?: string,
+description?: string,
+): CancelablePromise<PageResponseGetMinimalProductDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/products/searchSuggestions',
@@ -448,15 +451,15 @@ export class ProductControllerService {
     }
 
     /**
-     * @param filePath
+     * @param filePath 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteImage(
-        filePath: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+filePath: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/products/deleteImage',

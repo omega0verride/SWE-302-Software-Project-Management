@@ -12,65 +12,66 @@ import { request as __request } from '../core/request';
 export class OrderControllerService {
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @param sortBy
-     * @param clientNotes
-     * @param paymentOption
-     * @param userId
-     * @param orderLinesId
-     * @param orderLinesTitle
-     * @param createdAt
-     * @param orderStatus
-     * @param clientEmail
-     * @param orderLinesDiscount
-     * @param clientSurname
-     * @param orderLinesUsed
-     * @param id
-     * @param orderLinesProductId
-     * @param orderLinesRange
-     * @param orderLinesQuantity
-     * @param clientAddressLine1
-     * @param orderLinesUpdatedAt
-     * @param orderLinesCreatedAt
-     * @param updatedAt
-     * @param orderLinesPrice
-     * @param clientPhoneNumber
-     * @param orderLinesDescription
-     * @param clientName
+     * @param pageSize 
+     * @param pageNumber 
+     * @param sortBy 
+     * @param clientNotes 
+     * @param paymentOption 
+     * @param userId 
+     * @param orderLinesId 
+     * @param orderLinesTitle 
+     * @param createdAt 
+     * @param orderStatus 
+     * @param clientEmail 
+     * @param orderLinesDiscount 
+     * @param clientSurname 
+     * @param orderLinesUsed 
+     * @param id 
+     * @param orderLinesProductId 
+     * @param orderLinesRange 
+     * @param orderLinesQuantity 
+     * @param clientAddressLine1 
+     * @param orderLinesUpdatedAt 
+     * @param orderLinesCreatedAt 
+     * @param updatedAt 
+     * @param orderLinesPrice 
+     * @param clientPhoneNumber 
+     * @param orderLinesDescription 
+     * @param clientName 
      * @param authorization JWT Bearer Authorization Header
      * @returns PageResponseGetOrderDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getAllOrders(
-        pageSize: number = 30,
-        pageNumber?: number,
-        sortBy?: string,
-        clientNotes?: string,
-        paymentOption?: string,
-        userId?: string,
-        orderLinesId?: string,
-        orderLinesTitle?: string,
-        createdAt?: string,
-        orderStatus?: string,
-        clientEmail?: string,
-        orderLinesDiscount?: string,
-        clientSurname?: string,
-        orderLinesUsed?: string,
-        id?: string,
-        orderLinesProductId?: string,
-        orderLinesRange?: string,
-        orderLinesQuantity?: string,
-        clientAddressLine1?: string,
-        orderLinesUpdatedAt?: string,
-        orderLinesCreatedAt?: string,
-        updatedAt?: string,
-        orderLinesPrice?: string,
-        clientPhoneNumber?: string,
-        orderLinesDescription?: string,
-        clientName?: string,
-        authorization?: string,
-    ): CancelablePromise<PageResponseGetOrderDTO> {
+pageSize: number = 30,
+pageNumber?: number,
+sortBy?: string,
+clientNotes?: string,
+paymentOption?: string,
+userId?: string,
+orderLinesId?: string,
+orderLinesTitle?: string,
+createdAt?: string,
+orderStatus?: string,
+clientEmail?: string,
+orderLinesDiscount?: string,
+clientSurname?: string,
+orderLinesUsed?: string,
+id?: string,
+orderLinesProductId?: string,
+orderLinesRange?: string,
+orderLinesQuantity?: string,
+clientAddressLine1?: string,
+orderLinesUpdatedAt?: string,
+orderLinesCreatedAt?: string,
+updatedAt?: string,
+orderLinesPrice?: string,
+clientPhoneNumber?: string,
+orderLinesDescription?: string,
+clientName?: string,
+authorization?: string,
+): CancelablePromise<PageResponseGetOrderDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/orders',
@@ -112,17 +113,17 @@ export class OrderControllerService {
     }
 
     /**
-     * @param requestBody
-     * @param skipVerification
+     * @param requestBody 
+     * @param skipVerification 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static createOrder(
-        requestBody: CreateOrderDTO,
-        skipVerification: boolean = false,
-        authorization?: string,
-    ): CancelablePromise<any> {
+requestBody: CreateOrderDTO,
+skipVerification: boolean = false,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/orders',
@@ -141,19 +142,19 @@ export class OrderControllerService {
     }
 
     /**
-     * @param orderId
-     * @param orderStatus
-     * @param adminNotesOnStatusChange
+     * @param orderId 
+     * @param orderStatus 
+     * @param adminNotesOnStatusChange 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static changeOrderStatus(
-        orderId: number,
-        orderStatus: 'NEW' | 'KONFIRMUAR' | 'NË DËRGIM' | 'REFUZUAR' | 'MBYLLUR',
-        adminNotesOnStatusChange?: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+orderId: number,
+orderStatus: 'NEW' | 'KONFIRMUAR' | 'NË DËRGIM' | 'REFUZUAR' | 'MBYLLUR',
+adminNotesOnStatusChange?: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/orders/{orderId}/changeStatus/{orderStatus}',
@@ -174,15 +175,15 @@ export class OrderControllerService {
     }
 
     /**
-     * @param orderConfirmationToken
+     * @param orderConfirmationToken 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static confirmOrder(
-        orderConfirmationToken: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+orderConfirmationToken: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/orders/confirm/{orderConfirmationToken}',
@@ -199,15 +200,16 @@ export class OrderControllerService {
     }
 
     /**
-     * @param orderId
+     * @param orderId 
      * @param authorization JWT Bearer Authorization Header
      * @returns GetOrderDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getOrderById(
-        orderId: number,
-        authorization?: string,
-    ): CancelablePromise<GetOrderDTO> {
+orderId: number,
+authorization?: string,
+): CancelablePromise<GetOrderDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/orders/{orderId}',

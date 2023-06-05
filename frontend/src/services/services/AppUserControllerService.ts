@@ -15,15 +15,15 @@ import { request as __request } from '../core/request';
 export class AppUserControllerService {
 
     /**
-     * @param username
+     * @param username 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static resetPassword(
-        username: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+username: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/resetPassword',
@@ -40,19 +40,19 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param requestBody
-     * @param skipVerification
-     * @param isAdmin
+     * @param requestBody 
+     * @param skipVerification 
+     * @param isAdmin 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static registerUser(
-        requestBody: CreateAppUserDTO,
-        skipVerification: boolean = false,
-        isAdmin: boolean = false,
-        authorization?: string,
-    ): CancelablePromise<any> {
+requestBody: CreateAppUserDTO,
+skipVerification: boolean = false,
+isAdmin: boolean = false,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/register',
@@ -72,15 +72,15 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param requestBody
-     * @param authorization
+     * @param requestBody 
+     * @param authorization 
      * @returns any OK
      * @throws ApiError
      */
     public static registerUser1(
-        requestBody: BasicCredentialsDTO,
-        authorization?: string,
-    ): CancelablePromise<any> {
+requestBody: BasicCredentialsDTO,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/register/resendVerification',
@@ -96,13 +96,13 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param requestBody
+     * @param requestBody 
      * @returns any OK
      * @throws ApiError
      */
     public static changePassword(
-        requestBody: PasswordDto,
-    ): CancelablePromise<any> {
+requestBody: PasswordDto,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/changePassword',
@@ -115,15 +115,16 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param username
+     * @param username 
      * @param authorization JWT Bearer Authorization Header
      * @returns GetAppUserDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getUserByUsername(
-        username: string,
-        authorization?: string,
-    ): CancelablePromise<GetAppUserDTO> {
+username: string,
+authorization?: string,
+): CancelablePromise<GetAppUserDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/{username}',
@@ -140,15 +141,15 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param username
+     * @param username 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUserByUsername(
-        username: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+username: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/{username}',
@@ -165,17 +166,18 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param username
-     * @param requestBody
+     * @param username 
+     * @param requestBody 
      * @param authorization JWT Bearer Authorization Header
      * @returns GetAppUserDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static updateUserByUsername(
-        username: string,
-        requestBody: UpdateAppUserDTO,
-        authorization?: string,
-    ): CancelablePromise<GetAppUserDTO> {
+username: string,
+requestBody: UpdateAppUserDTO,
+authorization?: string,
+): CancelablePromise<GetAppUserDTO | any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/users/{username}',
@@ -194,39 +196,40 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param pageSize
-     * @param pageNumber
-     * @param sortBy
-     * @param username
-     * @param id
-     * @param surname
-     * @param email
-     * @param userAuthType
-     * @param updatedAt
-     * @param enabled
-     * @param createdAt
-     * @param name
-     * @param phoneNumber
+     * @param pageSize 
+     * @param pageNumber 
+     * @param sortBy 
+     * @param username 
+     * @param id 
+     * @param surname 
+     * @param email 
+     * @param userAuthType 
+     * @param updatedAt 
+     * @param enabled 
+     * @param createdAt 
+     * @param name 
+     * @param phoneNumber 
      * @param authorization JWT Bearer Authorization Header
      * @returns PageResponseGetAppUserDTO OK
+     * @returns any default response
      * @throws ApiError
      */
     public static getUsers(
-        pageSize: number = 30,
-        pageNumber?: number,
-        sortBy?: string,
-        username?: string,
-        id?: string,
-        surname?: string,
-        email?: string,
-        userAuthType?: string,
-        updatedAt?: string,
-        enabled?: string,
-        createdAt?: string,
-        name?: string,
-        phoneNumber?: string,
-        authorization?: string,
-    ): CancelablePromise<PageResponseGetAppUserDTO> {
+pageSize: number = 30,
+pageNumber?: number,
+sortBy?: string,
+username?: string,
+id?: string,
+surname?: string,
+email?: string,
+userAuthType?: string,
+updatedAt?: string,
+enabled?: string,
+createdAt?: string,
+name?: string,
+phoneNumber?: string,
+authorization?: string,
+): CancelablePromise<PageResponseGetAppUserDTO | any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users',
@@ -255,17 +258,17 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param token
-     * @param username
+     * @param token 
+     * @param username 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static confirmRegistration(
-        token: string,
-        username?: string,
-        authorization?: string,
-    ): CancelablePromise<any> {
+token: string,
+username?: string,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/register/confirm',
@@ -283,15 +286,15 @@ export class AppUserControllerService {
     }
 
     /**
-     * @param ids
+     * @param ids 
      * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUsers(
-        ids: Array<number>,
-        authorization?: string,
-    ): CancelablePromise<any> {
+ids: Array<number>,
+authorization?: string,
+): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/batchDelete/{ids}',
