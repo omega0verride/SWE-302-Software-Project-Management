@@ -68,11 +68,12 @@ const ProductsTable = () => {
   }>({})
 
   const handleCreateNewRow = async (values: Product) => {
-    // const res = await createProduct(values)
-    console.log(values)
-    // const newValues = await getProducts()
-    tableData.push(values)
-    setTableData([...tableData])
+    const {
+      details: { pk_value },
+    } = await createProduct(values)
+    const response = await uploadImage(values?.thumbnail, pk_value)
+    const getProductsFromApi = await getProducts()
+    setTableData(getProductsFromApi)
   }
 
   const handleSaveRowEdits: MaterialReactTableProps<Product>['onEditingRowSave'] =
@@ -303,7 +304,14 @@ const ProductsTable = () => {
         Cell: ({ cell }) => (
           <div>
             {cell.getValue<URL>() ? (
-              <div>{cell.getValue<URL>()}</div>
+              <div>
+                <a
+                  style={{ textDecoration: 'none' }}
+                  href={cell.getValue<string>()}
+                  target="_blank">
+                  Instagram Post
+                </a>
+              </div>
             ) : (
               <div style={{ color: '#D12222' }}>No URL</div>
             )}
@@ -319,7 +327,14 @@ const ProductsTable = () => {
         Cell: ({ cell }) => (
           <div>
             {cell.getValue<URL>() ? (
-              <div>{cell.getValue<URL>()}</div>
+              <div>
+                <a
+                  style={{ textDecoration: 'none' }}
+                  href={cell.getValue<string>()}
+                  target="_blank">
+                  Facebook Post
+                </a>
+              </div>
             ) : (
               <div style={{ color: '#D12222' }}>No URL</div>
             )}
@@ -419,8 +434,8 @@ export const CreateNewProductModal = ({
   const [errors, setErrors] = useState<string[]>([])
 
   const handleSubmit = () => {
-    const form = new FormData()
     //put your validation logic here
+    const fd = new FormData()
     const arrayOfErros: string[] = []
     if (!validateRequired(values?.title)) {
       arrayOfErros.push('Please enter a valid title!')
@@ -440,12 +455,12 @@ export const CreateNewProductModal = ({
         arrayOfErros.push('Please make sure that your file is an image!')
       }
 
-      form.append('file', values?.file[0])
-      form.append('name', values?.file[0]?.name)
+      fd.append('file', values?.file[0])
+      fd.append('name', values?.file[0]?.name)
     }
     const newValues = {
       ...values,
-      thumbnail: values?.file ? form : 'images/no_image.jpg/no_image.jpg',
+      thumbnail: values?.file ? fd : 'images/no_image.jpg/no_image.jpg',
       used: values?.used === 'New' ? false : true,
       price: Number(values?.price),
       discount: values?.discount ? Number(values?.discount) : 0,
