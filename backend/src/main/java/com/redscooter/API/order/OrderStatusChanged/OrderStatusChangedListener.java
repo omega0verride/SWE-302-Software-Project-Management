@@ -3,6 +3,7 @@ package com.redscooter.API.order.OrderStatusChanged;
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.API.common.mailSender.EmailSender;
 import com.redscooter.API.order.Order;
+import com.redscooter.exceptions.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
@@ -21,9 +22,10 @@ public class OrderStatusChangedListener implements ApplicationListener<OnOrderSt
     }
 
     private void confirmRegistration(OnOrderStatusChangedEvent event) {
-        Order order = event.getOrder();
-        String recipientAddress = order.getOrderBilling().getClientEmail();
-        String subject = "Porosia juaj #" + order.getId() + " u kalua ne statusin [" + order.getOrderStatus() + "]";
-        emailSender.sendEmailWithDefaultExceptionHandler(recipientAddress, subject, OrderStatusHTMLBuilder.buildOrderStatusHTML(order, event.getAdminNotesOnStatusChange()));
+        try {
+            emailSender.sendEmailWithDefaultExceptionHandler(event.getRecipientAddress(), event.getSubject(), event.getHtml());
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

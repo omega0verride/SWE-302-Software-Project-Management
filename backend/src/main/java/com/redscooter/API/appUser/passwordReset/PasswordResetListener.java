@@ -3,6 +3,7 @@ package com.redscooter.API.appUser.passwordReset;
 import com.redscooter.API.appUser.AppUser;
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.API.common.mailSender.EmailSender;
+import com.redscooter.exceptions.BaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -17,17 +18,22 @@ public class PasswordResetListener implements ApplicationListener<OnResetPasswor
     private AppUserService appUserService;
     @Value("${server.domain}")
     private String domainName;
+
     @Override
     public void onApplicationEvent(OnResetPasswordEvent event) {
         this.resetPassword(event);
     }
 
     private void resetPassword(OnResetPasswordEvent event) {
-        PasswordResetToken passwordResetToken = event.getPasswordResetToken();
-        AppUser user = passwordResetToken.getUser();
-        String confirmationURL = domainName+"?token=" + passwordResetToken.getToken() + "&username=" + user.getUsername();
-        String recipientAddress = user.getUsername();
-        String subject = "RedScooter - Ndryshim i Fjalëkalimit";
-        emailSender.sendEmailWithDefaultExceptionHandler(recipientAddress, subject, ResetPasswordHTMLBuilder.buildResetPasswordHTML(user, confirmationURL, passwordResetToken));
+        try {
+            PasswordResetToken passwordResetToken = event.getPasswordResetToken();
+            AppUser user = passwordResetToken.getUser();
+            String confirmationURL = domainName + "?token=" + passwordResetToken.getToken() + "&username=" + user.getUsername();
+            String recipientAddress = user.getUsername();
+            String subject = "RedScooter - Ndryshim i Fjalëkalimit";
+            emailSender.sendEmailWithDefaultExceptionHandler(recipientAddress, subject, ResetPasswordHTMLBuilder.buildResetPasswordHTML(user, confirmationURL, passwordResetToken));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 }

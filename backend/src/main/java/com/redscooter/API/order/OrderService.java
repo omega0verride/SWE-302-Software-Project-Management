@@ -5,6 +5,7 @@ import com.redscooter.API.OrderLine.OrderLineService;
 import com.redscooter.API.common.BaseService;
 import com.redscooter.API.order.DTO.CreateOrderDTO;
 import com.redscooter.API.order.OrderStatusChanged.OnOrderStatusChangedEvent;
+import com.redscooter.API.order.OrderStatusChanged.OrderStatusHTMLBuilder;
 import com.redscooter.API.order.OrderVerifcication.OnOrderConfirmedEvent;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,7 +66,7 @@ public class OrderService extends BaseService<Order> {
         Order order = getById(orderId);
         order.setOrderStatus(orderStatus);
         order = save(order);
-        eventPublisher.publishEvent(new OnOrderStatusChangedEvent(order, adminNotesOnStatusChange));
+         eventPublisher.publishEvent(new OnOrderStatusChangedEvent(order.getOrderBilling().getClientEmail(), "Porosia juaj #" + order.getId() + " u kalua ne statusin [" + order.getOrderStatus() + "]", OrderStatusHTMLBuilder.buildOrderStatusHTML(order, adminNotesOnStatusChange)));
         return order;
     }
 }
