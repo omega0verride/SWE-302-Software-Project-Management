@@ -101,8 +101,8 @@ public class AppUserController {
         return ResponseFactory.buildResourceDeletedSuccessfullyResponse();
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin) {
+    @PostMapping("")
+    public ResponseEntity<Object> registerUser(@RequestBody @Valid CreateAppUserDTO createAppUserDTO, @RequestParam(defaultValue = "false") Boolean skipVerification, @RequestParam(defaultValue = "false") Boolean isAdmin, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.registerUser(new AppUser(createAppUserDTO));
         if (isAdmin) {
             if (!AuthorizationFacade.isAdminOnCurrentSecurityContext())
@@ -115,7 +115,7 @@ public class AppUserController {
             appUserService.enableUser(appUser);
         } else {
             VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
         }
         appUserService.saveUser(appUser);
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("User", "Id", appUser.getId());
@@ -123,14 +123,14 @@ public class AppUserController {
 
     @PostMapping("/register/resendVerification")
     @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
-    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO) {
+    public ResponseEntity<Object> registerUser(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestBody(required = true) BasicCredentialsDTO basicCredentialsDTO, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.getByUsername(basicCredentialsDTO.getUsername());
         if (!appUserService.matchesPassword(appUser, basicCredentialsDTO.getPassword()) && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
             throw new ForbiddenAccessException("Unauthorized! Cannot resend verification email without verifying account credentials from a non admin context.");
         if (appUser.isEnabled())
             throw new UserAccountAlreadyActivatedException();
         VerificationToken verificationToken = appUserService.createVerificationToken(appUser);
-        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+        eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
@@ -153,7 +153,7 @@ public class AppUserController {
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             verificationToken = appUserService.createVerificationToken(user);
-            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(verificationToken));
+            eventPublisher.publishEvent(new OnRegistrationCompleteEvent(httpServletRequest, verificationToken));
             return "Verification Token Has Expired! A new token has been sent to your email."; // TODO change response to HTML or redirect to frontend endpoint that states this message
         }
         appUserService.enableUser(user);
@@ -165,12 +165,12 @@ public class AppUserController {
 
 
     @PostMapping("/resetPassword")
-    public ResponseEntity<Object> resetPassword(@NotEmpty @NotNull @RequestParam(name = "username") String username) {
+    public ResponseEntity<Object> resetPassword(@NotEmpty @NotNull @RequestParam(name = "username") String username, HttpServletRequest httpServletRequest) {
         AppUser appUser = appUserService.getByUsername(username);
         if (!appUser.isEnabled())
             throw new UserAccountNotActivatedException();
         PasswordResetToken passwordResetToken = appUserService.createPasswordResetToken(appUser);
-        eventPublisher.publishEvent(new OnResetPasswordEvent(passwordResetToken));
+        eventPublisher.publishEvent(new OnResetPasswordEvent(httpServletRequest, passwordResetToken));
         return ResponseFactory.buildGenericSuccessfulResponse("Email successfully sent to [" + appUser.getEmail() + "]", appUser.getEmail());
     }
 

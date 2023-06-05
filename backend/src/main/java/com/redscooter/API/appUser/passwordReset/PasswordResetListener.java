@@ -28,7 +28,7 @@ public class PasswordResetListener implements ApplicationListener<OnResetPasswor
 //        try {
             PasswordResetToken passwordResetToken = event.getPasswordResetToken();
             AppUser user = passwordResetToken.getUser();
-            String confirmationURL = domainName + "?token=" + passwordResetToken.getToken() + "&username=" + user.getUsername();
+            String confirmationURL = domainName + "/resetPassword?token=" + passwordResetToken.getToken() + "&username=" + user.getUsername();
             String recipientAddress = user.getUsername();
             String subject = "RedScooter - Ndryshim i Fjalëkalimit";
             emailSender.sendEmailWithDefaultExceptionHandler(recipientAddress, subject, ResetPasswordHTMLBuilder.buildResetPasswordHTML(user, confirmationURL, passwordResetToken));

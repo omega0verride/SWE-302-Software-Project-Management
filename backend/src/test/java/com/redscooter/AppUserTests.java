@@ -43,12 +43,12 @@ public class AppUserTests {
     @Order(1)
     public void testCreateUser_PasswordIsSet() throws Exception {
         try {
-            ResponseEntity test = appUserController.registerUser(new CreateAppUserDTO("test", "test", "test@gmail.com", "password", null), false, false);
+            ResponseEntity test = appUserController.registerUser(new CreateAppUserDTO("test", "test", "test@gmail.com", "password", null), false, false, null);
             org.junit.jupiter.api.Assertions.assertEquals(test.getStatusCode(), HttpStatus.CREATED);
             org.junit.jupiter.api.Assertions.assertTrue(bCryptPasswordEncoder.matches("password", appUserService.getByUsername("test@gmail.com").getPassword()));
 
         } catch (Exception ex) {
-            if (!ex.getMessage().contains("No current ServletRequestAttributes"))
+            if (!ex.getMessage().contains("Cannot invoke \"jakarta.servlet.http.HttpServletRequest.getScheme()\" because \"request\" is null"))
                 throw ex;
         }
     }

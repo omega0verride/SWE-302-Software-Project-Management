@@ -19,7 +19,7 @@ const SendData = async (
   console.log(dataToBeSubmitted)
 
   try {
-    const apiExtension = register ? 'users/register' : 'token'
+    const apiExtension = register ? 'users' : 'token'
     const response = await (
       await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${apiExtension}`, {
         method: 'POST',
