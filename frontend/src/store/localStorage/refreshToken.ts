@@ -23,12 +23,11 @@ const refreshTokenFunction = async (refresh_token: string) => {
 
 export const checkTokenExpiration = async () => {
   const access_token: string = getFromStorage('access_token')!
-
+  console.log({ access_token })
   const { exp }: { exp: number } = await jwt_decode(access_token)
 
   if (exp < Date.now() / 1000) {
     const refresh_token: string = getFromStorage('refresh_token')!
-    localStorage.clear()
     const response = await refreshTokenFunction(refresh_token)
     saveToStorage('access_token', response?.access_token)
     saveToStorage('refresh_token', response?.refresh_token)

@@ -31,9 +31,8 @@ const LoginMain = ({ register }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        zIndex: 100
-      }}
-    >
+        zIndex: 100,
+      }}>
       <div
         style={{
           width: '60%',
@@ -41,9 +40,8 @@ const LoginMain = ({ register }) => {
           backgroundColor: '#F4F4F4',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center'
-        }}
-      >
+          justifyContent: 'center',
+        }}>
         <div style={{ width: '80%' }}>
           {errorMesssage && (
             <div style={{ color: '#D12222' }}>{errorMesssage}</div>
@@ -52,43 +50,45 @@ const LoginMain = ({ register }) => {
           <FormTitle title={register ? 'Create account' : 'Login'} />
           {register && (
             <>
-              <TextFieldLabel text='Name' />
+              <TextFieldLabel text="Name" />
               <UsernameTextField
-                placeholder='Enter your name'
+                placeholder="Enter your name"
                 dataToBeSubmitted={dataToBeSubmitted}
-                typeOfField='name'
+                typeOfField="name"
               />
-              <TextFieldLabel text='Surname' />
+              <TextFieldLabel text="Surname" />
               <UsernameTextField
-                placeholder='Enter your surname'
+                placeholder="Enter your surname"
                 dataToBeSubmitted={dataToBeSubmitted}
-                typeOfField='surname'
+                typeOfField="surname"
               />
-              <TextFieldLabel text='Phone Number' />
+              <TextFieldLabel text="Phone Number" />
               <UsernameTextField
-                placeholder='Enter your phonenumber'
+                placeholder="Enter your phonenumber"
                 dataToBeSubmitted={dataToBeSubmitted}
-                typeOfField='phoneNumber'
+                typeOfField="phoneNumber"
               />
             </>
           )}
 
-          <TextFieldLabel text='Email' />
+          <TextFieldLabel text="Email" />
           <UsernameTextField
             placeholder={'Enter email'}
             dataToBeSubmitted={dataToBeSubmitted}
             typeOfField={register ? 'email' : 'username'}
           />
-          <TextFieldLabel text='Password' />
+          <TextFieldLabel text="Password" />
           <PasswordField
-            placeholder='Enter password'
+            placeholder="Enter password"
             dataToBeSubmitted={dataToBeSubmitted}
-            typeOfField='password'
+            typeOfField="password"
           />
 
           <Link href={goTo.split('.')[1]}>{goTo.split('.')[0]}</Link>
           {!register && (
-            <Link style={{ marginTop: '1rem', display: 'block' }} href='/forgotPassword'>
+            <Link
+              style={{ marginTop: '1rem', display: 'block' }}
+              href="/forgotPassword">
               Forgot password?
             </Link>
           )}

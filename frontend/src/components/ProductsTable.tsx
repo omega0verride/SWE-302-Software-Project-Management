@@ -133,12 +133,13 @@ const ProductsTable = () => {
             cell.column.id === 'description' &&
             validateRequired(event.target.value)
           const isPriceVaild =
-            cell.column.id === 'price' && validateRequired(event.target.value)
+            cell.column.id === 'price' &&
+            validateNumber(Number(event.target.value))
           if (!isTitleValid && !isPriceVaild && !isDescriptionValid) {
             //set validation error for cell if invalid
             setValidationErrors({
               ...validationErrors,
-              [cell.id]: `${cell.column.columnDef.header} is required`,
+              [cell.id]: `${cell.column.columnDef.header} is required or fill it correctly`,
             })
           } else {
             //remove validation error for cell if valid
@@ -435,6 +436,8 @@ export const CreateNewProductModal = ({
 
   const handleSubmit = () => {
     //put your validation logic here
+    console.log(!validateNumber(values?.price))
+    console.log(values?.price)
     const fd = new FormData()
     const arrayOfErros: string[] = []
     if (!validateRequired(values?.title)) {

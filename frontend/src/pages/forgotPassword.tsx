@@ -2,6 +2,7 @@ import React from 'react'
 import Footer from '../components/LoginFooter'
 import Header from '../components/LoginHeader'
 import LoginMain from '../components/LoginMain'
+import ForgotPasswordComponent from '../components/ForgotPasswordComponent'
 
 const ForgotPassword = () => {
   return (
@@ -16,11 +17,10 @@ const ForgotPassword = () => {
         top: 0,
         left: 0,
         right: 0,
-        bottom: 0
-      }}
-    >
+        bottom: 0,
+      }}>
       <Header />
-      <LoginMain register={false} />
+      <ForgotPasswordComponent />
       <Footer />
     </div>
   )

@@ -1,34 +1,25 @@
 import React from 'react'
 import { useRouter } from 'next/router'
-import { useDispatch, useSelector } from 'react-redux'
 import { saveToStorage } from '../store/localStorage/manageStorage'
 
 interface myProps {
-  register: boolean
-  dataToBeSubmitted: object
+  username: string
   setErrorMessage: any
 }
 
 const SendData = async (
-  register: boolean,
-  dataToBeSubmitted: object,
-  router: any,
+  username: string,
   setErrorMessage: any,
-  dispatch: any,
+  router: any,
 ) => {
-  console.log(dataToBeSubmitted)
-
   try {
-    const apiExtension = register ? 'users/register' : 'token'
     const response = await (
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/${apiExtension}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${undefined}`,
+      await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/resetPassword?username=${username}`,
+        {
+          method: 'POST',
         },
-        body: JSON.stringify(dataToBeSubmitted),
-      })
+      )
     ).json()
 
     console.log(response)
@@ -55,7 +46,7 @@ const SendData = async (
       saveToStorage('refresh_token', response?.refresh_token)
       saveToStorage('expires_at', response?.expires_at)
       saveToStorage('username', response?.username)
-      router.push('/users')
+      router.push('/login')
     }
   } catch (err) {
     setErrorMessage('Something went wrong, try again later!')
@@ -63,11 +54,10 @@ const SendData = async (
   }
 }
 
-const LoginButton = (props: myProps) => {
-  const dispatch = useDispatch()
+const ForgotPasswordButton = (props: myProps) => {
   const router = useRouter()
 
-  const { register, dataToBeSubmitted, setErrorMessage } = props
+  const { username, setErrorMessage } = props
 
   return (
     <div>
@@ -83,19 +73,11 @@ const LoginButton = (props: myProps) => {
           cursor: 'pointer',
           marginTop: '2rem',
         }}
-        onClick={(e: any) =>
-          SendData(
-            register,
-            dataToBeSubmitted,
-            router,
-            setErrorMessage,
-            dispatch,
-          )
-        }>
-        {register ? 'Register' : 'Log In'}
+        onClick={(e: any) => SendData(username, setErrorMessage, router)}>
+        Reset Password
       </button>
     </div>
   )
 }
 
-export default LoginButton
+export default ForgotPasswordButton

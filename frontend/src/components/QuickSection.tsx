@@ -1,96 +1,73 @@
 import React from 'react'
-import PageLogo from './PageLogo'
-
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import StarIcon from '@mui/icons-material/Star'
 import HomeIcon from '@mui/icons-material/Home'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart'
 import InventoryIcon from '@mui/icons-material/Inventory'
 import GroupIcon from '@mui/icons-material/Group'
-import ReviewsIcon from '@mui/icons-material/Reviews'
-import LocalOfferIcon from '@mui/icons-material/LocalOffer'
-import QueryStatsIcon from '@mui/icons-material/QueryStats'
-import SettingsIcon from '@mui/icons-material/Settings'
+import LogoutIcon from '@mui/icons-material/Logout'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import { handleLogOut } from '../store/localStorage/manageStorage'
 
 const QuickSection = () => {
   return (
     <List
-      sx={{ width: '100%', maxWidth: 360, marginTop: '2%' }}
-      aria-label='contacts'
-    >
+      sx={{ width: '50%', maxWidth: '20rem', marginTop: '2%' }}
+      aria-label="contacts">
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href="/">
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
-          <ListItemText primary='Home' />
+          <ListItemText primary="Home" />
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/products'>
-          <ListItemIcon>
-            <InventoryIcon />
-          </ListItemIcon>
-          <ListItemText primary='Products' />
-        </ListItemButton>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <ListItemButton href='/orders'>
-          <ListItemIcon>
-            <ShoppingCartIcon />
-          </ListItemIcon>
-          <ListItemText primary='Orders' />
-        </ListItemButton>
-      </ListItem>
-
-      <ListItem disablePadding>
-        <ListItemButton href='/users'>
+        <ListItemButton href="/users">
           <ListItemIcon>
             <GroupIcon />
           </ListItemIcon>
-          <ListItemText primary='Users' />
+          <ListItemText primary="Users" />
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href="/products">
           <ListItemIcon>
-            <ReviewsIcon />
+            <InventoryIcon />
           </ListItemIcon>
-          <ListItemText primary='Reviews' />
+          <ListItemText primary="Products" />
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href="/orders">
           <ListItemIcon>
-            <LocalOfferIcon />
+            <ShoppingCartIcon />
           </ListItemIcon>
-          <ListItemText primary='Discounts' />
+          <ListItemText primary="Orders" />
         </ListItemButton>
       </ListItem>
 
       <ListItem disablePadding>
-        <ListItemButton href='/'>
+        <ListItemButton href="/">
           <ListItemIcon>
-            <QueryStatsIcon />
+            <ManageAccountsIcon />
           </ListItemIcon>
-          <ListItemText primary='Analytics' />
+          <ListItemText primary="Profile" />
         </ListItemButton>
       </ListItem>
 
-      <ListItem disablePadding>
-        <ListItemButton href='/'>
+      <ListItem disablePadding onClick={e => handleLogOut()}>
+        <ListItemButton href="/login">
           <ListItemIcon>
-            <SettingsIcon />
+            <LogoutIcon />
           </ListItemIcon>
-          <ListItemText primary='Settings' />
+          <ListItemText primary="Log out" />
         </ListItemButton>
       </ListItem>
     </List>

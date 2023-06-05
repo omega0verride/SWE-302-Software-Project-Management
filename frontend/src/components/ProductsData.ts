@@ -1,7 +1,6 @@
 import img from '../assets/icons/dummyLogo.jpg'
 import { checkTokenExpiration } from '../store/localStorage/refreshToken'
 import { Product } from './ProductsTable'
-//     image: img.src,
 
 export const getProducts = async () => {
   try {
