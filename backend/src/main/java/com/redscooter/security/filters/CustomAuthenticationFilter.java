@@ -2,6 +2,7 @@ package com.redscooter.security.filters;
 
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.exceptions.BaseException;
+import com.redscooter.exceptions.GlobalResponseEntityExceptionHandler;
 import com.redscooter.exceptions.UnknownException;
 import com.redscooter.exceptions.api.badRequest.BadRequestBodyException;
 import com.redscooter.exceptions.api.httpCore.HttpRequestMethodNotSupportedException;
@@ -36,10 +37,13 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     private final AppUserService appUserService;
     private final MultiAuthIdentityProvider multiAuthIdentityProvider;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AppUserService appUserService, MultiAuthIdentityProvider multiAuthIdentityProvider) {
+    private GlobalResponseEntityExceptionHandler globalResponseEntityExceptionHandler;
+
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, JwtUtils jwtUtils, AppUserService appUserService, MultiAuthIdentityProvider multiAuthIdentityProvider, GlobalResponseEntityExceptionHandler globalResponseEntityExceptionHandler) {
         this.authenticationManager = authenticationManager;
         this.jwtUtils = jwtUtils;
         this.appUserService = appUserService;
+        this.globalResponseEntityExceptionHandler = globalResponseEntityExceptionHandler;
         this.multiAuthIdentityProvider = multiAuthIdentityProvider;
         this.setFilterProcessesUrl(jwtUtils.getAccessTokenEndpoint()); // set authentication endpoint
     }
@@ -67,7 +71,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
                 exception = new InvalidCredentialsException();
             if (!(exception instanceof BaseException))
                 exception = new UnknownException(exception);
-
             BaseException baseException = ((BaseException) exception);
             response.setStatus(baseException.getHttpStatusCode());
             response.setContentType(APPLICATION_JSON_VALUE);

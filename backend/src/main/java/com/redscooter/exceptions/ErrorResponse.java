@@ -19,16 +19,12 @@ import java.util.List;
 //  @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class ErrorResponse {
     private HttpStatus httpStatus;
-
     private int httpStatusCode;
-
     private String exceptionId;
-
     private List<String> exceptionStack;
     private String message;
-
-    private Exception rootException;
-
+    private String traceID;
+    private String rootExceptionJSONString;
     private String rootExceptionMessage;
     private HashMap<String, Object> details = new HashMap<>();
     private ArrayList<String> detailsList = new ArrayList<>();
@@ -41,9 +37,15 @@ public class ErrorResponse {
         setMessage(exception.getMessage());
         setDetails(exception.getDetails());
         setDetailsList(exception.getDetailsList());
-        if (!exception.isSuppressRootException())
-            setRootException(exception.getRootException());
+        setTraceID(exception.getTraceId());
         if (!exception.isSuppressRootException()) {
+            try {
+                setRootExceptionJSONString(new ObjectMapper().writeValueAsString(exception.getRootException()));
+            } catch (JsonProcessingException e) {
+                rootExceptionJSONString = "Could not serialize rootException!";
+            }
+        }
+        if (!exception.isSuppressRootExceptionMessage()) {
             Exception ex = exception.getRootException();
             setRootExceptionMessage(ex == null ? null : ex.getMessage());
         }

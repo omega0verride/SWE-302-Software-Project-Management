@@ -23,7 +23,7 @@ export DATABASE_VOLUME=~/database-data
 export DATABASE_NAME=redscooter
 export DATABASE_PORT=5432
 # - FileStore - #
-export FILE_STORE_ROOT_PERSIST_PATH=~/filestore
+export FILE_STORE_PRIVATE_ROOT_PERSIST_PATH=~/filestore-private
 export FILE_STORE_PUBLIC_ROOT_PERSIST_PATH=~/filestore/public
 export FILE_STORE_PUBLIC_ROOT_URI=/resources/public
 # - FileStore - #

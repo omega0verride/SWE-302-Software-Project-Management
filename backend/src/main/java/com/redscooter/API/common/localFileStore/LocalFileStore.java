@@ -49,8 +49,8 @@ public class LocalFileStore {
         this(absoluteParentRootPath, fileStoreRelativePath, null);
     }
 
-    public LocalFileStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties) {
-        this(fileStoreConfigProperties.getPublicRootPath(), fileStoreRelativePath, fileStoreConfigProperties.getMaxNumberOfSubDirectories());
+    public LocalFileStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties, boolean public_) {
+        this(public_ ? fileStoreConfigProperties.getPublicRootPath() : fileStoreConfigProperties.getPrivateRootPath(), fileStoreRelativePath, fileStoreConfigProperties.getMaxNumberOfSubDirectories());
     }
 
     public static String generateUniqueRelativePath(Long id, String subPath, int maxNumberOfSubDirectories) {

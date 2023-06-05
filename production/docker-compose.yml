@@ -51,13 +51,13 @@ services:
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       RESOURCES_ROOT_PATH: /resources
-      FILE_STORE_ROOT_PATH: /filestore
+      FILE_STORE_PRIVATE_ROOT_PATH: /filestore-private
       FILE_STORE_PUBLIC_ROOT_PATH: /filestore/public
     volumes:
       - ./target/api.jar:/api.jar
       - ./target/application.yml:/application.yml
       - ./target/resources:/resources
-      - ${FILE_STORE_ROOT_PERSIST_PATH}:/filestore
+      - ${FILE_STORE_PRIVATE_ROOT_PERSIST_PATH}:/filestore-private
       - ${FILE_STORE_PUBLIC_ROOT_PERSIST_PATH}:/filestore/public
     command: "java -jar api.jar --spring.config.location=file:///application.yml"
     ports:

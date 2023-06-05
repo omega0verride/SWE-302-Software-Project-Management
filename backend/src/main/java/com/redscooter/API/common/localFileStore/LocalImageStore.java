@@ -23,8 +23,8 @@ public class LocalImageStore extends LocalFileStore {
         this(absoluteParentRootPath, fileStoreRelativePath, maxNumberOfSubDirectories, null);
     }
 
-    public LocalImageStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties) {
-        super(fileStoreRelativePath, fileStoreConfigProperties);
+    public LocalImageStore(String fileStoreRelativePath, FileStoreConfigProperties fileStoreConfigProperties, boolean public_) {
+        super(fileStoreRelativePath, fileStoreConfigProperties, public_);
     }
 
     private LocalImage buildDefaultNoLocalImage(String defaultNoImageRelativePath) {

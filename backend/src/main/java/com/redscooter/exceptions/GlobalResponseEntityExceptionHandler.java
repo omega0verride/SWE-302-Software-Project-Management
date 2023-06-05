@@ -2,25 +2,41 @@ package com.redscooter.exceptions;
 
 import com.redscooter.exceptions.api.httpCore.HttpRequestMethodNotSupportedException;
 import com.redscooter.exceptions.to_delete.ErrorResponse__;
-import com.redscooter.exceptions.to_refactor.InvalidValueException;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.tomcat.util.http.fileupload.impl.SizeException;
 import org.apache.tomcat.util.http.fileupload.impl.SizeLimitExceededException;
+import org.restprocessors.exceptions.InvalidValueException;
+import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.http.*;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.transaction.TransactionSystemException;
+import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.ErrorResponseException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.ServletRequestBindingException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import jakarta.persistence.RollbackException;
@@ -77,14 +93,23 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(new ErrorResponse__(ex.getMessage()), BAD_REQUEST);
     }
 
-
-    // TODO should we keep this?
-    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-    @ExceptionHandler(value = {InvalidMediaTypeException.class})
-    protected ResponseEntity<ErrorResponse__> unsupportedMediaTypeException(InvalidMediaTypeException ex) {
-        String message = ex.getMessage();
-        return new ResponseEntity<>(new ErrorResponse__(message), HttpStatus.BAD_REQUEST);
+    @Override
+    @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
+    @ApiResponse(content = @Content)
+    protected ResponseEntity<Object> handleHttpMediaTypeNotAcceptable(HttpMediaTypeNotAcceptableException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new BaseException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage()).toResponseEntity();
     }
+
+    @Override
+    @ResponseStatus(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
+    @Schema(implementation = BaseException.class)
+//    @ExceptionHandler(value = {InvalidMediaTypeException.class})
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        return new BaseException(HttpStatus.UNSUPPORTED_MEDIA_TYPE, ex.getMessage()).toResponseEntity();
+    }
+
+
+
 
     @ExceptionHandler(value = NotImplementedException.class)
     protected ResponseEntity<ErrorResponse__> NotImplementedExceptionHandler(NotImplementedException ex) {
@@ -160,5 +185,69 @@ public class GlobalResponseEntityExceptionHandler extends ResponseEntityExceptio
         return new ResponseEntity<>(errorResponse, BAD_REQUEST);
     }
 
+//    public ResponseEntity<Object> handleHttpRequestMethodNotSupported(org.springframework.web.HttpRequestMethodNotSupportedException ex, HttpServletRequest httpServletRequest){
+//
+//    }
+//    public ResponseEntity<Object> handleException(Exception ex, HttpServletRequest httpServletRequest){
+//        if (ex instanceof org.springframework.web.HttpRequestMethodNotSupportedException subEx) {
+//            return handleHttpRequestMethodNotSupported(subEx, httpServletRequest);
+//        }
+//        else if (ex instanceof HttpMediaTypeNotSupportedException subEx) {
+//            return handleHttpMediaTypeNotSupported(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof HttpMediaTypeNotAcceptableException subEx) {
+//            return handleHttpMediaTypeNotAcceptable(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof MissingPathVariableException subEx) {
+//            return handleMissingPathVariable(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof MissingServletRequestParameterException subEx) {
+//            return handleMissingServletRequestParameter(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof MissingServletRequestPartException subEx) {
+//            return handleMissingServletRequestPart(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof ServletRequestBindingException subEx) {
+//            return handleServletRequestBindingException(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof MethodArgumentNotValidException subEx) {
+//            return handleMethodArgumentNotValid(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof NoHandlerFoundException subEx) {
+//            return handleNoHandlerFoundException(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof AsyncRequestTimeoutException subEx) {
+//            return handleAsyncRequestTimeoutException(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//        else if (ex instanceof ErrorResponseException subEx) {
+//            return handleErrorResponseException(subEx, subEx.getHeaders(), subEx.getStatusCode(), request);
+//        }
+//
+//        // Lower level exceptions, and exceptions used symmetrically on client and server
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        if (ex instanceof ConversionNotSupportedException theEx) {
+//            return handleConversionNotSupported(theEx, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+//        }
+//        else if (ex instanceof TypeMismatchException theEx) {
+//            return handleTypeMismatch(theEx, headers, HttpStatus.BAD_REQUEST, request);
+//        }
+//        else if (ex instanceof HttpMessageNotReadableException theEx) {
+//            return handleHttpMessageNotReadable(theEx, headers, HttpStatus.BAD_REQUEST, request);
+//        }
+//        else if (ex instanceof HttpMessageNotWritableException theEx) {
+//            return handleHttpMessageNotWritable(theEx, headers, HttpStatus.INTERNAL_SERVER_ERROR, request);
+//        }
+//        else if (ex instanceof BindException theEx) {
+//            return handleBindException(theEx, headers, HttpStatus.BAD_REQUEST, request);
+//        }
+//        else {
+//            // Unknown exception, typically a wrapper with a common MVC exception as cause
+//            // (since @ExceptionHandler type declarations also match nested causes):
+//            // We only deal with top-level MVC exceptions here, so let's rethrow the given
+//            // exception for further processing through the HandlerExceptionResolver chain.
+//            throw ex;
+//        }
+//    }
 
 }

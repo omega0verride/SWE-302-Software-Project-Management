@@ -86,7 +86,7 @@ email:
     starttls: true
 
 file-store:
-    root-path: ${FILE_STORE_ROOT_PATH:/filestore}
+    private-root-path: ${FILE_STORE_PRIVATE_ROOT_PATH:/filestore-private}
     public-root-path: ${FILE_STORE_PUBLIC_ROOT_PATH:/filestore/public}
     no-image-relative-path: /images/no_image.jpg
     max-number-of-sub-directories: 30000

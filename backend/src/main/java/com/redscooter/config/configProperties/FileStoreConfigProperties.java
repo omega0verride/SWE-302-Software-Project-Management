@@ -1,6 +1,5 @@
 package com.redscooter.config.configProperties;
 
-import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
@@ -11,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
-import java.util.List;
 
 @ConfigurationProperties(prefix = "file-store")
 @Configuration
@@ -22,7 +20,7 @@ import java.util.List;
 public class FileStoreConfigProperties {
 
     @NotEmpty
-    private String rootPath;
+    private String privateRootPath;
 
     @NotEmpty
     private String publicRootPath;
@@ -30,8 +28,8 @@ public class FileStoreConfigProperties {
     @Min(100)
     private Integer maxNumberOfSubDirectories = 30000;
 
-    public void setRootPath(String rootPath) {
-        this.rootPath = new File(rootPath).getAbsolutePath();
+    public void setPrivateRootPath(String privateRootPath) {
+        this.privateRootPath = new File(privateRootPath).getAbsolutePath();
     }
 
     public void setPublicRootPath(String publicRootPath) {

@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ProductImageStore extends LocalImageStore {
     public ProductImageStore(FileStoreConfigProperties fileStoreConfigProperties) {
-        super(Utilities.joinPathsAsString("products", "images"), fileStoreConfigProperties);
+        super(Utilities.joinPathsAsString("products", "images"), fileStoreConfigProperties, true);
     }
 }

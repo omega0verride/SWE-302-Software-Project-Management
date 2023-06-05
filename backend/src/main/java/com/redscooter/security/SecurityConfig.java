@@ -2,6 +2,7 @@ package com.redscooter.security;
 
 import com.redscooter.API.appUser.AppUserService;
 import com.redscooter.config.configProperties.CorsConfigProperties;
+import com.redscooter.exceptions.GlobalResponseEntityExceptionHandler;
 import com.redscooter.security.filters.CustomAuthenticationFilter;
 import com.redscooter.security.filters.CustomAuthorizationFilter;
 import com.redscooter.security.thirdPartyLogin.MultiAuthIdentityProvider;
@@ -47,7 +48,7 @@ public class SecurityConfig {
 
     @Bean
     @Autowired
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, CustomAuthorizationFilter customAuthorizationFilter, AppUserService appUserService, MultiAuthIdentityProvider multiAuthIdentityProvider) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager, CustomAuthorizationFilter customAuthorizationFilter, AppUserService appUserService, MultiAuthIdentityProvider multiAuthIdentityProvider, GlobalResponseEntityExceptionHandler globalResponseEntityExceptionHandler) throws Exception {
         http.csrf().disable().cors().and().httpBasic().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
@@ -66,7 +67,7 @@ public class SecurityConfig {
         // deny all other requests (this helps limit access to resources paths)
         http.authorizeHttpRequests((authorizer) -> authorizer.requestMatchers("/**").denyAll());
 
-        http.addFilter(new CustomAuthenticationFilter(authenticationManager, jwtUtils, appUserService, multiAuthIdentityProvider)); // add authentication filter
+        http.addFilter(new CustomAuthenticationFilter(authenticationManager, jwtUtils, appUserService, multiAuthIdentityProvider, globalResponseEntityExceptionHandler)); // add authentication filter
         http.addFilterBefore(customAuthorizationFilter, UsernamePasswordAuthenticationFilter.class); // add authorization filter
 
         return http.build();

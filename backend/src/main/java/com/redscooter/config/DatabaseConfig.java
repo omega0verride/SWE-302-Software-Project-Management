@@ -146,6 +146,13 @@ public class DatabaseConfig {
             }};
             OrderBilling orderBilling = new OrderBilling("asd", "asd", "asd", "asd", "asd,", "asd", PaymentOption.CASH);
             orderService.create(order, orderLines, orderBilling);
+
+            Order order2 = new Order();
+            List<OrderLine> orderLines2 = new ArrayList<>() {{
+                add(new OrderLine(new Product("test2", "test", 0, 100.0, 0, 7, "asd", "asd"), 2));
+            }};
+            OrderBilling orderBilling2 = new OrderBilling("indrit", "breti", "+355686773878", "ibreti20@epoka.edu.al", "asd,", "asd", PaymentOption.CASH);
+            orderService.create(order2, orderLines2, orderBilling2);
         };
     }
 }

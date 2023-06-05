@@ -1,14 +1,22 @@
 package com.redscooter.exceptions;
 
+import com.redscooter.util.Utilities;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -34,8 +42,8 @@ public class BaseException extends RuntimeException {
     private boolean exposeExtraFieldsAsDetails = true;
 
     private boolean isInternalServerException = false;
-    private String internalServerExceptionLogFile = null;
-    private String internalServerExceptionURL = null;
+    private String traceLogFile = null;
+    private String traceId = null;
 
     public BaseException(HttpStatus httpStatus, String message, String customExceptionId, boolean suppressRootException, boolean suppressRootExceptionMessage) {
         setHttpStatus(httpStatus);
@@ -46,7 +54,7 @@ public class BaseException extends RuntimeException {
     }
 
     public BaseException(HttpStatus httpStatus, String message, String customExceptionId, boolean suppressRootExceptionMessage) {
-        this(httpStatus, message, customExceptionId, true, false);
+        this(httpStatus, message, customExceptionId, true, suppressRootExceptionMessage);
     }
 
     public BaseException(HttpStatus httpStatus, String message, String customExceptionId) {
@@ -102,8 +110,17 @@ public class BaseException extends RuntimeException {
 
     public void buildAsInternalServerException() {
         isInternalServerException = true;
-        setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR); // TODO
+        setHttpStatus(HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+//    public void buildTrace(){
+//        this.traceId = UUID.randomUUID().toString();
+//        Path path = Paths.get("F:\\netjs\\WriteFile.txt");
+//        FileOutputStream fos = new FileOutputStream(Utilities.pat);
+//        DataOutputStream outStream = new DataOutputStream(new BufferedOutputStream(fos));
+//        outStream.writeUTF(value);
+//        outStream.close();
+//    }
 
     public boolean isInternalServerException() {
         return isInternalServerException;
@@ -124,8 +141,8 @@ public class BaseException extends RuntimeException {
                 ", suppressRootExceptionMessage=" + suppressRootExceptionMessage +
                 ", exposeExtraFieldsAsDetails=" + exposeExtraFieldsAsDetails +
                 ", isInternalServerException=" + isInternalServerException +
-                ", internalServerExceptionLogFile='" + internalServerExceptionLogFile + '\'' +
-                ", internalServerExceptionURL='" + internalServerExceptionURL + '\'' +
+                ", traceLogFile='" + traceLogFile + '\'' +
+                ", traceId='" + traceId + '\'' +
                 '}';
     }
 
@@ -138,7 +155,9 @@ public class BaseException extends RuntimeException {
     }
 
     public void printRootStackTrace() {
-        if (rootException!=null)
+        if (rootException != null)
             rootException.printStackTrace();
     }
+
+
 }

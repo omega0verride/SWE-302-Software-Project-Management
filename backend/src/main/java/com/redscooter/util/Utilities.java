@@ -15,6 +15,7 @@ import java.util.stream.Stream;
 
 @Getter
 public class Utilities {
+    public static final String PUBLIC_RESOURCES_ROOT_PATH = "/resources";
     public static final String RESOURCES_ROOT_PATH = "/resources";
 //    public static final String RESOURCES_ROOT_PATH = "C:\\Users\\indri\\SWE-302-Software-Project-Management\\backend\\src\\main\\resources";
     public static final String STATIC_FOLDER_DIR = Utilities.joinPathsAsString(RESOURCES_ROOT_PATH, "static");
