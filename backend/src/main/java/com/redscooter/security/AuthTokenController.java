@@ -11,6 +11,8 @@ import com.redscooter.exceptions.api.unauthorized.*;
 import com.redscooter.exceptions.generic.TokenDecodeException;
 import com.redscooter.security.DTO.DetailedTokenDetailsDTO;
 import com.redscooter.security.DTO.MultiAuthIdentityProviderDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +38,7 @@ public class AuthTokenController {
     protected final Log logger = LogFactory.getLog(this.getClass());
 
     @GetMapping(value = JWTConfigProperties.DEFAULT_REFRESH_TOKEN_ENDPOINT_VALUE)
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public DetailedTokenDetailsDTO refreshToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
         String authorizationHeader = request.getHeader(AUTHORIZATION);
         if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer "))

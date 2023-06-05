@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "openapi -i http://75.119.149.135/api/api-docs/v3.yaml -o src/services && next dev",
+    "dev": "openapi -i http://75.119.149.135:8080/api/api-docs/v3.yaml -o src/services && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -29,6 +29,7 @@
     "eslint-config-next": "13.2.4",
     "form-data": "^4.0.0",
     "graphql": "^15.8.0",
+    "jwt-decode": "^3.1.2",
     "material-react-table": "^1.10.0",
     "next": "13.2.4",
     "next-redux-wrapper": "^8.1.0",

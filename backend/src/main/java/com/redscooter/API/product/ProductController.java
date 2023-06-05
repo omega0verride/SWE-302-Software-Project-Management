@@ -8,6 +8,9 @@ import com.redscooter.API.product.DTO.*;
 import com.redscooter.exceptions.api.forbidden.ResourceRequiresAdminPrivileges;
 import com.redscooter.security.AuthorizationFacade;
 import com.redscooter.security.JwtUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.PathFunctionArg;
 import org.restprocessors.DynamicQueryBuilder.DynamicSortBuilder.SortByFunction;
@@ -20,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,6 +53,7 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public GetProductDTO getProductByID(@RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @PathVariable(name = "productId", required = true) Long productId) {
         Product product = productService.getById(productId);
         if (!product.isVisible() && !AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService))
@@ -57,19 +62,21 @@ public class ProductController {
     }
 
     @DynamicRestMapping(path = "", requestMethod = RequestMethod.GET, entity = Product.class)
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<PageResponse<GetModerateProductDTO>> getAllProducts(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
         Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetModerateProductDTO(product, productService));
     }
 
     @DynamicRestMapping(path = "/searchSuggestions", requestMethod = RequestMethod.GET, entity = Product.class)
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<PageResponse<GetMinimalProductDTO>> getProductsSearchSuggestion(CriteriaParameters cp, @RequestHeader(value = HttpHeaders.AUTHORIZATION, required = false) String authorizationHeader, @RequestParam(name = "searchQuery", required = false) String searchQuery) {
         Page<Product> resultsPage = productService.getAllByCriteria(!AuthorizationFacade.isAdminAuthorization(authorizationHeader, jwtUtils, appUserService), searchQuery, cp);
         return ResponseFactory.buildPageResponse(resultsPage, product -> new GetMinimalProductDTO(product, productService));
     }
 
-
     @PostMapping("")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> createProduct(@Valid @RequestBody CreateProductDTO createProductDTO) {
         AuthorizationFacade.ensureAdmin();
         Product product = new Product(createProductDTO);
@@ -77,8 +84,8 @@ public class ProductController {
         return ResponseFactory.buildResourceCreatedSuccessfullyResponse("Product", "Id", product.getId());
     }
 
-
     @PatchMapping("/{productId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> updateProduct(@PathVariable(name = "productId") Long productId, @Valid @RequestBody UpdateProductDTO updateProductDTO) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.updateProduct(productId, updateProductDTO);
@@ -86,6 +93,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}/setCustomFields")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.setCustomFields(productId, customFields);
@@ -93,6 +101,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}/setCustomFieldsFromList")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> setCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody List<Map.Entry<String, Object>> customFields) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.setCustomFields(productId, customFields);
@@ -100,6 +109,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}/addCustomFields")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> addCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Map<String, Object> customFields) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.addCustomFields(productId, customFields);
@@ -107,6 +117,7 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}/removeCustomFields")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> removeCustomFields(@PathVariable(name = "productId") Long productId, @RequestBody Set<String> keys) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.removeCustomFields(productId, keys);
@@ -114,14 +125,15 @@ public class ProductController {
     }
 
     @PatchMapping("/{productId}/removeCustomField")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> removeCustomField(@PathVariable(name = "productId") Long productId, @RequestBody String key) {
         AuthorizationFacade.ensureAdmin();
         Product updatedProduct = productService.removeCustomField(productId, key);
         return ResponseFactory.buildResourceUpdatedSuccessfullyResponse("Product", "productId", productId, updatedProduct.toGetProductDTO(productService));
     }
 
-
     @DeleteMapping("/{productId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> deleteProduct(@PathVariable(name = "productId") Long productId) {
         AuthorizationFacade.ensureAdmin();
         productService.delete(productId);
@@ -129,7 +141,9 @@ public class ProductController {
     }
 
     // THESE METHODS HANDLE IMAGE UPLOAD/DELETE/THUMBNAIL_CHANGE
-    @PostMapping("/uploadImage/{productId}")
+    @PostMapping(path = "/uploadImage/{productId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
+    @Operation(security = @SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> uploadImage(@RequestParam(name = "file", required = true) MultipartFile file, @PathVariable(name = "productId", required = true) Long productId, @RequestParam(name = "isThumbnail", required = false, defaultValue = "false") boolean isThumbnail) throws IOException {
         AuthorizationFacade.ensureAdmin();
         LocalImage savedImage = productService.uploadImage(file, productId, isThumbnail);
@@ -142,6 +156,7 @@ public class ProductController {
     }
 
     @DeleteMapping("/deleteImage")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> deleteImage(@RequestParam(name = "filePath", required = true) String filePath) throws IOException {
         AuthorizationFacade.ensureAdmin();
         productService.deleteImage(filePath);

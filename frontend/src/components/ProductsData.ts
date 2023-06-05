@@ -6,7 +6,7 @@ import { Product } from './ProductsTable'
 export const getProducts = async () => {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products?sortBy=-updatedAt`,
       {
         method: 'GET',
       },
@@ -19,7 +19,7 @@ export const getProducts = async () => {
         thumbnail:
           el.thumbnail === 'images/no_image.jpg/no_image.jpg'
             ? img.src
-            : el.thumbnail,
+            : `${process.env.NEXT_PUBLIC_IMAGE_URL}/resources/public/${el.thumbnail}`,
       }
     })
     return newValues
@@ -52,10 +52,11 @@ export const createProduct = async (data: object) => {
   }
 }
 
-export const deleteProduct = async (access_token: string, username: string) => {
+export const deleteProduct = async (productId: number) => {
   try {
+    const access_token: string = await checkTokenExpiration()
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/products/${username}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`,
       {
         method: 'DELETE',
         headers: new Headers({
@@ -73,12 +74,9 @@ export const deleteProduct = async (access_token: string, username: string) => {
   }
 }
 
-export const updateProduct = async (
-  access_token: string,
-  productId: number,
-  data: object,
-) => {
+export const updateProduct = async (productId: number, data: object) => {
   try {
+    const access_token: string = await checkTokenExpiration()
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`,
       {

@@ -3,7 +3,6 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { setLogin } from '../store/reducers/user'
 import { saveToStorage } from '../store/localStorage/manageStorage'
-import { AuthTokenControllerService } from '../services/services/AuthTokenControllerService'
 
 interface myProps {
   register: boolean
@@ -27,6 +26,7 @@ const SendData = async (
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${undefined}`,
         },
         body: JSON.stringify(dataToBeSubmitted),
       })

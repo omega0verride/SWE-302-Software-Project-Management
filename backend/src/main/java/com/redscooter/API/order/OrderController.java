@@ -10,6 +10,8 @@ import com.redscooter.API.order.DTO.GetOrderDTO;
 import com.redscooter.API.order.DTO.OrderConfirmationTokenDTO;
 import com.redscooter.exceptions.api.forbidden.ForbiddenException;
 import com.redscooter.security.AuthorizationFacade;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import jakarta.validation.Valid;
 import org.restprocessors.DynamicRESTController.CriteriaParameters;
 import org.restprocessors.DynamicRestMapping;
@@ -35,6 +37,7 @@ public class OrderController {
     }
 
     @GetMapping("orders/{orderId}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public GetOrderDTO getOrderByID(@PathVariable(name = "orderId", required = true) Long orderId) {
         Order order = orderService.getById(orderId);
         if (!AuthorizationFacade.isAdminOrCurrentUserOnCurrentSecurityContext(appUserService.getById(order.getUserId(), false)))
@@ -44,6 +47,7 @@ public class OrderController {
 
 
     @DynamicRestMapping(path = "orders", requestMethod = RequestMethod.GET, entity = Order.class)
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
 //    @Parameters({@Parameter(name = "createdAt_", in = ParameterIn.QUERY, required = false, example = "propertyName:<asc|desc>"), @Parameter(name = "sortBy", in = ParameterIn.QUERY, required = false, schema = @Schema(description = "var 1", type = "string", allowableValues = {"1", "2"}))})
 //    @ApiResponse(responseCode = "200", description = "OK", content = {@Content(schema = @Schema(implementation = Page<GetOrderDTO>.))})
     public ResponseEntity<PageResponse<GetOrderDTO>> getAllOrders(CriteriaParameters cp) {
@@ -53,6 +57,7 @@ public class OrderController {
     }
 
     @PostMapping("orders")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> createOrder(@Valid @RequestBody CreateOrderDTO createOrderDTO, @RequestParam(name = "skipVerification", defaultValue = "false") boolean skipVerification) {
         Order order = orderService.create(createOrderDTO, skipVerification);
         if (skipVerification)
@@ -69,6 +74,7 @@ public class OrderController {
     }
 
     @PatchMapping("orders/{orderId}/changeStatus/{orderStatus}")
+    @SecurityRequirements(@SecurityRequirement(name = "bearerAuth"))
     public ResponseEntity<Object> changeOrderStatus(@PathVariable(name = "orderId", required = true) Long orderId, @PathVariable(name = "orderStatus", required = true) OrderStatus orderStatus, @RequestParam(name = "adminNotesOnStatusChange", required = false) String adminNotesOnStatusChange) {
         AuthorizationFacade.ensureAdmin();
         Order updatedOrder = orderService.changeOrderStatus(orderId, orderStatus, adminNotesOnStatusChange);
