@@ -38,6 +38,7 @@ export class OrderControllerService {
      * @param clientPhoneNumber
      * @param orderLinesDescription
      * @param clientName
+     * @param authorization JWT Bearer Authorization Header
      * @returns PageResponseGetOrderDTO OK
      * @throws ApiError
      */
@@ -68,10 +69,14 @@ export class OrderControllerService {
         clientPhoneNumber?: string,
         orderLinesDescription?: string,
         clientName?: string,
+        authorization?: string,
     ): CancelablePromise<PageResponseGetOrderDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/orders',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'pageSize': pageSize,
                 'pageNumber': pageNumber,
@@ -109,16 +114,21 @@ export class OrderControllerService {
     /**
      * @param requestBody
      * @param skipVerification
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static createOrder(
         requestBody: CreateOrderDTO,
         skipVerification: boolean = false,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/orders',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'skipVerification': skipVerification,
             },
@@ -134,6 +144,7 @@ export class OrderControllerService {
      * @param orderId
      * @param orderStatus
      * @param adminNotesOnStatusChange
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
@@ -141,6 +152,7 @@ export class OrderControllerService {
         orderId: number,
         orderStatus: 'NEW' | 'KONFIRMUAR' | 'NË DËRGIM' | 'REFUZUAR' | 'MBYLLUR',
         adminNotesOnStatusChange?: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -148,6 +160,9 @@ export class OrderControllerService {
             path: {
                 'orderId': orderId,
                 'orderStatus': orderStatus,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             query: {
                 'adminNotesOnStatusChange': adminNotesOnStatusChange,
@@ -160,17 +175,22 @@ export class OrderControllerService {
 
     /**
      * @param orderConfirmationToken
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static confirmOrder(
         orderConfirmationToken: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/orders/confirm/{orderConfirmationToken}',
             path: {
                 'orderConfirmationToken': orderConfirmationToken,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,
@@ -180,17 +200,22 @@ export class OrderControllerService {
 
     /**
      * @param orderId
+     * @param authorization JWT Bearer Authorization Header
      * @returns GetOrderDTO OK
      * @throws ApiError
      */
     public static getOrderById(
         orderId: number,
+        authorization?: string,
     ): CancelablePromise<GetOrderDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/orders/{orderId}',
             path: {
                 'orderId': orderId,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,

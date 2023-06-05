@@ -22,9 +22,7 @@ const Header = () => {
                     <PageLogo></PageLogo>
                     <ShopName></ShopName>
                 </div>
-                <div style={{display: "flex", flexDirection: 'row',}}>
-                    <RedBorderButton content="login" ></RedBorderButton>
-                </div>
+                
                 
           </div>
       

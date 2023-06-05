@@ -16,15 +16,20 @@ export class AppUserControllerService {
 
     /**
      * @param username
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static resetPassword(
         username: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/resetPassword',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'username': username,
             },
@@ -38,6 +43,7 @@ export class AppUserControllerService {
      * @param requestBody
      * @param skipVerification
      * @param isAdmin
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
@@ -45,10 +51,14 @@ export class AppUserControllerService {
         requestBody: CreateAppUserDTO,
         skipVerification: boolean = false,
         isAdmin: boolean = false,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
             url: '/api/users/register',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'skipVerification': skipVerification,
                 'isAdmin': isAdmin,
@@ -106,17 +116,22 @@ export class AppUserControllerService {
 
     /**
      * @param username
+     * @param authorization JWT Bearer Authorization Header
      * @returns GetAppUserDTO OK
      * @throws ApiError
      */
     public static getUserByUsername(
         username: string,
+        authorization?: string,
     ): CancelablePromise<GetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/{username}',
             path: {
                 'username': username,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,
@@ -126,17 +141,22 @@ export class AppUserControllerService {
 
     /**
      * @param username
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUserByUsername(
         username: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/{username}',
             path: {
                 'username': username,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,
@@ -147,18 +167,23 @@ export class AppUserControllerService {
     /**
      * @param username
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns GetAppUserDTO OK
      * @throws ApiError
      */
     public static updateUserByUsername(
         username: string,
         requestBody: UpdateAppUserDTO,
+        authorization?: string,
     ): CancelablePromise<GetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/users/{username}',
             path: {
                 'username': username,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -182,6 +207,7 @@ export class AppUserControllerService {
      * @param createdAt
      * @param name
      * @param phoneNumber
+     * @param authorization JWT Bearer Authorization Header
      * @returns PageResponseGetAppUserDTO OK
      * @throws ApiError
      */
@@ -199,10 +225,14 @@ export class AppUserControllerService {
         createdAt?: string,
         name?: string,
         phoneNumber?: string,
+        authorization?: string,
     ): CancelablePromise<PageResponseGetAppUserDTO> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'pageSize': pageSize,
                 'pageNumber': pageNumber,
@@ -227,16 +257,21 @@ export class AppUserControllerService {
     /**
      * @param token
      * @param username
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static confirmRegistration(
         token: string,
         username?: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'GET',
             url: '/api/users/register/confirm',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'token': token,
                 'username': username,
@@ -249,17 +284,22 @@ export class AppUserControllerService {
 
     /**
      * @param ids
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteUsers(
         ids: Array<number>,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/users/batchDelete/{ids}',
             path: {
                 'ids': ids,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,

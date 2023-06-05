@@ -77,17 +77,22 @@ export class CategoryControllerService {
 
     /**
      * @param categoryId
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteCategory(
         categoryId: number,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/categories/{categoryId}',
             path: {
                 'categoryId': categoryId,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             errors: {
                 415: `Unsupported Media Type`,
@@ -98,18 +103,23 @@ export class CategoryControllerService {
     /**
      * @param categoryId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static updateCategory(
         categoryId: number,
         requestBody: UpdateCategoryDTO,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/categories/{categoryId}',
             path: {
                 'categoryId': categoryId,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             body: requestBody,
             mediaType: 'application/json',

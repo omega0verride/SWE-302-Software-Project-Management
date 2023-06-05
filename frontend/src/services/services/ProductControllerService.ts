@@ -111,14 +111,16 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param isThumbnail
-     * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
+     * @param formData
      * @returns any OK
      * @throws ApiError
      */
     public static uploadImage(
         productId: number,
         isThumbnail: boolean = false,
-        requestBody?: {
+        authorization?: string,
+        formData?: {
             file: Blob;
         },
     ): CancelablePromise<any> {
@@ -128,11 +130,14 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'isThumbnail': isThumbnail,
             },
-            body: requestBody,
-            mediaType: 'application/json',
+            formData: formData,
+            mediaType: 'multipart/form-data',
             errors: {
                 415: `Unsupported Media Type`,
             },
@@ -166,11 +171,13 @@ export class ProductControllerService {
 
     /**
      * @param productId
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteProduct(
         productId: number,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
@@ -178,6 +185,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             errors: {
                 415: `Unsupported Media Type`,
             },
@@ -187,12 +197,14 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static updateProduct(
         productId: number,
         requestBody: UpdateProductDTO,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -200,6 +212,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -211,12 +226,14 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static setCustomFields(
         productId: number,
         requestBody: Record<string, any>,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -224,6 +241,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -235,6 +255,7 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
@@ -244,6 +265,7 @@ export class ProductControllerService {
             value?: any;
             key?: string;
         }>,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -251,6 +273,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -262,12 +287,14 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomFields(
         productId: number,
         requestBody: Array<string>,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -275,6 +302,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -286,12 +316,14 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static removeCustomField(
         productId: number,
         requestBody: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
@@ -299,6 +331,9 @@ export class ProductControllerService {
             path: {
                 'productId': productId,
             },
+            headers: {
+                'Authorization': authorization,
+            },
             body: requestBody,
             mediaType: 'application/json',
             errors: {
@@ -310,18 +345,23 @@ export class ProductControllerService {
     /**
      * @param productId
      * @param requestBody
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static addCustomFields(
         productId: number,
         requestBody: Record<string, any>,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'PATCH',
             url: '/api/products/{productId}/addCustomFields',
             path: {
                 'productId': productId,
+            },
+            headers: {
+                'Authorization': authorization,
             },
             body: requestBody,
             mediaType: 'application/json',
@@ -409,15 +449,20 @@ export class ProductControllerService {
 
     /**
      * @param filePath
+     * @param authorization JWT Bearer Authorization Header
      * @returns any OK
      * @throws ApiError
      */
     public static deleteImage(
         filePath: string,
+        authorization?: string,
     ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'DELETE',
             url: '/api/products/deleteImage',
+            headers: {
+                'Authorization': authorization,
+            },
             query: {
                 'filePath': filePath,
             },

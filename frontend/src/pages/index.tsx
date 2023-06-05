@@ -14,6 +14,7 @@ import Footer from '../components/LoginFooter'
 import RegisterPage from './register'
 import { ProductControllerService } from '../services/services/ProductControllerService'
 import { GetModerateProductDTO } from '../services/models/GetModerateProductDTO'
+import Link from 'next/link'
 
 
 export default function Home() {
@@ -147,8 +148,40 @@ export default function Home() {
               marginLeft: '10px',
             }}
           >
-            <RedBorderButton content="Login" />
-            <RedBorderButton content="Register" />
+            <div>
+              <Link style={{ textDecoration: 'none', color: 'inherit' }} href={'./login'}>
+                <button
+                  type="button"
+                  style={{
+                    width: '104px',
+                    height: '40px',
+                    borderRadius: '4px',
+                    borderWidth: '1px',
+                    borderColor: '#D12222',
+                    borderStyle: 'solid',
+                    backgroundColor: 'transparent',
+                    color: '#D12222',
+                    fontFamily: 'Quicksand',
+                    fontWeight: '500',
+                    fontSize: '20px',
+                    marginRight: '15px',
+                    cursor: 'pointer'
+                  }}
+                >Login</button>
+              </Link>
+
+              <Link style={{ textDecoration: 'none', color: 'inherit' }} href={'./register'}>
+                <button
+                  type="button"
+                  style={{ width: '104px', height: '40px', borderRadius: '4px', borderWidth: '1px', borderColor: '#D12222', borderStyle: 'solid', backgroundColor: 'transparent', color: '#D12222', fontFamily: 'Quicksand', fontWeight: '500', fontSize: '20px', marginRight: '15px', cursor: 'pointer' }}
+                >
+                  Register
+                </button>
+              </Link>
+
+            </div>
+
+
           </div>
         </div>
       </div>
@@ -637,14 +670,14 @@ export default function Home() {
         </div>
         <div style={{ backgroundColor: 'white', width: '80%', height: '100%', borderRadius: '8px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', height: '70vh', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'left', maxHeight: 'calc(70vh - 40px)' }}>
               {products.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map(product => (
                 <div
                   key={product.id}
                   style={{
                     width: '30%',
                     height: '30%',
-                    border: '1px solid black',
+                    border: '1px solid #D12222',
                     padding: '15px',
                     margin: '5px',
                     display: 'flex',
@@ -653,8 +686,9 @@ export default function Home() {
                     alignItems: 'center',
                   }}
                 >
+                  <img src={product.thumbnail} alt='Product Picture' width='50px' height='50px'></img>
                   <h4>{product.title}</h4>
-                  <p>{product.description}</p>
+                  <p>ALL {product.price} Range: {product.range} km</p>
                 </div>
               ))}
             </div>
@@ -727,9 +761,9 @@ export default function Home() {
         </div>
         <div style={{ display: "flex", flexDirection: 'column' }}>
           <p style={{ display: 'block', marginLeft: '4px' }}>Contact</p>
-          <button style={{ backgroundColor: "transparent", border: 'none', cursor: 'pointer', display: 'block', textAlign: 'left' }}>(+355) 0696867903</button>
-          <button style={{ backgroundColor: "transparent", border: 'none', cursor: 'pointer', marginTop: '5px', display: 'block', textAlign: 'left' }}>Rruga Hoxha Tasim,</button>
-          <button style={{ backgroundColor: "transparent", border: 'none', cursor: 'pointer', marginTop: '5px', display: 'block', textAlign: 'left' }}>Tiranë, Albania</button>
+          <button style={{ backgroundColor: "transparent", border: 'none', display: 'block', textAlign: 'left' }}>(+355) 0696867903</button>
+          <button style={{ backgroundColor: "transparent", border: 'none', marginTop: '5px', display: 'block', textAlign: 'left' }}>Rruga Hoxha Tasim,</button>
+          <button style={{ backgroundColor: "transparent", border: 'none', marginTop: '5px', display: 'block', textAlign: 'left' }}>Tiranë, Albania</button>
         </div>
       </div>
     </div>
