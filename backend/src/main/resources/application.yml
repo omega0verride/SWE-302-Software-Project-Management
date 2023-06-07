@@ -59,12 +59,10 @@ spring:
             enhancer:
                 enableLazyInitialization: true
 
-        show-sql: true
-
     datasource:
-        username: ${DATABASE_USER:postgres}
-        password: ${DATABASE_PASSWORD:postgres}
-        url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/redscooter?reWriteBatchedInserts=true
+        username: ${DATABASE_USER:admin}
+        password: ${DATABASE_PASSWORD:admin}
+        url: jdbc:postgresql://${DATABASE_HOST:localhost}:${DATABASE_PORT:5432}/${DATABASE_NAME:postgres}?reWriteBatchedInserts=true
 
 
 jwt:
@@ -91,3 +89,40 @@ file-store:
     no-image-relative-path: /images/no_image.jpg
     max-number-of-sub-directories: 30000
 
+
+decorator:
+    datasource:
+        datasource-proxy:
+            multiline: 'true'
+            logging: sysout
+            slow-query:
+                log-level: warn
+                threshold: '300'
+#                logger-name: ''
+                enable-logging: 'true'
+            json-format: 'false'
+            query:
+                enable-logging: 'true'
+                log-level: debug
+#                logger-name: ''
+            count-query: 'true'
+
+#        p6spy:
+#            enable-logging: true # Register P6LogFactory to log JDBC events
+#            multiline: true # Use com.p6spy.engine.spy.appender.MultiLineFormat instead of com.p6spy.engine.spy.appender.SingleLineFormat
+#            logging: slf4j # Use logging for default listeners [slf4j, sysout, file, custom]
+#            log-file: spy.log # Use logging for default listeners [slf4j, sysout, file, custom]
+#            # custom-appender-class: my.custom.LoggerClass # Class file to use (only with logging=custom). The class must implement com.p6spy.engine.spy.appender.FormattedLogger
+#            # log-format: # Custom log format, if specified com.p6spy.engine.spy.appender.CustomLineFormat will be used with this log format
+#            # log-filter
+#            #    pattern: # Use regex pattern to filter log messages. If specified only matched messages will be logged.
+#            tracing:
+#                include-parameter-values: true # Report the effective sql string (with '?' replaced with real values) to tracing systems. # NOTE this setting does not affect the logging message.
+#logging:
+#    level:
+#        org:
+#            hibernate:
+#                SQL: debug
+#                type:
+#                    descriptor:
+#                        sql: trace

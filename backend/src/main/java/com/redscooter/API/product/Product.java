@@ -2,6 +2,7 @@ package com.redscooter.API.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.redscooter.API.OrderLine.OrderLine;
 import com.redscooter.API.category.Category;
 import com.redscooter.API.common.AuditData;
 import com.redscooter.API.common.Auditable;
@@ -15,6 +16,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
+import org.restprocessors.JoinRESTField;
 import org.springframework.stereotype.Repository;
 
 import java.util.*;
@@ -54,6 +56,8 @@ public class Product extends ProductBase implements Auditable {
     @Column(columnDefinition = "jsonb")
     private Map<String, Object> customFields = new HashMap<>();
 
+
+    @JoinRESTField(joinClass = Category.class)
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {
                     CascadeType.MERGE

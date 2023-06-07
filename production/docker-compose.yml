@@ -47,6 +47,7 @@ services:
       DATABASE_PORT: ${DATABASE_PORT:-5432}
       DATABASE_USER: *db_user
       DATABASE_PASSWORD: *db_password
+      DATABASE_NAME: *db_database
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
