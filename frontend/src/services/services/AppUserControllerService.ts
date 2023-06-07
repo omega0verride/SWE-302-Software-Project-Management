@@ -15,23 +15,60 @@ import { request as __request } from '../core/request';
 export class AppUserControllerService {
 
     /**
+     * @param pageSize 
+     * @param pageNumber 
+     * @param sortBy 
      * @param username 
+     * @param id 
+     * @param surname 
+     * @param email 
+     * @param userAuthType 
+     * @param updatedAt 
+     * @param enabled 
+     * @param createdAt 
+     * @param name 
+     * @param phoneNumber 
      * @param authorization JWT Bearer Authorization Header
-     * @returns any OK
+     * @returns PageResponseGetAppUserDTO OK
+     * @returns any default response
      * @throws ApiError
      */
-    public static resetPassword(
-username: string,
+    public static getUsers(
+pageSize: number = 30,
+pageNumber?: number,
+sortBy?: string,
+username?: string,
+id?: string,
+surname?: string,
+email?: string,
+userAuthType?: string,
+updatedAt?: string,
+enabled?: string,
+createdAt?: string,
+name?: string,
+phoneNumber?: string,
 authorization?: string,
-): CancelablePromise<any> {
+): CancelablePromise<PageResponseGetAppUserDTO | any> {
         return __request(OpenAPI, {
-            method: 'POST',
-            url: '/api/users/resetPassword',
+            method: 'GET',
+            url: '/api/users',
             headers: {
                 'Authorization': authorization,
             },
             query: {
+                'pageSize': pageSize,
+                'pageNumber': pageNumber,
+                'sortBy': sortBy,
                 'username': username,
+                'id': id,
+                'surname': surname,
+                'email': email,
+                'userAuthType': userAuthType,
+                'updatedAt': updatedAt,
+                'enabled': enabled,
+                'createdAt': createdAt,
+                'name': name,
+                'phoneNumber': phoneNumber,
             },
             errors: {
                 415: `Unsupported Media Type`,
@@ -55,7 +92,7 @@ authorization?: string,
 ): CancelablePromise<any> {
         return __request(OpenAPI, {
             method: 'POST',
-            url: '/api/users/register',
+            url: '/api/users',
             headers: {
                 'Authorization': authorization,
             },
@@ -65,6 +102,31 @@ authorization?: string,
             },
             body: requestBody,
             mediaType: 'application/json',
+            errors: {
+                415: `Unsupported Media Type`,
+            },
+        });
+    }
+
+    /**
+     * @param username 
+     * @param authorization JWT Bearer Authorization Header
+     * @returns any OK
+     * @throws ApiError
+     */
+    public static resetPassword(
+username: string,
+authorization?: string,
+): CancelablePromise<any> {
+        return __request(OpenAPI, {
+            method: 'POST',
+            url: '/api/users/resetPassword',
+            headers: {
+                'Authorization': authorization,
+            },
+            query: {
+                'username': username,
+            },
             errors: {
                 415: `Unsupported Media Type`,
             },
@@ -189,68 +251,6 @@ authorization?: string,
             },
             body: requestBody,
             mediaType: 'application/json',
-            errors: {
-                415: `Unsupported Media Type`,
-            },
-        });
-    }
-
-    /**
-     * @param pageSize 
-     * @param pageNumber 
-     * @param sortBy 
-     * @param username 
-     * @param id 
-     * @param surname 
-     * @param email 
-     * @param userAuthType 
-     * @param updatedAt 
-     * @param enabled 
-     * @param createdAt 
-     * @param name 
-     * @param phoneNumber 
-     * @param authorization JWT Bearer Authorization Header
-     * @returns PageResponseGetAppUserDTO OK
-     * @returns any default response
-     * @throws ApiError
-     */
-    public static getUsers(
-pageSize: number = 30,
-pageNumber?: number,
-sortBy?: string,
-username?: string,
-id?: string,
-surname?: string,
-email?: string,
-userAuthType?: string,
-updatedAt?: string,
-enabled?: string,
-createdAt?: string,
-name?: string,
-phoneNumber?: string,
-authorization?: string,
-): CancelablePromise<PageResponseGetAppUserDTO | any> {
-        return __request(OpenAPI, {
-            method: 'GET',
-            url: '/api/users',
-            headers: {
-                'Authorization': authorization,
-            },
-            query: {
-                'pageSize': pageSize,
-                'pageNumber': pageNumber,
-                'sortBy': sortBy,
-                'username': username,
-                'id': id,
-                'surname': surname,
-                'email': email,
-                'userAuthType': userAuthType,
-                'updatedAt': updatedAt,
-                'enabled': enabled,
-                'createdAt': createdAt,
-                'name': name,
-                'phoneNumber': phoneNumber,
-            },
             errors: {
                 415: `Unsupported Media Type`,
             },

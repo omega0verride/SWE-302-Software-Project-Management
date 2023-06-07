@@ -70,4 +70,8 @@ public class AppUserTests {
         appUserService.saveUser(appUser);
         org.junit.jupiter.api.Assertions.assertTrue(bCryptPasswordEncoder.matches("updated_password", appUserService.getByUsername("test@gmail.com").getPassword()));
     }
+    
+
+    // this function test if the user is updated correctlly
+    
 }
